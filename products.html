@@ -4,23 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - Muscle Gains Supplements</title>
+    <meta name="description" content="Browse our full range of muscle supplements including protein, creatine, and more.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Same navbar as index.html -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <!-- Copy the nav from index.html -->
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Muscle Gains</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
     <section class="container my-5">
         <h2 class="text-center mb-4">All Products</h2>
         <div class="row">
-            <!-- Add more cards like in index.html, e.g., for Vitamins, Pre-Workout, etc. -->
-            <!-- Example additional product -->
+            <!-- Featured from Home + More -->
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="images/logo.png" class="card-img-top" alt="Multivitamins" style="height: 200px; object-fit: cover;">
+                    <img src="images/whey.jpg" class="card-img-top" alt="Whey Protein" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Whey Protein Powder</h5>
+                        <p class="card-text">25g protein per serving. Chocolate flavor.</p>
+                        <p class="fw-bold">$29.99</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Whey Protein" data-price="29.99">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="images/creatine.jpg" class="card-img-top" alt="Creatine" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Creatine Monohydrate</h5>
+                        <p class="card-text">Pure micronized creatine for strength gains.</p>
+                        <p class="fw-bold">$19.99</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Creatine" data-price="19.99">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="images/bcaa.jpg" class="card-img-top" alt="BCAAs" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">BCAA Recovery Drink</h5>
+                        <p class="card-text">Essential amino acids for muscle repair.</p>
+                        <p class="fw-bold">$24.99</p>
+                        <button class="btn btn-primary add-to-cart" data-name="BCAA" data-price="24.99">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="images/vitamins.jpg" class="card-img-top" alt="Multivitamins" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Daily Multivitamins</h5>
                         <p class="card-text">Essential nutrients for overall health and performance.</p>
@@ -29,25 +74,37 @@
                     </div>
                 </div>
             </div>
-
-
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="images/logo.png" class="card-img-top" alt="Multivitamins" style="height: 200px; object-fit: cover;">
+                    <img src="images/preworkout.jpg" class="card-img-top" alt="Pre-Workout" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
-                        <h5 class="card-title">Daily Multivitamins</h5>
-                        <p class="card-text">Essential nutrients for overall health and performance.</p>
-                        <p class="fw-bold">$100.50</p>
-                        <button class="btn btn-primary add-to-cart" data-name="Multivitamins" data-price="14.99">Add to Cart</button>
+                        <h5 class="card-title">Pre-Workout Energy Boost</h5>
+                        <p class="card-text">Caffeine and beta-alanine for intense sessions.</p>
+                        <p class="fw-bold">$34.99</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Pre-Workout" data-price="34.99">Add to Cart</button>
                     </div>
                 </div>
             </div>
-            <!-- Repeat for 8-10 products total -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="images/glutamine.jpg" class="card-img-top" alt="Glutamine" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">L-Glutamine Powder</h5>
+                        <p class="card-text">Supports immune function and recovery.</p>
+                        <p class="fw-bold">$22.99</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Glutamine" data-price="22.99">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more cards here as needed -->
         </div>
     </section>
 
-    
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2023 Muscle Gains Supplements. All rights reserved.</p>
+    </footer>
 
-    <!-- Same footer and scripts as index.html -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
