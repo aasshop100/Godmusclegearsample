@@ -16,8 +16,13 @@ function updateCart() {
     if (cartItems) {
         cartItems.innerHTML = '';
         cart.forEach((item, index) => {
-            const itemPrice = parseFloat(item.price);
+            // Robust price parsing: Convert to number, fallback to 0 if invalid
+            const itemPrice = Number(item.price) || 0; // Handles strings like "29.99" or NaN
             subtotal += itemPrice;
+            
+            // Temp debug: Check console (F12) for prices
+            console.log(`Item: ${item.name}, Price: ${itemPrice}, Running Subtotal: ${subtotal}`);
+            
             cartItems.innerHTML += `
                 <div class="card mb-3">
                     <div class="card-body d-flex justify-content-between align-items-center">
@@ -35,9 +40,18 @@ function updateCart() {
         const grandTotal = subtotal + SHIPPING_FEE;
         if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
         if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
+        
+        console.log(`Final Subtotal: ${subtotal}, Grand Total: ${grandTotal}`); // Temp debug
     }
     
     localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// Clear cart for testing
+function clearCart() {
+    cart = [];
+    updateCart();
+    alert('Cart cleared!');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -46,11 +60,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const addButtons = document.querySelectorAll('.add-to-cart');
     addButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const name = this.dataset.name;
-            const price = this.dataset.price;
+            const name = this.dataset.name || 'Unknown Item';
+            const priceStr = this.dataset.price || '0';
+            const price = Number(priceStr) || 0; // Ensure price is a number now
             cart.push({ name, price });
             updateCart();
-            alert(`${name} added to cart!`); // Optional: Remove later for better UX
+            alert(`${name} added to cart! (Price: $${price})`); // Enhanced alert for debug
         });
     });
 });
@@ -65,10 +80,9 @@ function checkout() {
         alert('Your cart is empty!');
         return;
     }
-    const subtotal = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
+    const subtotal = cart.reduce((sum, item) => sum + Number(item.price), 0);
     const grandTotal = subtotal + SHIPPING_FEE;
-    // For now, alert; later integrate Stripe with grandTotal
-    alert(`Redirecting to checkout... Total: $${grandTotal.toFixed(2)} (includes $20 shipping)`);
-    cart = []; // Clear cart after "purchase"
+    alert(`Redirecting to checkout... Subtotal: $${subtotal.toFixed(2)} | Shipping: $20 | Total: $${grandTotal.toFixed(2)}`);
+    cart = []; // Clear after "purchase"
     updateCart();
 }
