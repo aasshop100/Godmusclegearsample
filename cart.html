@@ -26,13 +26,33 @@
     </nav>
 
     <section class="container my-5">
-        <h2>Shopping Cart</h2>
-        <div id="cart-items"></div> <!-- Removed class="row" to avoid layout issues -->
-        <div class="mt-4">
-            <h4>Total: $<span id="cart-total">0.00</span></h4>
-            <button class="btn btn-success" onclick="checkout()">Checkout</button>
+    <h2>Shopping Cart</h2>
+    <div id="cart-items"></div> <!-- Items list here -->
+    <div class="row mt-4 justify-content-end">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Shipping Fee:</span>
+                        <span>$20.00</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Grand Total:</strong>
+                        <strong id="cart-grand-total">$20.00</strong>
+                    </div>
+                    <button class="btn btn-success w-100" onclick="checkout()">Checkout</button>
+                    <small class="text-muted d-block mt-2">Shipping: Standard delivery in 3-5 business days. Free over $100 (coming soon).</small>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <footer class="bg-dark text-white text-center py-3">
         <p>&copy; 2023 Muscle Gains Supplements. All rights reserved.</p>
@@ -42,3 +62,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
