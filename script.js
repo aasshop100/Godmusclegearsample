@@ -1,3 +1,7 @@
+// Add this to the top of script.js if needed
+document.addEventListener('touchstart', function() {}, {passive: true}); // Improves mobile clicks
+
+
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function updateCart() {
@@ -54,4 +58,5 @@ function checkout() {
     alert('Redirecting to checkout... (Implement payment here)');
     cart = []; // Clear cart after "purchase"
     updateCart();
+
 }
