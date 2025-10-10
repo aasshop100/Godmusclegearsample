@@ -12,4 +12,13 @@ body {
 
 header {
     background: linear-gradient(135deg, #007bff, #0056b3);
+
+}
+
+.card-body .d-flex.justify-content-between {
+    font-size: 1.1rem; /* Larger text for totals */
+}
+#cart-grand-total {
+    color: #28a745; /* Green for emphasis */
+    font-size: 1.3rem;
 }
