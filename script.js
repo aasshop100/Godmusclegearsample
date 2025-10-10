@@ -378,16 +378,4 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert(`Order ${order.id} confirmed! Emails sent to you and ${order.customer.email} with details and proof attachment. Thank you for shopping at GOD MUSCLE GEARS!`);
                 
                 // Redirect to home
-                window.location.href = 'index.html';
-
-            } catch (error) {
-                console.error('SendGrid error:', error);
-                alert('Order saved locally, but emails failed to send. Please contact us directly. Error: ' + error.message);
-                
-                // Still save order and clear cart
-                let orders = JSON.parse(localStorage.getItem('orders')) || [];
-                orders.push(order);
-                localStorage.setItem('orders', JSON.stringify(orders));
-                cart.length = 0;
-                local
-
+                window.location
