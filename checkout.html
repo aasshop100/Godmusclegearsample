@@ -106,30 +106,33 @@
                                     <!-- Add more countries as needed -->
                                 </select>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Payment Method</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment-method" id="bitcoin" value="Bitcoin" required>
-                                    <label class="form-check-label" for="bitcoin">
-                                        Bitcoin (Crypto Wallet)
-                                        <br><small class="text-muted">Send to wallet: <strong>bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</strong> (Copy this address for payment)</small>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment-method" id="paypal" value="PayPal" required>
-                                    <label class="form-check-label" for="paypal">
-                                        PayPal
-                                        <br><small class="text-muted">Email: <strong>yourpaypal@business.com</strong> (Copy this email for payment)</small>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment-method" id="wise" value="Wise" required>
-                                    <label class="form-check-label" for="wise">
-                                        Wise (Bank Transfer)
-                                        <br><small class="text-muted">Account: <strong>WISE123456789</strong>, Bank: <strong>XYZ International Bank</strong> (Copy details for transfer)</small>
-                                    </label>
-                                </div>
-                            </div>
+                           <div class="mb-3">
+    <label class="form-label">Payment Method</label>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="payment-method" id="bitcoin" value="Bitcoin" required>
+        <label class="form-check-label" for="bitcoin">
+            Bitcoin (Crypto Wallet)
+            <br><small class="text-muted">Send to wallet: <strong id="btc-wallet">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</strong> 
+            <button type="button" class="btn btn-sm btn-outline-secondary ms-2 copy-btn" data-copy-target="btc-wallet" onclick="copyPaymentDetails(this)">Copy</button></small>
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="payment-method" id="paypal" value="PayPal" required>
+        <label class="form-check-label" for="paypal">
+            PayPal
+            <br><small class="text-muted">Email: <strong id="paypal-email">yourpaypal@business.com</strong> 
+            <button type="button" class="btn btn-sm btn-outline-secondary ms-2 copy-btn" data-copy-target="paypal-email" onclick="copyPaymentDetails(this)">Copy</button></small>
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="payment-method" id="wise" value="Wise" required>
+        <label class="form-check-label" for="wise">
+            Wise (Bank Transfer)
+            <br><small class="text-muted">Account: <strong id="wise-account">WISE123456789</strong>, Bank: <strong id="wise-bank">XYZ International Bank</strong> 
+            <button type="button" class="btn btn-sm btn-outline-secondary ms-2 copy-btn" data-copy-target="wise-details" onclick="copyPaymentDetails(this)">Copy</button></small>
+        </label>
+    </div>
+</div>
                             <div class="mb-3">
                                 <label for="proof-upload" class="form-label">Upload Proof of Payment</label>
                                 <input type="file" class="form-control" id="proof-upload" name="proof-upload" accept="image/*,.pdf" required>
@@ -154,3 +157,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
