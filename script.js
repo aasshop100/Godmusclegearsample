@@ -188,8 +188,14 @@ function handleCheckoutSubmit(event) {
         return;
     }
 
-    // Demo: Log data (in real app, send to backend/email)
-    console.log('Order Details:', { fullName, email, fullAddress, paymentMethod, proofFile.name });
+    // Demo: Log data (fixed: explicit object properties, no shorthand)
+    console.log('Order Details:', { 
+        fullName: fullName, 
+        email: email, 
+        fullAddress: fullAddress, 
+        paymentMethod: paymentMethod, 
+        proofFileName: proofFile.name 
+    });
 
     // Calculate totals for confirmation
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -275,3 +281,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
