@@ -216,24 +216,24 @@ function handleCheckoutSubmit(event) {
         cart_details: cartDetails
     };
 
-    // Send to Customer (confirmation) - REPLACE WITH YOUR Service ID and Customer Template ID
-    emailjs.send('service_uerk41r', 'template_0ry9w0v', templateParams) // e.g., 'service_abc123', 'template_def456'
-        .then(function(response) {
-            console.log('Customer email sent!', response.status, response.text);
-        }, function(error) {
-            console.log('Customer email failed:', error);
-            // Still proceed, but notify
-        });
+    // Send to Customer (confirmation) - Explicit To for customer
+templateParams.to_email = customerEmail; // Use form's customer email
+emailjs.send('service_uerk41r', 'template_0ry9w0v', templateParams)
+    .then(function(response) {
+        console.log('Customer email sent to ' + customerEmail + '!', response.status, response.text);
+    }, function(error) {
+        console.log('Customer email failed:', error);
+    });
 
-    // Send to Owner (you) - REPLACE WITH YOUR Service ID and Owner Template ID
-    templateParams.to_email = 'aasshop100@gmail.com'; // e.g., 'yourbusiness@gmail.com' - your email for notifications
-    emailjs.send('service_uerk41r', 'template_8x2z86l', templateParams) // e.g., 'service_abc123', 'template_ghi789'
-        .then(function(response) {
-            console.log('Owner email sent!', response.status, response.text);
-        }, function(error) {
-            console.log('Owner email failed:', error);
-        });
-
+// Send to Owner (you) - Explicit To for owner
+templateParams.to_email = 'aasshop100@gmail.com'; // Your email
+emailjs.send('service_uerk41r', 'template_8x2z86l', templateParams)
+    .then(function(response) {
+        console.log('Owner email sent to aasshop100@gmail.com!', response.status, response.text);
+    }, function(error) {
+        console.log('Owner email failed:', error);
+    });
+    
     // Success feedback (emails are async - may take seconds)
     alert('Order Placed Successfully!\n\nCustomer: ' + fullName + '\nEmail: ' + customerEmail + '\nAddress: ' + fullAddress + '\nPayment: ' + paymentMethod + '\nProof: ' + proofFile.name + '\nTotal: $' + grandTotal.toFixed(2) + '\n\nConfirmation emails sent! Check spam if not received.\n\nWe\'ll review and ship soon.');
     
@@ -460,6 +460,7 @@ function showCopyFeedback(button, message) {
         button.classList.remove('btn-success');
     }, 2000); // Reset after 2 seconds
 }
+
 
 
 
