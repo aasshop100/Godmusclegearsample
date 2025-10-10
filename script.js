@@ -109,6 +109,110 @@ function addToCart(button) {
     updateCart(); // Updates count, saves, and re-renders if on cart page
     alert(`${name} added to cart! (Total Qty: ${existingItem ? existingItem.quantity : 1})`); // Feedback
 }
+// Render checkout summary (for checkout.html)
+function renderCheckoutSummary() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const checkoutItems = document.getElementById('checkout-items');
+    const subtotalEl = document.getElementById('checkout-subtotal');
+    const shippingEl = document.getElementById('checkout-shipping');
+    const grandTotalEl = document.getElementById('checkout-grand-total');
+    const emptyMsg = document.getElementById('empty-checkout-message');
+
+    if (!checkoutItems) return; // Only run if on checkout page
+
+    let subtotal = 0;
+    let totalQuantity = 0;
+    checkoutItems.innerHTML = '';
+
+    if (cart.length === 0) {
+        if (emptyMsg) emptyMsg.style.display = 'block';
+        if (subtotalEl) subtotalEl.textContent = '$0.00';
+        if (shippingEl) shippingEl.textContent = '$0.00';
+        if (grandTotalEl) grandTotalEl.textContent = '$0.00';
+        return;
+    }
+
+    if (emptyMsg) emptyMsg.style.display = 'none';
+
+    cart.forEach(item => {
+        const itemPrice = Number(item.price) || 0;
+        const quantity = item.quantity || 1;
+        const lineTotal = itemPrice * quantity;
+        subtotal += lineTotal;
+        totalQuantity += quantity;
+
+        const imageSrc = item.image || 'images/default-supplement.png';
+        const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
+
+        checkoutItems.innerHTML += `
+            <div class="d-flex align-items-center mb-2">
+                <div>${imageHtml}</div>
+                <div class="ms-2">
+                    <h6 class="mb-0">${item.name}</h6>
+                    <small class="text-muted">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
+                </div>
+                <div class="ms-auto">
+                    <strong>$${lineTotal.toFixed(2)}</strong>
+                </div>
+            </div>
+            <hr class="my-1">
+        `;
+    });
+
+    // Calculate shipping and total (reuse logic from cart)
+    const BASE_SHIPPING_PER_10 = 20.00;
+    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+    const grandTotal = subtotal + shipping;
+
+    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+    if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
+    if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
+}
+
+// Handle checkout form submission
+function handleCheckoutSubmit(event) {
+    event.preventDefault(); // Stop page reload
+    const form = document.getElementById('checkout-form');
+    if (!form.checkValidity()) {
+        alert('Please fill all required fields!');
+        return;
+    }
+
+    // Get form data
+    const formData = new FormData(form);
+    const fullName = formData.get('full-name');
+    const email = formData.get('email');
+    const street = formData.get('street-address');
+    const city = formData.get('city');
+    const state = formData.get('state');
+    const zip = formData.get('zip-code');
+    const country = formData.get('country');
+    const fullAddress = `${street}, ${city}, ${state} ${zip}, ${country}`; // Combine for display
+    const paymentMethod = formData.get('payment-method');
+    const proofFile = formData.get('proof-upload');
+
+    if (!proofFile) {
+        alert('Please upload proof of payment!');
+        return;
+    }
+
+    // Demo: Log data (in real app, send to backend/email)
+    console.log('Order Details:', { fullName, email, fullAddress, paymentMethod, proofFile.name });
+
+    // Calculate totals for confirmation
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
+    const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const shipping = Math.ceil(totalQuantity / 10) * 20.00;
+    const grandTotal = subtotal + shipping;
+
+    // Demo success: Alert with details, clear cart, redirect to home
+    alert(`Order Placed Successfully!\n\nCustomer: ${fullName}\nEmail: ${email}\nAddress: ${fullAddress}\nPayment: ${paymentMethod}\nProof: ${proofFile.name}\n\nTotal: $${grandTotal.toFixed(2)}\n\nWe'll review your proof and ship soon. Check your email for confirmation.`);
+    
+    cart = []; // Clear cart
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.location.href = 'index.html'; // Redirect to home (or create a thank-you.html)
+}
 
 // Update quantity for an item (called from input onchange)
 function updateQuantity(index, newQty) {
@@ -170,6 +274,15 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCart();
     }
 });
+// Checkout page logic
+if (document.getElementById('checkout-items')) {
+    renderCheckoutSummary();
+    updateCartCount(); // Update navbar
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+    }
+}
 
 // Search functionality (add to products page)
 if (document.getElementById('search-input')) {
@@ -186,3 +299,4 @@ if (document.getElementById('search-input')) {
         });
     });
 }
+
