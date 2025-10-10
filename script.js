@@ -170,3 +170,19 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCart();
     }
 });
+
+// Search functionality (add to products page)
+if (document.getElementById('search-input')) {
+    document.getElementById('search-input').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const productCards = document.querySelectorAll('#product-list .col-md-4');
+        productCards.forEach(card => {
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+            if (title.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+}
