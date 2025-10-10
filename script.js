@@ -170,3 +170,107 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCart();
     }
 });
+
+
+// Updated checkout function (replace your existing one)
+function checkout() {
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+    // Redirect to checkout page instead of alerting
+    window.location.href = 'checkout.html';
+}
+
+// Checkout page logic (runs if on checkout.html)
+if (document.getElementById('checkout-form')) {
+    // Populate order summary on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length === 0) {
+            alert('Cart is empty! Redirecting to products.');
+            window.location.href = 'products.html';
+            return;
+        }
+
+        const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
+        const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+        const grandTotal = subtotal + shipping;
+
+        document.getElementById('checkout-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('checkout-shipping').textContent = `$${shipping.toFixed(2)}`;
+        document.getElementById('checkout-total').textContent = `$${grandTotal.toFixed(2)}`;
+        document.getElementById('checkout-items').textContent = totalQuantity;
+
+        console.log('Checkout summary loaded:', { subtotal, shipping, total: grandTotal, items: totalQuantity }); // Debug
+    });
+
+    // Form validation and submit
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default submit
+
+        // Get form values
+        const fullName = document.getElementById('full-name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const state = document.getElementById('state').value.trim();
+        const zip = document.getElementById('zip').value.trim();
+        const country = document.getElementById('country').value;
+        const payment = document.querySelector('input[name="payment"]:checked');
+        const proofFile = document.getElementById('proof-upload').files[0];
+
+        // Validation
+        let errors = [];
+        if (!fullName) errors.push('Full Name is required.');
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Valid Email is required.');
+        if (!phone) errors.push('Phone Number is required.');
+        if (!address || !city || !state || !zip || !country) errors.push('All address fields are required.');
+        if (!payment) errors.push('Please select a payment method.');
+        if (!proofFile) errors.push('Proof of payment screenshot is required.');
+        if (proofFile && !proofFile.type.startsWith('image/')) errors.push('Proof must be an image file (JPG, PNG, etc.).');
+
+        if (errors.length > 0) {
+            alert('Please fix the following errors:\n' + errors.join('\n'));
+            return;
+        }
+
+        // All good - create order object
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const order = {
+            id: 'ORDER-' + Date.now(), // Simple unique ID
+            timestamp: new Date().toISOString(),
+            items: cart, // Full cart details
+            subtotal: cart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0),
+            shipping: Math.ceil(cart.reduce((sum, item) => sum + (item.quantity || 1), 0) / 10) * BASE_SHIPPING_PER_10,
+            total: 0, // Calculated below
+            customer: {
+                name: fullName,
+                email: email,
+                phone: phone,
+                address: { street: address, city, state, zip, country }
+            },
+            paymentMethod: payment.value,
+            proofFileName: proofFile.name // Demo: Just filename; real upload would save file
+        };
+        order.total = order.subtotal + order.shipping;
+
+        // Save to localStorage (demo - in real: send to server)
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        orders.push(order);
+        localStorage.setItem('orders', JSON.stringify(orders));
+
+        // Clear cart
+        cart.length = 0;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount(); // Update navbar if needed
+
+        // Confirmation
+        alert(`Order ${order.id} confirmed! We've received your details and proof of payment. You will receive an email confirmation shortly with next steps (e.g., wallet address for Bitcoin). Thank you for shopping at GOD MUSCLE GEARS!`);
+        
+        // Redirect to home (or create thank-you.html)
+        window.location.href = 'index.html';
+    });
+}
