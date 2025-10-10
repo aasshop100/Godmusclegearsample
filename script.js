@@ -282,3 +282,64 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Copy payment details to clipboard (for checkout buttons)
+function copyPaymentDetails(button) {
+    const targetId = button.getAttribute('data-copy-target');
+    let textToCopy = '';
+
+    if (targetId === 'btc-wallet') {
+        textToCopy = document.getElementById('btc-wallet').textContent;
+    } else if (targetId === 'paypal-email') {
+        textToCopy = document.getElementById('paypal-email').textContent;
+    } else if (targetId === 'wise-details') {
+        // Combine Wise account and bank
+        const account = document.getElementById('wise-account').textContent;
+        const bank = document.getElementById('wise-bank').textContent;
+        textToCopy = 'Account: ' + account + ', Bank: ' + bank;
+    }
+
+    if (!textToCopy) {
+        alert('No text to copy!');
+        return;
+    }
+
+    // Modern clipboard API (works in most browsers)
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(function() {
+            showCopyFeedback(button, 'Copied!');
+        }).catch(function(err) {
+            console.error('Copy failed:', err);
+            fallbackCopy(textToCopy, button);
+        });
+    } else {
+        // Fallback for older browsers
+        fallbackCopy(textToCopy, button);
+    }
+}
+
+// Fallback copy method (selects text and uses execCommand)
+function fallbackCopy(text, button) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        showCopyFeedback(button, 'Copied!');
+    } catch (err) {
+        console.error('Fallback copy failed:', err);
+        alert('Copy failed - please select and copy manually: ' + text);
+    }
+    document.body.removeChild(textArea);
+}
+
+// Show temporary feedback on button
+function showCopyFeedback(button, message) {
+    const originalText = button.textContent;
+    button.textContent = message;
+    button.classList.add('btn-success'); // Green highlight
+    setTimeout(function() {
+        button.textContent = originalText;
+        button.classList.remove('btn-success');
+    }, 2000); // Reset after 2 seconds
+}
