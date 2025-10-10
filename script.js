@@ -201,7 +201,7 @@ function handleCheckoutSubmit(event) {
     const cartDetails = JSON.stringify(cart, null, 2); // Full cart for you
 
     // Initialize EmailJS (REPLACE WITH YOUR User ID)
-    emailjs.init(eHXhTKYnIawMoj-Im); // e.g., 'user_jkl012' - from EmailJS Dashboard
+    emailjs.init('eHXhTKYnIawMoj-Im'); // e.g., 'user_jkl012' - from EmailJS Dashboard
 
     // Prepare common params for templates
     const templateParams = {
@@ -460,6 +460,7 @@ function showCopyFeedback(button, message) {
         button.classList.remove('btn-success');
     }, 2000); // Reset after 2 seconds
 }
+
 
 
 
