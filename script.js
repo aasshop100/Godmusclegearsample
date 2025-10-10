@@ -161,7 +161,7 @@ function renderCheckoutSummary() {
     console.log('Checkout rendered successfully:', { subtotal, shipping, grandTotal, totalQuantity, cartLength: cart.length }); // Debug
 }
 
-// Handle checkout form submission
+// Handle checkout form submission (with EmailJS)
 function handleCheckoutSubmit(event) {
     event.preventDefault(); // Stop page reload
     const form = document.getElementById('checkout-form');
@@ -173,13 +173,13 @@ function handleCheckoutSubmit(event) {
     // Get form data
     const formData = new FormData(form);
     const fullName = formData.get('full-name');
-    const email = formData.get('email');
+    const customerEmail = formData.get('email');
     const street = formData.get('street-address');
     const city = formData.get('city');
     const state = formData.get('state');
     const zip = formData.get('zip-code');
     const country = formData.get('country');
-    const fullAddress = street + ', ' + city + ', ' + state + ' ' + zip + ', ' + country; // Combine for display
+    const fullAddress = street + ', ' + city + ', ' + state + ' ' + zip + ', ' + country;
     const paymentMethod = formData.get('payment-method');
     const proofFile = formData.get('proof-upload');
 
@@ -188,24 +188,54 @@ function handleCheckoutSubmit(event) {
         return;
     }
 
-    // Demo: Log data (fixed: explicit object properties, no shorthand)
-    console.log('Order Details:', { 
-        fullName: fullName, 
-        email: email, 
-        fullAddress: fullAddress, 
-        paymentMethod: paymentMethod, 
-        proofFileName: proofFile.name 
-    });
-
-    // Calculate totals for confirmation
+    // Calculate totals and order details
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
     const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
     const shipping = Math.ceil(totalQuantity / 10) * 20.00;
     const grandTotal = subtotal + shipping;
 
-    // Demo success: Alert with details, clear cart, redirect to home
-    alert('Order Placed Successfully!\n\nCustomer: ' + fullName + '\nEmail: ' + email + '\nAddress: ' + fullAddress + '\nPayment: ' + paymentMethod + '\nProof: ' + proofFile.name + '\n\nTotal: $' + grandTotal.toFixed(2) + '\n\nWe\'ll review your proof and ship soon. Check your email for confirmation.');
+    // Generate order ID and summaries
+    const orderId = 'ORDER-' + Date.now(); // e.g., ORDER-1725123456789
+    const itemsSummary = cart.map(item => item.name + ' (Qty: ' + (item.quantity || 1) + ')').join(', ');
+    const cartDetails = JSON.stringify(cart, null, 2); // Full cart for you
+
+    // Initialize EmailJS (REPLACE WITH YOUR User ID)
+    emailjs.init(eHXhTKYnIawMoj-Im); // e.g., 'user_jkl012' - from EmailJS Dashboard
+
+    // Prepare common params for templates
+    const templateParams = {
+        order_id: orderId,
+        customer_name: fullName,
+        customer_email: customerEmail,
+        full_address: fullAddress,
+        payment_method: paymentMethod,
+        proof_filename: proofFile.name,
+        total: grandTotal.toFixed(2),
+        items_summary: itemsSummary,
+        cart_details: cartDetails
+    };
+
+    // Send to Customer (confirmation) - REPLACE WITH YOUR Service ID and Customer Template ID
+    emailjs.send(service_uerk41r, template_0ry9w0v, templateParams) // e.g., 'service_abc123', 'template_def456'
+        .then(function(response) {
+            console.log('Customer email sent!', response.status, response.text);
+        }, function(error) {
+            console.log('Customer email failed:', error);
+            // Still proceed, but notify
+        });
+
+    // Send to Owner (you) - REPLACE WITH YOUR Service ID and Owner Template ID
+    templateParams.to_email = aasshop100@gmail.com; // e.g., 'yourbusiness@gmail.com' - your email for notifications
+    emailjs.send(service_uerk41r, template_8x2z86l, templateParams) // e.g., 'service_abc123', 'template_ghi789'
+        .then(function(response) {
+            console.log('Owner email sent!', response.status, response.text);
+        }, function(error) {
+            console.log('Owner email failed:', error);
+        });
+
+    // Success feedback (emails are async - may take seconds)
+    alert('Order Placed Successfully!\n\nCustomer: ' + fullName + '\nEmail: ' + customerEmail + '\nAddress: ' + fullAddress + '\nPayment: ' + paymentMethod + '\nProof: ' + proofFile.name + '\nTotal: $' + grandTotal.toFixed(2) + '\n\nConfirmation emails sent! Check spam if not received.\n\nWe\'ll review and ship soon.');
     
     localStorage.setItem('cart', '[]'); // Clear cart
     window.location.href = 'index.html'; // Redirect to home
@@ -430,4 +460,5 @@ function showCopyFeedback(button, message) {
         button.classList.remove('btn-success');
     }, 2000); // Reset after 2 seconds
 }
+
 
