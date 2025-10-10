@@ -109,6 +109,7 @@ function addToCart(button) {
     updateCart(); // Updates count, saves, and re-renders if on cart page
     alert(`${name} added to cart! (Total Qty: ${existingItem ? existingItem.quantity : 1})`); // Feedback
 }
+
 // Render checkout summary (for checkout.html)
 function renderCheckoutSummary() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -167,6 +168,8 @@ function renderCheckoutSummary() {
     if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
     if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
     if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
+
+    console.log('Checkout rendered successfully:', { subtotal, shipping, grandTotal, totalQuantity, cartLength: cart.length }); // Debug: Check Console for this
 }
 
 // Handle checkout form submission
@@ -234,22 +237,6 @@ function removeFromCart(index) {
     console.log(`Removed ${removedName} from cart`);
 }
 
-// Checkout
-function checkout() {
-    if (cart.length === 0) {
-        alert('Your cart is empty!');
-        return;
-    }
-    const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
-    const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-    const grandTotal = subtotal + shipping;
-    alert(`Proceeding to checkout... Subtotal: $${subtotal.toFixed(2)} | Shipping: $${shipping.toFixed(2)} (${BASE_SHIPPING_PER_10} per 10 items) | Total: $${grandTotal.toFixed(2)}`);
-    // For demo: Clear cart. In real site: Redirect to payment page
-    cart = [];
-    updateCart();
-}
-
 // Clear cart for testing (run in console: clearCart())
 function clearCart() {
     cart = [];
@@ -273,30 +260,30 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('cart-items')) {
         updateCart();
     }
-});
-// Checkout page logic
-if (document.getElementById('checkout-items')) {
-    renderCheckoutSummary();
-    updateCartCount(); // Update navbar
-    const checkoutForm = document.getElementById('checkout-form');
-    if (checkoutForm) {
-        checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+
+    // Checkout page logic (MOVED INSIDE DOMContentLoaded)
+    if (document.getElementById('checkout-items')) {
+        renderCheckoutSummary();
+        updateCartCount(); // Update navbar
+        const checkoutForm = document.getElementById('checkout-form');
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+        }
     }
-}
 
-// Search functionality (add to products page)
-if (document.getElementById('search-input')) {
-    document.getElementById('search-input').addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const productCards = document.querySelectorAll('#product-list .col-md-4');
-        productCards.forEach(card => {
-            const title = card.querySelector('.card-title').textContent.toLowerCase();
-            if (title.includes(searchTerm)) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
+    // Search functionality (add to products page) (MOVED INSIDE DOMContentLoaded)
+    if (document.getElementById('search-input')) {
+        document.getElementById('search-input').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const productCards = document.querySelectorAll('#product-list .col-md-4');
+            productCards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
-    });
-}
-
+    }
+});
