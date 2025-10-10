@@ -226,7 +226,7 @@ function handleCheckoutSubmit(event) {
         });
 
     // Send to Owner (you) - REPLACE WITH YOUR Service ID and Owner Template ID
-    templateParams.to_email = aasshop100@gmail.com; // e.g., 'yourbusiness@gmail.com' - your email for notifications
+    templateParams.to_email = 'aasshop100@gmail.com'; // e.g., 'yourbusiness@gmail.com' - your email for notifications
     emailjs.send(service_uerk41r, template_8x2z86l, templateParams) // e.g., 'service_abc123', 'template_ghi789'
         .then(function(response) {
             console.log('Owner email sent!', response.status, response.text);
@@ -460,5 +460,6 @@ function showCopyFeedback(button, message) {
         button.classList.remove('btn-success');
     }, 2000); // Reset after 2 seconds
 }
+
 
 
