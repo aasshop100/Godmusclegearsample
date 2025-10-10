@@ -250,6 +250,93 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Copy payment details to clipboard (for checkout buttons)
+function copyPaymentDetails(button) {
+    console.log('Copy button clicked:', button); // Debug: Confirms click works
+
+    const targetId = button.getAttribute('data-copy-target');
+    console.log('Target ID:', targetId); // Debug
+
+    let textToCopy = '';
+
+    if (targetId === 'btc-wallet') {
+        const element = document.getElementById('btc-wallet');
+        if (element) {
+            textToCopy = element.textContent.trim();
+        }
+    } else if (targetId === 'paypal-email') {
+        const element = document.getElementById('paypal-email');
+        if (element) {
+            textToCopy = element.textContent.trim();
+        }
+    } else if (targetId === 'wise-details') {
+        const accountEl = document.getElementById('wise-account');
+        const bankEl = document.getElementById('wise-bank');
+        if (accountEl && bankEl) {
+            textToCopy = 'Account: ' + accountEl.textContent.trim() + ', Bank: ' + bankEl.textContent.trim();
+        }
+    }
+
+    console.log('Text to copy:', textToCopy); // Debug: Shows what it's trying to copy
+
+    if (!textToCopy) {
+        alert('No text to copy! Check IDs.');
+        return;
+    }
+
+    // Modern clipboard API (works in most browsers)
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(function() {
+            console.log('Modern copy success'); // Debug
+            showCopyFeedback(button, 'Copied!');
+        }).catch(function(err) {
+            console.error('Modern copy failed:', err); // Debug
+            fallbackCopy(textToCopy, button);
+        });
+    } else {
+        console.log('Using fallback copy'); // Debug
+        fallbackCopy(textToCopy, button);
+    }
+}
+
+// Fallback copy method (selects text and uses execCommand)
+function fallbackCopy(text, button) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed'; // Off-screen
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            console.log('Fallback copy success'); // Debug
+            showCopyFeedback(button, 'Copied!');
+        } else {
+            throw new Error('execCommand failed');
+        }
+    } catch (err) {
+        console.error('Fallback copy failed:', err); // Debug
+        alert('Copy failed - please select and copy manually: ' + text);
+    }
+    document.body.removeChild(textArea);
+}
+
+// Show temporary feedback on button
+function showCopyFeedback(button, message) {
+    const originalText = button.textContent;
+    button.textContent = message;
+    button.classList.remove('btn-outline-secondary');
+    button.classList.add('btn-success'); // Green highlight
+    setTimeout(function() {
+        button.textContent = originalText;
+        button.classList.remove('btn-success');
+        button.classList.add('btn-outline-secondary');
+    }, 2000); // Reset after 2 seconds
+}
+
     // If on cart page, fully render the cart
     if (document.getElementById('cart-items')) {
         updateCart();
@@ -343,3 +430,4 @@ function showCopyFeedback(button, message) {
         button.classList.remove('btn-success');
     }, 2000); // Reset after 2 seconds
 }
+
