@@ -58,4 +58,32 @@ function updateCart() {
                         <div class="col-md-2">${imageHtml}</div>
                         <div class="col-md-3">
                             <h6 class="mb-1">${item.name}</h6>
-                            <p class="mb-1 text-muted">$${itemPrice.toFixed(2)}
+                            <p class="mb-1 text-muted">$${itemPrice.toFixed(2)} each</p>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control w-75 d-inline" value="${quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
+                        </div>
+                        <div class="col-md-2">
+                            <strong>$${lineTotal.toFixed(2)}</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Temp debug
+        console.log(`Item: ${item.name}, Qty: ${quantity}, Price: ${itemPrice}, Line Total: ${lineTotal}, Running Subtotal: ${subtotal}`);
+    });
+
+    // Quantity-based shipping: $20 per 10 items (or part thereof)
+    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+    const grandTotal = subtotal + shipping;
+
+    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+    if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
+    if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
+
+    console.log(`Total Items
