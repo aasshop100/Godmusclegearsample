@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Checkout page logic (runs if on checkout.html)
     if (document.getElementById('checkout-form')) {
         // Populate order summary on load
-        document.addEventListener('DOMContentLoaded', function() {
+        const summaryLoaded = function() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             if (cart.length === 0) {
                 alert('Cart is empty! Redirecting to products.');
@@ -210,7 +210,10 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             console.log('Checkout summary loaded:', window.orderData); // Debug
-        });
+        };
+
+        // Run summary on load
+        summaryLoaded();
 
         // Form validation and submit with SendGrid
         document.getElementById('checkout-form').addEventListener('submit', async function(e) {
@@ -277,18 +280,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            // SendGrid Config - REPLACE THESE WITH YOUR VALUES
-            const API_KEY = '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'; // Your SendGrid API key
-            const CUSTOMER_TEMPLATE_ID = 'd-0e4a3f6e6f384946a8b7d42b578ad47a'; // Your customer template ID
-            const ADMIN_TEMPLATE_ID = 'd-a55f0d96bc324030b783778eee3c89c5'; // Your admin template ID
-            const FROM_EMAIL = 'aasshop100@gmail.com'; // e.g., 'noreply@godmusclegears.com'
-            const ADMIN_EMAIL = 'aasshop100@gmail.com'; // Your email for admin notifications
-            const BITCOIN_WALLET = 'your-bitcoin-wallet-address-here'; // Optional for template
+            // SendGrid Config - YOUR DETAILS
+            const API_KEY = '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'; // Regenerate after testing
+            const CUSTOMER_TEMPLATE_ID = 'd-0e4a3f6e6f384946a8b7d42b578ad47a';
+            const ADMIN_TEMPLATE_ID = 'd-a55f0d96bc324030b783778eee3c89c5';
+            const FROM_EMAIL = 'aasshop100@gmail.com';
+            const ADMIN_EMAIL = 'aasshop100@gmail.com';
+            const BITCOIN_WALLET = ''; // Update if needed
 
-            // Template data for Handlebars (matches your template variables)
+            // Template data for Handlebars
             const templateData = {
                 order_id: order.id,
-                timestamp: new Date(order.timestamp).toLocaleString(), // Human-readable
+                timestamp: new Date(order.timestamp).toLocaleString(),
                 customer_name: order.customer.name,
                 customer_email: order.customer.email,
                 customer_phone: order.customer.phone,
@@ -299,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 proof_filename: order.proofFileName,
                 bitcoin_wallet: BITCOIN_WALLET,
                 address: `${order.customer.address.street}, ${order.customer.address.city}, ${order.customer.address.state} ${order.customer.address.zip}, ${order.customer.address.country}`,
-                items: order.items // Array for {{#each items}} loop in template
+                items: order.items // Array for loop in template
             };
 
             try {
@@ -318,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         from: { email: FROM_EMAIL },
                         template_id: CUSTOMER_TEMPLATE_ID,
                         attachments: proofBase64 ? [{
-                            content: proofBase64.split(',')[1], // Base64 content (remove data:image prefix)
+                            content: proofBase64.split(',')[1],
                             filename: proofFile.name,
                             type: proofFile.type,
                             disposition: 'attachment'
@@ -387,3 +390,4 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.setItem('orders', JSON.stringify(orders));
                 cart.length = 0;
                 local
+
