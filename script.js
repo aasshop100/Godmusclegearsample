@@ -2,7 +2,7 @@
 document.addEventListener('touchstart', function() {}, {passive: true}); // Improves mobile clicks
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
-const SHIPPING_FEE = 20.00; // Base shipping; free over $100
+const BASE_SHIPPING_PER_10 = 20.00; // $20 per 10 items (or part thereof)
 
 // Global function to update navbar cart count (call on all pages)
 function updateCartCount() {
@@ -27,6 +27,7 @@ function updateCart() {
     if (!cartItems) return; // Only run if on cart page
 
     let subtotal = 0;
+    let totalQuantity = 0; // Track total items for shipping
     cartItems.innerHTML = '';
 
     if (cart.length === 0) {
@@ -44,9 +45,10 @@ function updateCart() {
         const quantity = item.quantity || 1;
         const lineTotal = itemPrice * quantity;
         subtotal += lineTotal;
+        totalQuantity += quantity; // Accumulate total quantity
 
         // Use image if available, fallback to placeholder
-        const imageSrc = item.image || 'images/default-supplement.png'; // Add data-image to buttons for real images
+        const imageSrc = item.image || 'images/default-supplement.png';
         const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 60px; height: 60px; object-fit: cover;">`;
 
         cartItems.innerHTML += `
@@ -72,19 +74,19 @@ function updateCart() {
             </div>
         `;
 
-        // Temp debug: Check console (F12) for details
+        // Temp debug
         console.log(`Item: ${item.name}, Qty: ${quantity}, Price: ${itemPrice}, Line Total: ${lineTotal}, Running Subtotal: ${subtotal}`);
     });
 
-    // Dynamic shipping: Free over $100
-    let shipping = subtotal > 100 ? 0 : SHIPPING_FEE;
+    // Quantity-based shipping: $20 per 10 items (or part thereof)
+    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
     const grandTotal = subtotal + shipping;
 
     if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
     if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
     if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
 
-    console.log(`Final Subtotal: ${subtotal}, Shipping: ${shipping}, Grand Total: ${grandTotal}`); // Temp debug
+    console.log(`Total Items: ${totalQuantity}, Shipping: $${shipping} (${BASE_SHIPPING_PER_10} per 10 items), Subtotal: ${subtotal}, Grand Total: ${grandTotal}`); // Temp debug
 }
 
 // Add to cart (merges duplicates by ID, increments quantity)
@@ -135,9 +137,10 @@ function checkout() {
         return;
     }
     const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
-    let shipping = subtotal > 100 ? 0 : SHIPPING_FEE;
+    const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
     const grandTotal = subtotal + shipping;
-    alert(`Proceeding to checkout... Subtotal: $${subtotal.toFixed(2)} | Shipping: $${shipping.toFixed(2)} | Total: $${grandTotal.toFixed(2)}`);
+    alert(`Proceeding to checkout... Subtotal: $${subtotal.toFixed(2)} | Shipping: $${shipping.toFixed(2)} (${BASE_SHIPPING_PER_10} per 10 items) | Total: $${grandTotal.toFixed(2)}`);
     // For demo: Clear cart. In real site: Redirect to payment page
     cart = [];
     updateCart();
