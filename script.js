@@ -110,7 +110,7 @@ function addToCart(button) {
     alert(`${name} added to cart! (Total Qty: ${existingItem ? existingItem.quantity : 1})`); // Feedback
 }
 
-// Render checkout summary (for checkout.html)
+// Render checkout summary (for checkout.html) - Fixed template literal
 function renderCheckoutSummary() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const checkoutItems = document.getElementById('checkout-items');
@@ -145,19 +145,8 @@ function renderCheckoutSummary() {
         const imageSrc = item.image || 'images/default-supplement.png';
         const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
 
-        checkoutItems.innerHTML += `
-            <div class="d-flex align-items-center mb-2">
-                <div>${imageHtml}</div>
-                <div class="ms-2">
-                    <h6 class="mb-0">${item.name}</h6>
-                    <small class="text-muted">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
-                </div>
-                <div class="ms-auto">
-                    <strong>$${lineTotal.toFixed(2)}</strong>
-                </div>
-            </div>
-            <hr class="my-1">
-        `;
+        // Fixed: Single-line template to avoid copy-paste issues
+        checkoutItems.innerHTML += '<div class="d-flex align-items-center mb-2"><div>' + imageHtml + '</div><div class="ms-2"><h6 class="mb-0">' + item.name + '</h6><small class="text-muted">Qty: ' + quantity + ' | $' + itemPrice.toFixed(2) + ' each</small></div><div class="ms-auto"><strong>$' + lineTotal.toFixed(2) + '</strong></div></div><hr class="my-1">';
     });
 
     // Calculate shipping and total (reuse logic from cart)
@@ -165,11 +154,11 @@ function renderCheckoutSummary() {
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
     const grandTotal = subtotal + shipping;
 
-    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-    if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
-    if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
+    if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
+    if (shippingEl) shippingEl.textContent = '$' + shipping.toFixed(2);
+    if (grandTotalEl) grandTotalEl.textContent = '$' + grandTotal.toFixed(2);
 
-    console.log('Checkout rendered successfully:', { subtotal, shipping, grandTotal, totalQuantity, cartLength: cart.length }); // Debug: Check Console for this
+    console.log('Checkout rendered successfully:', { subtotal, shipping, grandTotal, totalQuantity, cartLength: cart.length }); // Debug
 }
 
 // Handle checkout form submission
@@ -190,7 +179,7 @@ function handleCheckoutSubmit(event) {
     const state = formData.get('state');
     const zip = formData.get('zip-code');
     const country = formData.get('country');
-    const fullAddress = `${street}, ${city}, ${state} ${zip}, ${country}`; // Combine for display
+    const fullAddress = street + ', ' + city + ', ' + state + ' ' + zip + ', ' + country; // Combine for display
     const paymentMethod = formData.get('payment-method');
     const proofFile = formData.get('proof-upload');
 
@@ -210,11 +199,10 @@ function handleCheckoutSubmit(event) {
     const grandTotal = subtotal + shipping;
 
     // Demo success: Alert with details, clear cart, redirect to home
-    alert(`Order Placed Successfully!\n\nCustomer: ${fullName}\nEmail: ${email}\nAddress: ${fullAddress}\nPayment: ${paymentMethod}\nProof: ${proofFile.name}\n\nTotal: $${grandTotal.toFixed(2)}\n\nWe'll review your proof and ship soon. Check your email for confirmation.`);
+    alert('Order Placed Successfully!\n\nCustomer: ' + fullName + '\nEmail: ' + email + '\nAddress: ' + fullAddress + '\nPayment: ' + paymentMethod + '\nProof: ' + proofFile.name + '\n\nTotal: $' + grandTotal.toFixed(2) + '\n\nWe\'ll review your proof and ship soon. Check your email for confirmation.');
     
-    cart = []; // Clear cart
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.location.href = 'index.html'; // Redirect to home (or create a thank-you.html)
+    localStorage.setItem('cart', '[]'); // Clear cart
+    window.location.href = 'index.html'; // Redirect to home
 }
 
 // Update quantity for an item (called from input onchange)
@@ -226,7 +214,7 @@ function updateQuantity(index, newQty) {
     }
     cart[index].quantity = qty;
     updateCart(); // Re-renders and updates totals
-    console.log(`Quantity updated for ${cart[index].name} to ${qty}`);
+    console.log('Quantity updated for ' + cart[index].name + ' to ' + qty);
 }
 
 // Remove item
@@ -234,7 +222,7 @@ function removeFromCart(index) {
     const removedName = cart[index].name;
     cart.splice(index, 1);
     updateCart();
-    console.log(`Removed ${removedName} from cart`);
+    console.log('Removed ' + removedName + ' from cart');
 }
 
 // Clear cart for testing (run in console: clearCart())
@@ -261,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCart();
     }
 
-    // Checkout page logic (MOVED INSIDE DOMContentLoaded)
+    // Checkout page logic
     if (document.getElementById('checkout-items')) {
         renderCheckoutSummary();
         updateCartCount(); // Update navbar
@@ -271,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Search functionality (add to products page) (MOVED INSIDE DOMContentLoaded)
+    // Search functionality (add to products page)
     if (document.getElementById('search-input')) {
         document.getElementById('search-input').addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
