@@ -502,6 +502,72 @@ p, li, span, label, input, select, textarea {
     margin-top: 0.5rem; /* Minimal top space on desktop */
 }
 
+/* Checkout Payment Section Design (Appealing & Fixed Overlap) */
+.payment-section {
+    background-color: #1a1a1a; /* Dark theme */
+}
+
+.payment-card {
+    background-color: #2a2a2a; /* Dark card bg */
+    border: 1px solid #ff4500; /* Red border */
+    color: #ffffff !important; /* White text */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 0.5rem; /* Rounded corners */
+}
+
+.payment-card:hover {
+    transform: translateY(-2px); /* Subtle lift */
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.2); /* Red glow */
+}
+
+.payment-icon i {
+    transition: color 0.3s ease;
+}
+
+.payment-card:hover .payment-icon i {
+    color: #ffffff !important; /* White on hover */
+}
+
+.form-check-input:checked {
+    background-color: #ff4500; /* Red radio when selected */
+    border-color: #ff4500;
+}
+
+.wallet-address {
+    font-family: 'Courier New', monospace; /* Monospace for addresses */
+    font-size: 0.8rem; /* Smaller text */
+    line-height: 1.3;
+    max-height: 60px; /* Limit height */
+    overflow-y: auto; /* Scroll if long */
+}
+
+.copy-btn {
+    font-size: 0.75rem; /* Smaller text */
+    padding: 0.3rem 0.6rem; /* Compact padding */
+    margin-top: 0.25rem; /* Small space above */
+    border-radius: 0.25rem; /* Rounded */
+    background-color: #ff4500; /* Red */
+    color: #ffffff !important; /* White text */
+    border: none;
+    transition: all 0.3s ease;
+    width: 100%; /* Full-width but small */
+}
+
+.copy-btn:hover {
+    background-color: #cc3700; /* Darker red */
+    transform: scale(0.98); /* Slight shrink */
+    box-shadow: 0 2px 4px rgba(255, 69, 0, 0.3); /* Glow */
+}
+
+.paypal-copy {
+    background-color: #0070ba !important; /* PayPal blue */
+}
+
+.paypal-copy:hover {
+    background-color: #005ea6 !important; /* Darker blue */
+}
+
+@media (max-width: 768px)
 
 
 
