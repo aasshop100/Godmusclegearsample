@@ -416,11 +416,8 @@ p, li, span, label, input, select, textarea {
         color: #000000 !important; /* Black text for visibility */
     }
     
-    /* If it's a specific class (e.g., .shop-now-btn), use this instead */
-    .shop-now-btn {
-        color: #000000 !important; /* Black on mobile */
-    }
 }
+
 
 
 
