@@ -409,46 +409,6 @@ p, li, span, label, input, select, textarea {
     }
 }
 
-/* Shop Now Button Fix - Mobile Visibility */
-.btn-shop-now, .shop-now, .btn-primary[href*="shop"], .btn-success[href*="shop"] {
-    color: #000000 !important; /* Black text for visibility on light backgrounds */
-    background-color: #ff4500 !important; /* Red background to match theme */
-    border-color: #ff4500 !important;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
 
-.btn-shop-now:hover, .shop-now:hover, .btn-primary[href*="shop"]:hover, .btn-success[href*="shop"]:hover {
-    color: #ffffff !important; /* White on hover for contrast */
-    background-color: #cc3700 !important; /* Darker red */
-    transform: scale(1.05); /* Slight grow */
-}
 
-/* General Button Fix on Mobile (for any light backgrounds) */
-@media (max-width: 768px) {
-    .btn, .btn-primary, .btn-success {
-        color: #000000 !important; /* Black text on mobile buttons */
-        background-color: #ff4500 !important; /* Ensure red bg */
-        border-color: #ff4500 !important;
-        font-size: 1rem; /* Larger for touch */
-        padding: 0.75rem 1.5rem; /* Bigger padding */
-    }
-    
-    .btn:hover {
-        color: #ffffff !important; /* White on hover */
-    }
-    
-    /* Specific for hero/shop sections if they have light bg */
-    .hero .btn, .hero-section .btn {
-        color: #000000 !important;
-        background-color: rgba(255, 69, 0, 0.9) !important; /* Semi-transparent red if overlay */
-    }
-}
-
-/* Desktop - Keep white text on dark (if needed) */
-@media (min-width: 769px) {
-    .btn-shop-now, .shop-now {
-        color: #ffffff !important; /* White on desktop if dark bg */
-    }
-}
 
