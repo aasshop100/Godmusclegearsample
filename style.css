@@ -409,6 +409,19 @@ p, li, span, label, input, select, textarea {
     }
 }
 
+/* Minimal Fix: Shop Now Text Color on Mobile Only */
+@media (max-width: 768px) {
+    /* Target buttons/links with "Shop Now" text */
+    a[href*="shop"], button:contains("Shop Now"), .btn:contains("Shop Now") {
+        color: #000000 !important; /* Black text for visibility */
+    }
+    
+    /* If it's a specific class (e.g., .shop-now-btn), use this instead */
+    .shop-now-btn {
+        color: #000000 !important; /* Black on mobile */
+    }
+}
+
 
 
 
