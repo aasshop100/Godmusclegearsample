@@ -331,3 +331,29 @@ p, li, span, label, input, select, textarea {
 .text-muted {
     color: #cccccc !important; /* Light gray for muted text, but still readable */
 }
+
+/* Checkout Dropdown Fix - Black Text for Options */
+#checkout-form .form-select {
+    color: #ffffff !important; /* White text in the select box */
+    background-color: #3a3a3a !important; /* Dark background for box */
+    border: 1px solid #ff4500 !important; /* Red border */
+}
+
+#checkout-form .form-select option {
+    color: #000000 !important; /* Black text for dropdown options */
+    background-color: #ffffff !important; /* White background for options */
+}
+
+#checkout-form .form-select option:checked {
+    color: #000000 !important; /* Black for selected option too */
+    background-color: #ff4500 !important; /* Red highlight for selected */
+}
+
+/* Mobile Dropdown - Ensure visibility */
+@media (max-width: 768px) {
+    #checkout-form .form-select {
+        font-size: 16px; /* Prevent zoom on iOS */
+        min-height: 48px; /* Taller for touch */
+    }
+}
+
