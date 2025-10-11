@@ -1,24 +1,281 @@
-body {
-    font-family: Arial, sans-serif;
+/* GOD MUSCLE GEARS - Custom Styles */
+/* General Reset and Fonts */
+* {
+    box-sizing: border-box;
 }
 
+body {
+    font-family: 'Arial', sans-serif; /* Clean, bold font for fitness theme */
+    background-color: #1a1a1a; /* Dark gray-black for modern look */
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    color: #ff4500; /* Red-orange for "muscle" energy */
+}
+
+/* Navbar Tweaks - Make it sticky and mobile-friendly */
+.navbar {
+    background-color: #000000 !important; /* Pure black */
+    box-shadow: 0 2px 10px rgba(255, 69, 0, 0.3); /* Red glow shadow */
+    padding: 0.5rem 1rem; /* Slimmer padding */
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff4500 !important; /* Red brand name */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+}
+
+.nav-link {
+    color: #ffffff !important;
+    transition: color 0.3s ease; /* Smooth hover */
+}
+
+.nav-link:hover {
+    color: #ff4500 !important; /* Red on hover */
+}
+
+#cart-count {
+    background-color: #ff4500;
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 0.3rem;
+}
+
+/* Product Cards - Better for Supplements */
 .card {
-    transition: transform 0.2s;
+    background-color: #2a2a2a; /* Dark card background */
+    border: 1px solid #ff4500; /* Red border */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover animation */
+    margin-bottom: 1.5rem;
 }
 
 .card:hover {
-    transform: scale(1.05);
+    transform: translateY(-5px); /* Lift on hover */
+    box-shadow: 0 5px 15px rgba(255, 69, 0, 0.3); /* Red glow */
 }
 
-header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-
+.card-img-top {
+    height: 200px;
+    object-fit: cover; /* Fit images nicely */
+    border-bottom: 2px solid #ff4500;
 }
 
-.card-body .d-flex.justify-content-between {
-    font-size: 1.1rem; /* Larger text for totals */
+.btn-primary, .btn-success, .btn-danger {
+    background-color: #ff4500; /* Red buttons */
+    border-color: #ff4500;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
-#cart-grand-total {
-    color: #28a745; /* Green for emphasis */
-    font-size: 1.3rem;
+
+.btn-primary:hover, .btn-success:hover, .btn-danger:hover {
+    background-color: #cc3700; /* Darker red on hover */
+    transform: scale(1.05); /* Slight grow */
+}
+
+.add-to-cart {
+    width: 100%; /* Full-width add buttons on products */
+    margin-top: 0.5rem;
+}
+
+/* Footer Tweaks */
+footer {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* General Responsive Tweaks */
+.container {
+    max-width: 1200px; /* Wider on desktop */
+}
+
+/* Mobile General - Ensure no horizontal scroll */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .nav-link {
+        text-align: center;
+        padding: 0.5rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .btn {
+        width: 100%; /* Full-width buttons on mobile */
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Specific Mobile Cart Improvements (cart.html) */
+@media (max-width: 768px) {
+    /* Stack cart rows vertically for mobile */
+    #cart-items .row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    #cart-items .col-md-2, #cart-items .col-md-3, #cart-items .col-md-2:nth-child(3), #cart-items .col-md-2:nth-child(4), #cart-items .col-md-3:nth-child(5) {
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+    
+    /* Smaller images on mobile */
+    #cart-items img {
+        width: 100px !important;
+        height: 100px !important;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    /* Full-width quantity input and buttons */
+    #cart-items input[type="number"] {
+        width: 100% !important;
+        max-width: 100px;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    #cart-items .btn {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    
+    /* Order summary on mobile - stack totals */
+    .order-summary .row {
+        flex-direction: column;
+    }
+    
+    .order-summary .col-md-6 {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Scrollable cart items if many */
+    #cart-items {
+        max-height: 60vh;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+    }
+    
+    #cart-items::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    #cart-items::-webkit-scrollbar-track {
+        background: #2a2a2a;
+    }
+    
+    #cart-items::-webkit-scrollbar-thumb {
+        background: #ff4500;
+        border-radius: 5px;
+    }
+}
+
+/* Checkout Form Mobile Tweaks (checkout.html) */
+@media (max-width: 768px) {
+    #checkout-form .row {
+        flex-direction: column;
+    }
+    
+    #checkout-form .col-md-6, #checkout-form .col-md-4 {
+        margin-bottom: 1rem;
+    }
+    
+    #checkout-form input, #checkout-form select {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .order-summary {
+        margin-top: 2rem;
+    }
+    
+    .form-check {
+        padding-left: 0;
+        text-align: left;
+    }
+    
+    .form-check-input {
+        margin-right: 0.5rem;
+    }
+}
+
+/* Product Grid Mobile */
+@media (max-width: 768px) {
+    .product-grid .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .product-grid .col-md-4 {
+        padding: 0.5rem;
+    }
+    
+    .product-grid .card {
+        height: 100%;
+    }
+}
+
+/* Hover Effects for Products (Desktop Only) */
+@media (min-width: 769px) {
+    .card {
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover .card-img-top {
+        transform: scale(1.05); /* Zoom image on hover */
+    }
+    
+    .add-to-cart:hover {
+        background-color: #cc3700;
+    }
+}
+
+/* Loading Animation for Add to Cart (Optional Fun) */
+.add-to-cart {
+    position: relative;
+    overflow: hidden;
+}
+
+.add-to-cart.loading {
+    pointer-events: none;
+}
+
+.add-to-cart.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
