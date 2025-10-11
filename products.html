@@ -248,10 +248,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 const nameText = productName ? productName.textContent.toLowerCase() : '';
                 const productDesc = card.querySelector('.card-text') ? card.querySelector('.card-text').textContent.toLowerCase() : '';
                 
-                if (searchTerm === '' || nameText.includes(searchTerm) || productDesc.includes(searchTerm)) {
-                    card.style.display = 'block'; // Show matching
-                } else {
-                    card.style.display = 'none'; // Hide non-matching
+               if (searchTerm === '' || nameText.includes(searchTerm) || productDesc.includes(searchTerm)) {
+    card.style.display = 'block'; // Show matching
+    card.parentElement.style.display = 'block'; // Show parent column too
+} else {
+    card.style.display = 'none'; // Hide non-matching
+    // Optional: Hide parent column if all cards in it are hidden
+    const parentCol = card.closest('.col-md-4');
+    if (parentCol && parentCol.querySelectorAll('.card[style*="none"]').length === parentCol.querySelectorAll('.card').length) {
+        parentCol.style.display = 'none';
+    }
+}
                 }
             });
             
@@ -267,6 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 </body>
 </html>
+
 
 
 
