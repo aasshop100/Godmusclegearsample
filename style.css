@@ -461,6 +461,46 @@ p, li, span, label, input, select, textarea {
     }
 }
 
+/* Fix Gap Below Search Bar on Mobile (Products Page) */
+@media (max-width: 768px) {
+    /* Remove space below navbar/search bar */
+    .navbar {
+        margin-bottom: 0 !important; /* No gap after navbar */
+        padding-bottom: 0 !important;
+    }
+    
+    #product-search {
+        margin-bottom: 0 !important; /* No space below search input */
+        border-radius: 0.375rem 0 0 0.375rem; /* Slight rounding if needed */
+    }
+    
+    /* Pull product container/row up to touch search bar */
+    .container:first-of-type .row { /* Targets the first row after search (your products) */
+        margin-top: -1rem !important; /* Negative margin to close gap */
+        padding-top: 0 !important; /* No padding above products */
+        margin-bottom: 1rem !important; /* Normal space below */
+    }
+    
+    /* Tighter spacing for visible cards after filtering */
+    .row .col-md-4 {
+        padding: 0.25rem !important; /* Less padding between columns on mobile */
+        margin-bottom: 0.5rem !important; /* Tighter card spacing */
+    }
+    
+    .card {
+        margin-bottom: 0.5rem !important; /* No extra space between filtered cards */
+    }
+    
+    /* Hide empty columns if all cards in row are hidden */
+    .row .col-md-4:empty {
+        display: none !important; /* Remove empty spaces from hidden cards */
+    }
+}
+
+/* General - Ensure no gaps on desktop too */
+.container .row {
+    margin-top: 0.5rem; /* Minimal top space on desktop */
+}
 
 
 
