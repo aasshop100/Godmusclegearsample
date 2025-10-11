@@ -235,7 +235,7 @@
     <script src="script.js"></script>
 
     <script>
-// Simple Product Search Functionality
+// Simple Product Search Functionality (Fixed Syntax)
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('product-search');
     const productCards = document.querySelectorAll('.card'); // Targets your product .card elements
@@ -243,43 +243,44 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            // Loop through each product card
             productCards.forEach(card => {
                 const productName = card.querySelector('h5') || card.querySelector('.card-title') || card.querySelector('h6'); // Finds title
                 const nameText = productName ? productName.textContent.toLowerCase() : '';
                 const productDesc = card.querySelector('.card-text') ? card.querySelector('.card-text').textContent.toLowerCase() : '';
                 
-               if (searchTerm === '' || nameText.includes(searchTerm) || productDesc.includes(searchTerm)) {
-    card.style.display = 'block'; // Show matching
-    card.parentElement.style.display = 'block'; // Show parent column too
-} else {
-    card.style.display = 'none'; // Hide non-matching
-    // Optional: Hide parent column if all cards in it are hidden
-    const parentCol = card.closest('.col-md-4');
-    if (parentCol && parentCol.querySelectorAll('.card[style*="none"]').length === parentCol.querySelectorAll('.card').length) {
-        parentCol.style.display = 'none';
-    }
-
+                if (searchTerm === '' || nameText.includes(searchTerm) || productDesc.includes(searchTerm)) {
+                    card.style.display = 'block'; // Show matching
+                    // Show parent column too
+                    const parentCol = card.closest('.col-md-4');
+                    if (parentCol) {
+                        parentCol.style.display = 'block';
+                    }
+                } else {
+                    card.style.display = 'none'; // Hide non-matching
+                    // Optional: Hide parent column if all cards in it are hidden
+                    const parentCol = card.closest('.col-md-4');
+                    if (parentCol) {
+                        const allCardsInCol = parentCol.querySelectorAll('.card');
+                        const hiddenCardsInCol = parentCol.querySelectorAll('.card[style*="none"]');
+                        if (hiddenCardsInCol.length === allCardsInCol.length) {
+                            parentCol.style.display = 'none';
+                        }
+                    }
+                }
+            });
             
-            // Show "No results" message if needed (optional)
+            // Show "No results" message if needed (optional - outside the loop)
             const noResults = document.getElementById('no-results');
             if (noResults) {
-                noResults.style.display = (searchTerm !== '' && Array.from(productCards).every(card => card.style.display === 'none')) ? 'block' : 'none';
+                const allHidden = Array.from(productCards).every(card => card.style.display === 'none');
+                noResults.style.display = (searchTerm !== '' && allHidden) ? 'block' : 'none';
             }
+        });
+    }
 });
 </script>
     
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
