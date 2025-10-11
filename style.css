@@ -440,15 +440,27 @@ p, li, span, label, input, select, textarea {
     box-shadow: 0 0 0 0.2rem rgba(255, 69, 0, 0.25); /* Red glow */
 }
 
-/* Mobile - Ensure larger/touch-friendly */
+/* Mobile - Ensure larger/touch-friendly, no extra space */
 @media (max-width: 768px) {
     #product-search {
         font-size: 16px; /* Prevent zoom on iOS */
         min-height: 48px; /* Taller for easy tapping */
         width: 100%; /* Full-width on mobile */
-        margin-bottom: 1rem; /* Space below on mobile */
+        margin-bottom: 0 !important; /* Remove space below search bar */
+    }
+    
+    /* Pull product grid up to eliminate gap */
+    .product-grid, .row.product-row {
+        margin-top: -1rem !important; /* Negative margin to close gap */
+        padding-top: 0 !important; /* No padding above products */
+    }
+    
+    /* Ensure filtered products have no extra space */
+    .card {
+        margin-bottom: 0.5rem !important; /* Tighter spacing between cards on mobile */
     }
 }
+
 
 
 
