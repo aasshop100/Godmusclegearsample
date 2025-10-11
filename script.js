@@ -232,7 +232,7 @@ function handleCheckoutSubmit(event) {
     // Send to Owner (you) - Explicit To override
     console.log('Sending owner email to:', 'aasshop100@gmail.com'); // Debug
     templateParams.to_email = 'aasshop100@gmail.com'; // Override To with your email
-    emailjs.send('service_uerk41r', 'YOUR_OWNER_TEMPLATE_ID_HERE', templateParams) // REPLACE WITH YOUR OWNER TEMPLATE ID (e.g., 'template_ghi789')
+    emailjs.send('service_uerk41r', 'template_8x2z86l', templateParams) // REPLACE WITH YOUR OWNER TEMPLATE ID (e.g., 'template_ghi789')
         .then(function(response) {
             console.log('Owner email sent to aasshop100@gmail.com!', response.status, response.text);
         }, function(error) {
@@ -466,6 +466,7 @@ function showCopyFeedback(button, message) {
         button.classList.remove('btn-success');
     }, 2000); // Reset after 2 seconds
 }
+
 
 
 
