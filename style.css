@@ -357,3 +357,56 @@ p, li, span, label, input, select, textarea {
     }
 }
 
+/* Video Section Styles */
+.video-section {
+    background-color: #1a1a1a; /* Dark bg matching site */
+}
+
+.video-card {
+    background-color: #2a2a2a; /* Dark card */
+    border: 1px solid #ff4500; /* Red border */
+    color: #ffffff !important; /* White text */
+    transition: transform 0.3s ease;
+}
+
+.video-card:hover {
+    transform: translateY(-5px); /* Lift on hover */
+    box-shadow: 0 5px 15px rgba(255, 69, 0, 0.3); /* Red glow */
+}
+
+.video-card h5 {
+    color: #ff4500 !important; /* Red titles */
+    font-size: 1.1rem;
+}
+
+.video-card p {
+    color: #ffffff !important; /* White descriptions */
+    font-size: 0.95rem;
+}
+
+/* Responsive Video Embeds (Bootstrap Ratio Utility) */
+.ratio iframe {
+    border: none;
+    border-radius: 8px;
+}
+
+/* Mobile Video Section */
+@media (max-width: 768px) {
+    .video-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .video-card {
+        margin-bottom: 1rem;
+    }
+    
+    .ratio {
+        max-width: 100%;
+    }
+    
+    .video-card p {
+        font-size: 0.9rem;
+    }
+}
+
+
