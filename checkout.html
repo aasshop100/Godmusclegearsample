@@ -173,23 +173,20 @@
 
             <!-- Order Summary (Your Existing) -->
             <div class="col-md-4">
-    <div class="card order-summary">
-        <div class="card-header" style="background-color: #ff4500 !important; color: #ffffff !important;">
-            <h5 class="mb-0" style="color: #ffffff !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">Order Summary</h5>
-        </div>
-        <div class="card-body" style="color: #ffffff !important; background-color: #2a2a2a !important;">
-    <p>Total Items: <span id="total-items-count">0</span></p>
-    <div id="checkout-items-list" style="max-height: 200px; overflow-y: auto; margin-bottom: 1rem;">
-        <!-- Cart items will appear here via JS (e.g., product names, qty, prices) -->
-    </div>
-    <hr style="border-color: #ff4500;">
-    <p>Subtotal: $<span id="checkout-subtotal">0.00</span></p>
-    <p>Shipping: $<span id="checkout-shipping">0.00</span></p>
-    <hr style="border-color: #ff4500;">
-    <h5 style="color: #ffffff !important;">Total: $<span id="checkout-total">0.00</span></h5>
-</div>
-    </div>
-</div>
+                <div class="card order-summary">
+                    <div class="card-header" style="background-color: #ff4500; color: #ffffff;">
+                        <h5 class="mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Total Items: <span id="checkout-items">0</span></p>
+                        <hr>
+                        <p>Subtotal: $<span id="checkout-subtotal">0.00</span></p>
+                        <p>Shipping: $<span id="checkout-shipping">0.00</span></p>
+                        <hr>
+                        <h5>Total: $<span id="checkout-total">0.00</span></h5>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -259,5 +256,3 @@
     </script>
 </body>
 </html>
-
-
