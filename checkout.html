@@ -37,52 +37,52 @@
             <div class="col-md-8">
                 <form id="checkout-form">
                     <!-- Customer Info -->
-                    <h5 style="color: #ff4500;">Shipping Information</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="full-name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="full-name" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="phone" required>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="address" class="form-label">Street Address</label>
-                            <input type="text" class="form-control" id="address" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="city" class="form-label">City</label>
-                            <input type="text" class="form-control" id="city" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="state" class="form-label">State</label>
-                            <input type="text" class="form-control" id="state" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="zip" class="form-label">ZIP Code</label>
-                            <input type="text" class="form-control" id="zip" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="country" class="form-label">Country</label>
-                            <select class="form-select" id="country" required>
-                                <option value="">Select Country</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="UK">United Kingdom</option>
-                                <option value="AU">Australia</option>
-                                <!-- Add more countries as needed -->
-                            </select>
-                        </div>
-                    </div>
+                   <h5 style="color: #ff4500;">Shipping Information</h5>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="full-name" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="full-name" name="full-name" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+</div>
+<div class="mb-3">
+    <label for="phone" class="form-label">Phone Number</label>
+    <input type="tel" class="form-control" id="phone" name="phone" required>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="address" class="form-label">Street Address</label>
+        <input type="text" class="form-control" id="address" name="street-address" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="city" class="form-label">City</label>
+        <input type="text" class="form-control" id="city" name="city" required>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <label for="state" class="form-label">State</label>
+        <input type="text" class="form-control" id="state" name="state" required>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label for="zip" class="form-label">ZIP Code</label>
+        <input type="text" class="form-control" id="zip" name="zip" required>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label for="country" class="form-label">Country</label>
+        <select class="form-select" id="country" name="country" required>
+            <option value="">Select Country</option>
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
+            <option value="UK">United Kingdom</option>
+            <option value="AU">Australia</option>
+            <!-- Add more countries as needed -->
+        </select>
+    </div>
+</div>
 
                     <!-- Payment Options Section (New Design - Replace Old Radios) -->
                     <div class="payment-section my-4">
@@ -161,10 +161,10 @@
 
                     <!-- Proof Upload (Your Existing) -->
                     <div class="mb-3">
-                        <label for="proof-upload" class="form-label" style="color: #ff4500;">Upload Proof of Payment (Screenshot)</label>
-                        <input type="file" class="form-control" id="proof-upload" accept="image/*" required>
-                        <div class="form-text">Upload a screenshot of your payment confirmation.</div>
-                    </div>
+    <label for="proof-upload" class="form-label" style="color: #ff4500;">Upload Proof of Payment (Screenshot)</label>
+    <input type="file" class="form-control" id="proof-upload" name="proof-upload" accept="image/*" required>
+    <div class="form-text">Upload a screenshot of your payment confirmation.</div>
+</div>
 
                     <!-- Submit Button (Your Existing) -->
                     <button type="submit" class="btn btn-primary w-100">Place Order</button>
@@ -177,14 +177,17 @@
                     <div class="card-header" style="background-color: #ff4500; color: #ffffff;">
                         <h5 class="mb-0">Order Summary</h5>
                     </div>
-                    <div class="card-body">
-                        <p>Total Items: <span id="checkout-items">0</span></p>
-                        <hr>
-                        <p>Subtotal: $<span id="checkout-subtotal">0.00</span></p>
-                        <p>Shipping: $<span id="checkout-shipping">0.00</span></p>
-                        <hr>
-                        <h5>Total: $<span id="checkout-total">0.00</span></h5>
-                    </div>
+                    <div class="card-body" style="color: #ffffff !important; background-color: #2a2a2a !important;">
+    <p>Total Items: <span id="total-items-count">0</span></p>
+    <div id="checkout-items-list" style="max-height: 200px; overflow-y: auto; margin-bottom: 1rem;">
+        <!-- Cart items will appear here via JS (e.g., product names, qty, prices) -->
+    </div>
+    <hr style="border-color: #ff4500;">
+    <p>Subtotal: $<span id="checkout-subtotal">0.00</span></p>
+    <p>Shipping: $<span id="checkout-shipping">0.00</span></p>
+    <hr style="border-color: #ff4500;">
+    <h5 style="color: #ffffff !important;">Total: $<span id="checkout-total">0.00</span></h5>
+</div>
                 </div>
             </div>
         </div>
@@ -253,6 +256,15 @@
             });
         });
     });
+        // Add form submit listener (for checkout.html)
+document.addEventListener('DOMContentLoaded', function() {
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+    }
+    // ... other existing code ...
+});
     </script>
 </body>
 </html>
+
