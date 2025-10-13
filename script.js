@@ -110,31 +110,31 @@ function addToCart(button) {
     alert(`${name} added to cart! (Total Qty: ${existingItem ? existingItem.quantity : 1})`); // Feedback
 }
 
-// Render checkout summary (for checkout.html) - Fixed template literal
+// Render checkout summary (for checkout.html) - Fixed for correct totals and no double $
 function renderCheckoutSummary() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const checkoutItems = document.getElementById('checkout-items');
+    const totalItemsEl = document.getElementById('total-items-count'); // For item count
+    const itemsListEl = document.getElementById('checkout-items-list'); // For item list
     const subtotalEl = document.getElementById('checkout-subtotal');
     const shippingEl = document.getElementById('checkout-shipping');
-    const grandTotalEl = document.getElementById('checkout-grand-total');
-    const emptyMsg = document.getElementById('empty-checkout-message');
+    const totalEl = document.getElementById('checkout-total'); // Correct ID
 
-    if (!checkoutItems) return; // Only run if on checkout page
+    if (!subtotalEl) return; // Only run if on checkout page
 
     let subtotal = 0;
     let totalQuantity = 0;
-    checkoutItems.innerHTML = '';
+    if (itemsListEl) itemsListEl.innerHTML = ''; // Clear previous list
 
     if (cart.length === 0) {
-        if (emptyMsg) emptyMsg.style.display = 'block';
-        if (subtotalEl) subtotalEl.textContent = '$0.00';
-        if (shippingEl) shippingEl.textContent = '$0.00';
-        if (grandTotalEl) grandTotalEl.textContent = '$0.00';
+        if (totalItemsEl) totalItemsEl.textContent = '0';
+        if (itemsListEl) itemsListEl.innerHTML = '<p class="text-muted">No items in cart.</p>';
+        if (subtotalEl) subtotalEl.textContent = '0.00';
+        if (shippingEl) shippingEl.textContent = '0.00';
+        if (totalEl) totalEl.textContent = '0.00';
         return;
     }
 
-    if (emptyMsg) emptyMsg.style.display = 'none';
-
+    // Loop through cart items to calculate and display list
     cart.forEach(item => {
         const itemPrice = Number(item.price) || 0;
         const quantity = item.quantity || 1;
@@ -142,25 +142,46 @@ function renderCheckoutSummary() {
         subtotal += lineTotal;
         totalQuantity += quantity;
 
-        const imageSrc = item.image || 'images/default-supplement.png';
-        const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
-
-        // Fixed: Single-line template to avoid copy-paste issues
-        checkoutItems.innerHTML += '<div class="d-flex align-items-center mb-2"><div>' + imageHtml + '</div><div class="ms-2"><h6 class="mb-0">' + item.name + '</h6><small class="text-muted">Qty: ' + quantity + ' | $' + itemPrice.toFixed(2) + ' each</small></div><div class="ms-auto"><strong>$' + lineTotal.toFixed(2) + '</strong></div></div><hr class="my-1">';
+        // Add item to list (with image if available)
+        if (itemsListEl) {
+            const imageSrc = item.image || 'images/default-supplement.png'; // Fallback image
+            const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
+            itemsListEl.innerHTML += `
+                <div class="d-flex align-items-center mb-2" style="color: #ffffff;">
+                    <div>${imageHtml}</div>
+                    <div class="ms-2 flex-grow-1">
+                        <h6 class="mb-0" style="color: #ffffff;">${item.name}</h6>
+                        <small class="text-muted">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
+                    </div>
+                    <div class="ms-auto">
+                        <strong style="color: #ff4500;">$${lineTotal.toFixed(2)}</strong>
+                    </div>
+                </div>
+                <hr class="my-1" style="border-color: #ff4500;">
+            `;
+        }
     });
 
-    // Calculate shipping and total (reuse logic from cart)
+    // Calculate shipping ($20 per 10 items or part thereof) and grand total
     const BASE_SHIPPING_PER_10 = 20.00;
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
     const grandTotal = subtotal + shipping;
 
-    if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
-    if (shippingEl) shippingEl.textContent = '$' + shipping.toFixed(2);
-    if (grandTotalEl) grandTotalEl.textContent = '$' + grandTotal.toFixed(2);
+    // Update elements with JUST the numbers (no $ - HTML handles it)
+    if (totalItemsEl) totalItemsEl.textContent = totalQuantity;
+    if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
+    if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
+    if (totalEl) totalEl.textContent = grandTotal.toFixed(2);
 
-    console.log('Checkout rendered successfully:', { subtotal, shipping, grandTotal, totalQuantity, cartLength: cart.length }); // Debug
+    // Debug log (check browser console if issues)
+    console.log('Checkout Summary Updated:', {
+        items: totalQuantity,
+        subtotal: `$${subtotal.toFixed(2)}`,
+        shipping: `$${shipping.toFixed(2)}`,
+        total: `$${grandTotal.toFixed(2)}`,
+        cartLength: cart.length
+    });
 }
-
 // Handle checkout form submission (with EmailJS - Fixed for customer/owner)
 function handleCheckoutSubmit(event) {
     event.preventDefault(); // Stop page reload
@@ -466,6 +487,7 @@ function showCopyFeedback(button, message) {
         button.classList.remove('btn-success');
     }, 2000); // Reset after 2 seconds
 }
+
 
 
 
