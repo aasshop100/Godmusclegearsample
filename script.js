@@ -127,7 +127,7 @@ function renderCheckoutSummary() {
 
     if (cart.length === 0) {
         if (totalItemsEl) totalItemsEl.textContent = '0';
-        if (itemsListEl) itemsListEl.innerHTML = '<p class="text-muted">No items in cart.</p>';
+        if (itemsListEl) itemsListEl.innerHTML = '<p class="text-muted" style="color: #ffffff;">No items in cart.</p>';
         if (subtotalEl) subtotalEl.textContent = '0.00';
         if (shippingEl) shippingEl.textContent = '0.00';
         if (totalEl) totalEl.textContent = '0.00';
@@ -151,7 +151,7 @@ function renderCheckoutSummary() {
                     <div>${imageHtml}</div>
                     <div class="ms-2 flex-grow-1">
                         <h6 class="mb-0" style="color: #ffffff;">${item.name}</h6>
-                        <small class="text-muted">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
+                        <small class="text-muted" style="color: #cccccc;">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
                     </div>
                     <div class="ms-auto">
                         <strong style="color: #ff4500;">$${lineTotal.toFixed(2)}</strong>
@@ -182,30 +182,34 @@ function renderCheckoutSummary() {
         cartLength: cart.length
     });
 }
+
+
+}
 // Handle checkout form submission (with EmailJS - Fixed for customer/owner)
 function handleCheckoutSubmit(event) {
     event.preventDefault(); // Stop page reload
     const form = document.getElementById('checkout-form');
     if (!form.checkValidity()) {
-        alert('Please fill all required fields!');
+        alert('Please fill all required fields and upload proof of payment!');
         return;
     }
 
-    // Get form data
+    // Get form data (fixed names to match HTML)
     const formData = new FormData(form);
-    const fullName = formData.get('full-name');
-    const customerEmail = formData.get('email');
-    const street = formData.get('street-address');
-    const city = formData.get('city');
-    const state = formData.get('state');
-    const zip = formData.get('zip-code');
-    const country = formData.get('country');
-    const fullAddress = street + ', ' + city + ', ' + state + ' ' + zip + ', ' + country;
-    const paymentMethod = formData.get('payment-method');
+    const fullName = formData.get('full-name') || '';
+    const customerEmail = formData.get('email') || '';
+    const phone = formData.get('phone') || '';
+    const street = formData.get('street-address') || '';
+    const city = formData.get('city') || '';
+    const state = formData.get('state') || '';
+    const zip = formData.get('zip') || '';
+    const country = formData.get('country') || '';
+    const fullAddress = `${street}, ${city}, ${state} ${zip}, ${country}`;
+    const paymentMethod = formData.get('payment') || 'Not selected'; // Fixed to 'payment'
     const proofFile = formData.get('proof-upload');
 
-    if (!proofFile) {
-        alert('Please upload proof of payment!');
+    if (!proofFile || proofFile.name === '') {
+        alert('Please upload a proof of payment screenshot!');
         return;
     }
 
@@ -218,56 +222,60 @@ function handleCheckoutSubmit(event) {
 
     // Generate order ID and summaries
     const orderId = 'ORDER-' + Date.now(); // e.g., ORDER-1725123456789
-    const itemsSummary = cart.map(item => item.name + ' (Qty: ' + (item.quantity || 1) + ')').join(', ');
+    const itemsSummary = cart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
     const cartDetails = JSON.stringify(cart, null, 2); // Full cart for you
 
-    // Initialize EmailJS (Your User ID)
-    emailjs.init('eHXhTKYnIawMoj-Im'); // Your User ID from EmailJS Dashboard
+    // Initialize EmailJS (Replace with your real User ID from emailjs.com dashboard)
+    emailjs.init('eHXhTKYnIawMoj-Im'); // Your User ID - update if different
 
-    // Prepare common params for templates (FIXED: Added customer_email for template substitution)
+    // Prepare common params for templates
     const templateParams = {
         order_id: orderId,
         customer_name: fullName,
-        customer_email: customerEmail, // For {{customer_email}} in template body/To
+        customer_email: customerEmail,
+        phone: phone,
         full_address: fullAddress,
         payment_method: paymentMethod,
         proof_filename: proofFile.name,
-        total: grandTotal.toFixed(2),
+        total_items: totalQuantity,
+        subtotal: subtotal.toFixed(2),
+        shipping: shipping.toFixed(2),
+        grand_total: grandTotal.toFixed(2),
         items_summary: itemsSummary,
         cart_details: cartDetails
     };
 
-    // Send to Customer (confirmation) - Explicit To override
-    console.log('Sending customer email to:', customerEmail); // Debug
+    // Send to Customer (confirmation) - Uses customer email
+    console.log('Sending customer email to:', customerEmail);
     templateParams.to_email = customerEmail; // Override To with form email
-    emailjs.send('service_uerk41r', 'template_0ry9w0v', templateParams)
+    emailjs.send('service_uerk41r', 'template_0ry9w0v', templateParams) // Replace service/template IDs with yours
         .then(function(response) {
-            console.log('Customer email sent to ' + customerEmail + '!', response.status, response.text);
+            console.log('Customer email sent!', response.status, response.text);
         }, function(error) {
             console.log('Customer email failed:', error);
+            // Still continue - email optional
         });
 
     // Reset to_email for owner send
     delete templateParams.to_email;
 
-    // Send to Owner (you) - Explicit To override
-    console.log('Sending owner email to:', 'aasshop100@gmail.com'); // Debug
-    templateParams.to_email = 'aasshop100@gmail.com'; // Override To with your email
-    emailjs.send('service_uerk41r', 'template_8x2z86l', templateParams) // REPLACE WITH YOUR OWNER TEMPLATE ID (e.g., 'template_ghi789')
+    // Send to Owner (you) - Fixed to your email
+    console.log('Sending owner email to: aasshop100@gmail.com');
+    templateParams.to_email = 'aasshop100@gmail.com'; // Your email
+    emailjs.send('service_uerk41r', 'template_8x2z86l', templateParams) // Replace with your owner template ID
         .then(function(response) {
-            console.log('Owner email sent to aasshop100@gmail.com!', response.status, response.text);
+            console.log('Owner email sent!', response.status, response.text);
         }, function(error) {
             console.log('Owner email failed:', error);
         });
 
-    // Success feedback (emails are async - may take seconds)
-    alert('Order Placed Successfully!\n\nCustomer: ' + fullName + '\nEmail: ' + customerEmail + '\nAddress: ' + fullAddress + '\nPayment: ' + paymentMethod + '\nProof: ' + proofFile.name + '\nTotal: $' + grandTotal.toFixed(2) + '\n\nConfirmation emails sent! Check spam if not received.\n\nWe\'ll review and ship soon.');
+    // Success feedback (always shows, even if emails fail)
+    alert(`Order Placed Successfully!\n\nCustomer: ${fullName}\nEmail: ${customerEmail}\nPhone: ${phone}\nAddress: ${fullAddress}\nPayment: ${paymentMethod}\nProof: ${proofFile.name}\nItems: ${totalQuantity}\nSubtotal: $${subtotal.toFixed(2)}\nShipping: $${shipping.toFixed(2)}\nTotal: $${grandTotal.toFixed(2)}\n\nConfirmation sent! We'll review and ship soon. (Check spam for emails.)`);
     
     localStorage.setItem('cart', '[]'); // Clear cart
     window.location.href = 'index.html'; // Redirect to home
-
 }
-
+} 
 // Update quantity for an item (called from input onchange)
 function updateQuantity(index, newQty) {
     const qty = parseInt(newQty) || 1;
@@ -487,6 +495,7 @@ function showCopyFeedback(button, message) {
         button.classList.remove('btn-success');
     }, 2000); // Reset after 2 seconds
 }
+
 
 
 
