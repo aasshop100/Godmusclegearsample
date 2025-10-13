@@ -228,75 +228,30 @@ footer p {
         color: #ffffff !important;
     }
     
-/* Checkout Form Inputs - Strong Override for Desktop Readability */
-#checkout-form {
-    color: #000000 !important; /* Base black for form */
-}
-
-#checkout-form input[type="text"],
-#checkout-form input[type="email"],
-#checkout-form input[type="tel"],
-#checkout-form input[type="file"],
-#checkout-form select,
-#checkout-form textarea {
-    color: #000000 !important; /* Black text - stronger specificity */
+   #checkout-form input, #checkout-form select, #checkout-form label, #checkout-form textarea {
+    color: #000000 !important; /* Black text for readability */
     background-color: #ffffff !important; /* White background */
-    border: 1px solid #ff4500 !important; /* Red border */
-    padding: 0.5rem; /* Extra padding for comfort */
-    font-size: 1rem; /* Standard size */
+    border: 1px solid #ff4500 !important; /* Red border to match theme */
 }
 
-#checkout-form input[type="text"]::-webkit-input-placeholder,
-#checkout-form input[type="email"]::-webkit-input-placeholder,
-#checkout-form input[type="tel"]::-webkit-input-placeholder,
-#checkout-form input[type="file"]::-webkit-input-placeholder,
-#checkout-form select option,
-#checkout-form textarea::-webkit-input-placeholder {
-    color: #999999 !important; /* Gray placeholders */
+#checkout-form input::placeholder, #checkout-form select::placeholder {
+    color: #999999 !important; /* Gray placeholder text */
 }
 
-/* Firefox-specific placeholder */
-#checkout-form input::-moz-placeholder,
-#checkout-form textarea::-moz-placeholder {
-    color: #999999 !important;
-    opacity: 1;
-}
-
-#checkout-form input:focus,
-#checkout-form select:focus,
-#checkout-form textarea:focus {
+#checkout-form input:focus, #checkout-form select:focus {
+    border-color: #ff4500 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 69, 0, 0.25) !important; /* Red glow on focus */
     color: #000000 !important;
     background-color: #ffffff !important;
-    border-color: #ff4500 !important;
-    box-shadow: 0 0 0 0.2rem rgba(255, 69, 0, 0.25) !important; /* Red focus glow */
-    outline: none; /* Remove default outline */
 }
-
-/* Labels in checkout - Ensure black/white contrast */
-#checkout-form label {
-    color: #000000 !important; /* Black labels for readability */
-    font-weight: bold;
-}
-
-/* Desktop-specific: Ensure no global white override applies */
-@media (min-width: 769px) {
-    #checkout-form input,
-    #checkout-form select,
-    #checkout-form textarea {
-        color: #000000 !important;
-        background-color: #ffffff !important;
+    
+    #checkout-form input::placeholder {
+        color: #cccccc !important; /* Light gray placeholder */
     }
-}
-
-/* Mobile: Keep existing black (no change needed) */
-@media (max-width: 768px) {
-    #checkout-form input,
-    #checkout-form select,
-    #checkout-form textarea {
-        color: #000000 !important;
-        background-color: #ffffff !important;
+    
+    #checkout-form .form-check-label {
+        color: #ffffff !important;
     }
-}
     
     .order-summary {
         margin-top: 2rem;
@@ -609,23 +564,92 @@ p, li, span, label, input, select, textarea {
     width: 100%; /* Full-width but small */
 }
 
-.copy-btn:hover {
-    background-color: #cc3700; /* Darker red */
-    transform: scale(0.98); /* Slight shrink */
-    box-shadow: 0 2px 4px rgba(255, 69, 0, 0.3); /* Glow */
+/* Checkout Form Inputs - Strong Override for Desktop Readability (Fix for White Text Issue) */
+#checkout-form {
+    color: #000000 !important; /* Base black for form */
 }
 
-.paypal-copy {
-    background-color: #0070ba !important; /* PayPal blue */
+#checkout-form input[type="text"],
+#checkout-form input[type="email"],
+#checkout-form input[type="tel"],
+#checkout-form input[type="file"],
+#checkout-form select,
+#checkout-form textarea {
+    color: #000000 !important; /* Black text - stronger specificity for desktop */
+    background-color: #ffffff !important; /* White background */
+    border: 1px solid #ff4500 !important; /* Red border */
+    padding: 0.5rem; /* Extra padding for comfort */
+    font-size: 1rem; /* Standard size */
 }
 
-.paypal-copy:hover {
-    background-color: #005ea6 !important; /* Darker blue */
+/* Placeholders - Gray text like "Enter your email" */
+#checkout-form input[type="text"]::-webkit-input-placeholder,
+#checkout-form input[type="email"]::-webkit-input-placeholder,
+#checkout-form input[type="tel"]::-webkit-input-placeholder,
+#checkout-form input[type="file"]::-webkit-input-placeholder,
+#checkout-form select option,
+#checkout-form textarea::-webkit-input-placeholder {
+    color: #999999 !important; /* Gray placeholders */
 }
 
+/* Firefox-specific placeholder */
+#checkout-form input::-moz-placeholder,
+#checkout-form textarea::-moz-placeholder {
+    color: #999999 !important;
+    opacity: 1;
+}
 
+/* Focus effects - Red glow when clicking in box */
+#checkout-form input:focus,
+#checkout-form select:focus,
+#checkout-form textarea:focus {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    border-color: #ff4500 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 69, 0, 0.25) !important; /* Red focus glow */
+    outline: none; /* Remove default outline */
+}
 
+/* Labels in checkout - Black for readability */
+#checkout-form label {
+    color: #000000 !important; /* Black labels */
+    font-weight: bold;
+}
 
+/* Desktop-specific: Force black/white override (beats global white rule) */
+@media (min-width: 769px) {
+    #checkout-form input,
+    #checkout-form select,
+    #checkout-form textarea,
+    #checkout-form label {
+        color: #000000 !important;
+        background-color: #ffffff !important;
+    }
+
+    #checkout-form input::placeholder {
+        color: #999999 !important;
+    }
+}
+
+/* Mobile: Reinforce black/white (already working, but ensure consistency) */
+@media (max-width: 768px) {
+    #checkout-form input,
+    #checkout-form select,
+    #checkout-form textarea,
+    #checkout-form label {
+        color: #000000 !important;
+        background-color: #ffffff !important;
+    }
+
+    #checkout-form input::placeholder {
+        color: #999999 !important;
+    }
+}
+
+/* Complete the incomplete media query from original file (if present - this fixes VS Code error) */
+@media (max-width: 768px) {
+    /* Empty or add mobile tweaks here if needed - this closes the rule properly */
+}
 
 
 
