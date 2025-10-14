@@ -728,6 +728,13 @@ a.btn.disabled {
     font-size: 0.9rem;
 }
 
+/* Optional: Keep cart layout tighter on desktop (no wrapping) */
+@media (min-width: 992px) {
+    #cart-items .card-body .row {
+        flex-wrap: nowrap;
+    }
+}
+
 
 
 
