@@ -691,6 +691,43 @@ a.btn.disabled {
     min-height: 300px;
 }
 
+/* === Fix Cart Item Layout Alignment === */
+#cart-items .card-body .row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* Make sure the image stays on the left and aligned */
+#cart-items .col-md-2 img {
+    display: block;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 1rem;
+}
+
+/* Ensure item info (name, price, quantity) aligns next to image nicely */
+#cart-items .col-md-3, 
+#cart-items .col-md-2, 
+#cart-items .col-md-3:last-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Tidy up spacing and text alignment */
+#cart-items h6 {
+    margin-bottom: 0.25rem;
+}
+
+#cart-items p.text-muted {
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
 
 
 
