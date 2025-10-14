@@ -364,17 +364,23 @@ document.querySelectorAll('.nav-link').forEach(link => {
 });
 
 function showPaymentDetails(id) {
-  // Hide all payment detail sections first
   document.querySelectorAll('.payment-details').forEach(el => {
     el.style.display = 'none';
   });
-
-  // Then show the one that matches the selected method
   const details = document.getElementById(id);
   if (details) {
     details.style.display = 'block';
   }
 }
+
+function copyToClipboard(elementId) {
+  const el = document.getElementById(elementId);
+  if (el) {
+    navigator.clipboard.writeText(el.value);
+    alert("Copied to clipboard!");
+  }
+}
+
 
 
 
