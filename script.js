@@ -11,9 +11,19 @@ const BASE_SHIPPING_PER_10 = 20.00;
 function updateCartCount() {
     const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
     const cartCountEl = document.getElementById('cart-count');
-    if (cartCountEl) cartCountEl.textContent = totalQuantity;
+    
+    if (cartCountEl) {
+        cartCountEl.textContent = totalQuantity;
+
+        // ✨ Trigger pop animation
+        cartCountEl.classList.remove('pop'); // reset animation if running
+        void cartCountEl.offsetWidth; // force reflow for restart
+        cartCountEl.classList.add('pop');
+    }
+
     localStorage.setItem('cart', JSON.stringify(cart));
 }
+
 
 // Show "Added to Cart" popup message
 function showAddedToast(itemName) {
@@ -311,6 +321,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
 
