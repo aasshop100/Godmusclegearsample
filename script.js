@@ -1,8 +1,7 @@
 // Add this to the top of script.js if needed
 document.addEventListener('touchstart', function() {}, {passive: true}); // Improves mobile clicks
 
-// Assuming your original 'cart' variable is already here, we won't add it again
-
+let cart = JSON.parse(localStorage.getItem('cart')) || [];  // This is your original declaration—kept it here once.
 const BASE_SHIPPING_PER_10 = 20.00; // $20 per 10 items (or part thereof)
 
 // Global function to update navbar cart count (call on all pages)
@@ -110,53 +109,31 @@ function addToCart(button) {
     alert(`${name} added to cart! (Total Qty: ${existingItem ? existingItem.quantity : 1})`); // Feedback
 }
 
-// The rest of your original code should follow here, like the DOMContentLoaded event.
-
-document.addEventListener('DOMContentLoaded', function() {
-    updateCartCount(); // Always update navbar count
-
-    // Add event listeners for add-to-cart buttons
-    const addButtons = document.querySelectorAll('.add-to-cart');
-    addButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            addToCart(this); // Use the improved function
-        });
-    });
-
-    // If on cart page, fully render the cart
-    if (document.getElementById('cart-items')) {
-        updateCart();
-    }
-
-    // ... (rest of your code)
-});
-
-
-// Render checkout summary (for checkout.html) - Fixed for correct totals and no double $
+// Render checkout summary (for checkout.html)
 function renderCheckoutSummary() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const totalItemsEl = document.getElementById('total-items-count'); // For item count
-    const itemsListEl = document.getElementById('checkout-items-list'); // For item list
+    const checkoutItems = document.getElementById('checkout-items');
     const subtotalEl = document.getElementById('checkout-subtotal');
     const shippingEl = document.getElementById('checkout-shipping');
-    const totalEl = document.getElementById('checkout-total'); // Correct ID
+    const grandTotalEl = document.getElementById('checkout-grand-total');
+    const emptyMsg = document.getElementById('empty-checkout-message');
 
-    if (!subtotalEl) return; // Only run if on checkout page
+    if (!checkoutItems) return;
 
     let subtotal = 0;
     let totalQuantity = 0;
-    if (itemsListEl) itemsListEl.innerHTML = ''; // Clear previous list
+    checkoutItems.innerHTML = '';
 
     if (cart.length === 0) {
-        if (totalItemsEl) totalItemsEl.textContent = '0';
-        if (itemsListEl) itemsListEl.innerHTML = '<p class="text-muted" style="color: #ffffff;">No items in cart.</p>';
-        if (subtotalEl) subtotalEl.textContent = '0.00';
-        if (shippingEl) shippingEl.textContent = '0.00';
-        if (totalEl) totalEl.textContent = '0.00';
+        if (emptyMsg) emptyMsg.style.display = 'block';
+        if (subtotalEl) subtotalEl.textContent = '$0.00';
+        if (shippingEl) shippingEl.textContent = '$0.00';
+        if (grandTotalEl) grandTotalEl.textContent = '$0.00';
         return;
     }
 
-    // Loop through cart items to calculate and display list
+    if (emptyMsg) emptyMsg.style.display = 'none';
+
     cart.forEach(item => {
         const itemPrice = Number(item.price) || 0;
         const quantity = item.quantity || 1;
@@ -164,141 +141,79 @@ function renderCheckoutSummary() {
         subtotal += lineTotal;
         totalQuantity += quantity;
 
-        // Add item to list (with image if available)
-        if (itemsListEl) {
-            const imageSrc = item.image || 'images/default-supplement.png'; // Fallback image
-            const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
-            itemsListEl.innerHTML += `
-                <div class="d-flex align-items-center mb-2" style="color: #ffffff;">
-                    <div>${imageHtml}</div>
-                    <div class="ms-2 flex-grow-1">
-                        <h6 class="mb-0" style="color: #ffffff;">${item.name}</h6>
-                        <small class="text-muted" style="color: #cccccc;">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
-                    </div>
-                    <div class="ms-auto">
-                        <strong style="color: #ff4500;">$${lineTotal.toFixed(2)}</strong>
-                    </div>
-                </div>
-                <hr class="my-1" style="border-color: #ff4500;">
-            `;
-        }
+        const imageSrc = item.image || 'images/default-supplement.png';
+        const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
+
+        checkoutItems.innerHTML += '<div class="d-flex align-items-center mb-2"><div>' + imageHtml + '</div><div class="ms-2"><h6 class="mb-0">' + item.name + '</h6><small class="text-muted">Qty: ' + quantity + ' | $' + itemPrice.toFixed(2) + ' each</small></div><div class="ms-auto"><strong>$' + lineTotal.toFixed(2) + '</strong></div></div><hr class="my-1">';
     });
 
-    // Calculate shipping ($20 per 10 items or part thereof) and grand total
-    const BASE_SHIPPING_PER_10 = 20.00;
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
     const grandTotal = subtotal + shipping;
 
-    // Update elements with JUST the numbers (no $ - HTML handles it)
-    if (totalItemsEl) totalItemsEl.textContent = totalQuantity;
-    if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
-    if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
-    if (totalEl) totalEl.textContent = grandTotal.toFixed(2);
-
-    // Debug log (check browser console if issues)
-    console.log('Checkout Summary Updated:', {
-        items: totalQuantity,
-        subtotal: `$${subtotal.toFixed(2)}`,
-        shipping: `$${shipping.toFixed(2)}`,
-        total: `$${grandTotal.toFixed(2)}`,
-        cartLength: cart.length
-    });
+    if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
+    if (shippingEl) shippingEl.textContent = '$' + shipping.toFixed(2);
+    if (grandTotalEl) grandTotalEl.textContent = '$' + grandTotal.toFixed(2);
 }
 
-
-}
-// Handle checkout form submission (with EmailJS - Fixed for customer/owner)
+// Handle checkout form submission
 function handleCheckoutSubmit(event) {
-    event.preventDefault(); // Stop page reload
+    event.preventDefault();
     const form = document.getElementById('checkout-form');
     if (!form.checkValidity()) {
-        alert('Please fill all required fields and upload proof of payment!');
+        alert('Please fill all required fields!');
         return;
     }
 
-    // Get form data (fixed names to match HTML)
     const formData = new FormData(form);
-    const fullName = formData.get('full-name') || '';
-    const customerEmail = formData.get('email') || '';
-    const phone = formData.get('phone') || '';
-    const street = formData.get('street-address') || '';
-    const city = formData.get('city') || '';
-    const state = formData.get('state') || '';
-    const zip = formData.get('zip') || '';
-    const country = formData.get('country') || '';
-    const fullAddress = `${street}, ${city}, ${state} ${zip}, ${country}`;
-    const paymentMethod = formData.get('payment') || 'Not selected'; // Fixed to 'payment'
+    const fullName = formData.get('full-name');
+    const customerEmail = formData.get('email');
+    const street = formData.get('street-address');
+    const city = formData.get('city');
+    const state = formData.get('state');
+    const zip = formData.get('zip-code');
+    const country = formData.get('country');
+    const fullAddress = street + ', ' + city + ', ' + state + ' ' + zip + ', ' + country;
+    const paymentMethod = formData.get('payment-method');
     const proofFile = formData.get('proof-upload');
 
-    if (!proofFile || proofFile.name === '') {
-        alert('Please upload a proof of payment screenshot!');
+    if (!proofFile) {
+        alert('Please upload proof of payment!');
         return;
     }
 
-    // Calculate totals and order details
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
     const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
     const shipping = Math.ceil(totalQuantity / 10) * 20.00;
     const grandTotal = subtotal + shipping;
+    const orderId = 'ORDER-' + Date.now();
+    const itemsSummary = cart.map(item => item.name + ' (Qty: ' + (item.quantity || 1) + ')').join(', ');
+    const cartDetails = JSON.stringify(cart, null, 2);
 
-    // Generate order ID and summaries
-    const orderId = 'ORDER-' + Date.now(); // e.g., ORDER-1725123456789
-    const itemsSummary = cart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
-    const cartDetails = JSON.stringify(cart, null, 2); // Full cart for you
-
-    // Initialize EmailJS (Replace with your real User ID from emailjs.com dashboard)
-    emailjs.init('eHXhTKYnIawMoj-Im'); // Your User ID - update if different
-
-    // Prepare common params for templates
+    emailjs.init('eHXhTKYnIawMoj-Im');
     const templateParams = {
         order_id: orderId,
         customer_name: fullName,
         customer_email: customerEmail,
-        phone: phone,
         full_address: fullAddress,
         payment_method: paymentMethod,
         proof_filename: proofFile.name,
-        total_items: totalQuantity,
-        subtotal: subtotal.toFixed(2),
-        shipping: shipping.toFixed(2),
-        grand_total: grandTotal.toFixed(2),
+        total: grandTotal.toFixed(2),
         items_summary: itemsSummary,
         cart_details: cartDetails
     };
 
-    // Send to Customer (confirmation) - Uses customer email
-    console.log('Sending customer email to:', customerEmail);
-    templateParams.to_email = customerEmail; // Override To with form email
-    emailjs.send('service_uerk41r', 'template_0ry9w0v', templateParams) // Replace service/template IDs with yours
-        .then(function(response) {
-            console.log('Customer email sent!', response.status, response.text);
-        }, function(error) {
-            console.log('Customer email failed:', error);
-            // Still continue - email optional
-        });
-
-    // Reset to_email for owner send
+    templateParams.to_email = customerEmail;
+    emailjs.send('service_uerk41r', 'template_0ry9w0v', templateParams).then(response => console.log('Customer email sent!'), error => console.log('Failed:', error));
     delete templateParams.to_email;
+    templateParams.to_email = 'aasshop100@gmail.com';
+    emailjs.send('service_uerk41r', 'template_8x2z86l', templateParams).then(response => console.log('Owner email sent!'), error => console.log('Failed:', error));
 
-    // Send to Owner (you) - Fixed to your email
-    console.log('Sending owner email to: aasshop100@gmail.com');
-    templateParams.to_email = 'aasshop100@gmail.com'; // Your email
-    emailjs.send('service_uerk41r', 'template_8x2z86l', templateParams) // Replace with your owner template ID
-        .then(function(response) {
-            console.log('Owner email sent!', response.status, response.text);
-        }, function(error) {
-            console.log('Owner email failed:', error);
-        });
-
-    // Success feedback (always shows, even if emails fail)
-    alert(`Order Placed Successfully!\n\nCustomer: ${fullName}\nEmail: ${customerEmail}\nPhone: ${phone}\nAddress: ${fullAddress}\nPayment: ${paymentMethod}\nProof: ${proofFile.name}\nItems: ${totalQuantity}\nSubtotal: $${subtotal.toFixed(2)}\nShipping: $${shipping.toFixed(2)}\nTotal: $${grandTotal.toFixed(2)}\n\nConfirmation sent! We'll review and ship soon. (Check spam for emails.)`);
-    
-    localStorage.setItem('cart', '[]'); // Clear cart
-    window.location.href = 'index.html'; // Redirect to home
+    alert('Order Placed Successfully!');
+    localStorage.setItem('cart', '[]');
+    window.location.href = 'index.html';
 }
-} 
-// Update quantity for an item (called from input onchange)
+
+// Update quantity for an item
 function updateQuantity(index, newQty) {
     const qty = parseInt(newQty) || 1;
     if (qty < 1) {
@@ -306,226 +221,32 @@ function updateQuantity(index, newQty) {
         return;
     }
     cart[index].quantity = qty;
-    updateCart(); // Re-renders and updates totals
-    console.log('Quantity updated for ' + cart[index].name + ' to ' + qty);
+    updateCart();
 }
 
 // Remove item
 function removeFromCart(index) {
-    const removedName = cart[index].name;
     cart.splice(index, 1);
     updateCart();
-    console.log('Removed ' + removedName + ' from cart');
-}
-
-// Clear cart for testing (run in console: clearCart())
-function clearCart() {
-    cart = [];
-    updateCart();
-    alert('Cart cleared!');
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    updateCartCount(); // Always update navbar count
-
-    // Add event listeners for add-to-cart buttons (on product pages like index.html/products.html)
+    updateCartCount();
     const addButtons = document.querySelectorAll('.add-to-cart');
     addButtons.forEach(button => {
         button.addEventListener('click', function() {
-            addToCart(this); // Use the improved function
+            addToCart(this);
         });
     });
-
-    // Copy payment details to clipboard (for checkout buttons)
-function copyPaymentDetails(button) {
-    console.log('Copy button clicked:', button); // Debug: Confirms click works
-
-    const targetId = button.getAttribute('data-copy-target');
-    console.log('Target ID:', targetId); // Debug
-
-    let textToCopy = '';
-
-    if (targetId === 'btc-wallet') {
-        const element = document.getElementById('btc-wallet');
-        if (element) {
-            textToCopy = element.textContent.trim();
-        }
-    } else if (targetId === 'paypal-email') {
-        const element = document.getElementById('paypal-email');
-        if (element) {
-            textToCopy = element.textContent.trim();
-        }
-    } else if (targetId === 'wise-details') {
-        const accountEl = document.getElementById('wise-account');
-        const bankEl = document.getElementById('wise-bank');
-        if (accountEl && bankEl) {
-            textToCopy = 'Account: ' + accountEl.textContent.trim() + ', Bank: ' + bankEl.textContent.trim();
-        }
-    }
-
-    console.log('Text to copy:', textToCopy); // Debug: Shows what it's trying to copy
-
-    if (!textToCopy) {
-        alert('No text to copy! Check IDs.');
-        return;
-    }
-
-    // Modern clipboard API (works in most browsers)
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(textToCopy).then(function() {
-            console.log('Modern copy success'); // Debug
-            showCopyFeedback(button, 'Copied!');
-        }).catch(function(err) {
-            console.error('Modern copy failed:', err); // Debug
-            fallbackCopy(textToCopy, button);
-        });
-    } else {
-        console.log('Using fallback copy'); // Debug
-        fallbackCopy(textToCopy, button);
-    }
-}
-
-// Fallback copy method (selects text and uses execCommand)
-function fallbackCopy(text, button) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed'; // Off-screen
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-            console.log('Fallback copy success'); // Debug
-            showCopyFeedback(button, 'Copied!');
-        } else {
-            throw new Error('execCommand failed');
-        }
-    } catch (err) {
-        console.error('Fallback copy failed:', err); // Debug
-        alert('Copy failed - please select and copy manually: ' + text);
-    }
-    document.body.removeChild(textArea);
-}
-
-// Show temporary feedback on button
-function showCopyFeedback(button, message) {
-    const originalText = button.textContent;
-    button.textContent = message;
-    button.classList.remove('btn-outline-secondary');
-    button.classList.add('btn-success'); // Green highlight
-    setTimeout(function() {
-        button.textContent = originalText;
-        button.classList.remove('btn-success');
-        button.classList.add('btn-outline-secondary');
-    }, 2000); // Reset after 2 seconds
-}
-
-    // If on cart page, fully render the cart
     if (document.getElementById('cart-items')) {
         updateCart();
     }
-
-    // Checkout page logic
     if (document.getElementById('checkout-items')) {
         renderCheckoutSummary();
-        updateCartCount(); // Update navbar
         const checkoutForm = document.getElementById('checkout-form');
         if (checkoutForm) {
             checkoutForm.addEventListener('submit', handleCheckoutSubmit);
         }
     }
-
-    // Search functionality (add to products page)
-    if (document.getElementById('search-input')) {
-        document.getElementById('search-input').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const productCards = document.querySelectorAll('#product-list .col-md-4');
-            productCards.forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                if (title.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    }
 });
-
-// Copy payment details to clipboard (for checkout buttons)
-function copyPaymentDetails(button) {
-    const targetId = button.getAttribute('data-copy-target');
-    let textToCopy = '';
-
-    if (targetId === 'btc-wallet') {
-        textToCopy = document.getElementById('btc-wallet').textContent;
-    } else if (targetId === 'paypal-email') {
-        textToCopy = document.getElementById('paypal-email').textContent;
-    } else if (targetId === 'wise-details') {
-        // Combine Wise account and bank
-        const account = document.getElementById('wise-account').textContent;
-        const bank = document.getElementById('wise-bank').textContent;
-        textToCopy = 'Account: ' + account + ', Bank: ' + bank;
-    }
-
-    if (!textToCopy) {
-        alert('No text to copy!');
-        return;
-    }
-
-    // Modern clipboard API (works in most browsers)
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(textToCopy).then(function() {
-            showCopyFeedback(button, 'Copied!');
-        }).catch(function(err) {
-            console.error('Copy failed:', err);
-            fallbackCopy(textToCopy, button);
-        });
-    } else {
-        // Fallback for older browsers
-        fallbackCopy(textToCopy, button);
-    }
-}
-
-// Fallback copy method (selects text and uses execCommand)
-function fallbackCopy(text, button) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.select();
-    try {
-        document.execCommand('copy');
-        showCopyFeedback(button, 'Copied!');
-    } catch (err) {
-        console.error('Fallback copy failed:', err);
-        alert('Copy failed - please select and copy manually: ' + text);
-    }
-    document.body.removeChild(textArea);
-}
-
-// Show temporary feedback on button
-function showCopyFeedback(button, message) {
-    const originalText = button.textContent;
-    button.textContent = message;
-    button.classList.add('btn-success'); // Green highlight
-    setTimeout(function() {
-        button.textContent = originalText;
-        button.classList.remove('btn-success');
-    }, 2000); // Reset after 2 seconds
-}
-
-
-
-
-
-
-
-
-
-
-
-
