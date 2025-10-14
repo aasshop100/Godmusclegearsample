@@ -81,9 +81,14 @@ function updateCart() {
     if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
 }
 
-// Add to cart function with debug and global attachment
+// Add to cart function with debug and check
 function addToCart(button) {
-    console.log('addToCart is defined and called!');  // Debug log
+    if (!button) {
+        console.log('Error: Button is undefined in addToCart');
+        alert('Error: Button is not defined. Please check the console.');
+        return;
+    }
+    console.log('addToCart is defined and called with button:', button);  // Debug log
     const name = button.dataset.name || 'Unknown Item';
     const priceStr = button.dataset.price || '0';
     const price = Number(priceStr) || 0;
@@ -99,7 +104,7 @@ function addToCart(button) {
     updateCart();
     alert(`${name} added to cart!`);
 }
-window.addToCart = addToCart;  // Attach to global window object to ensure accessibility
+window.addToCart = addToCart;  // Attach to global window object
 
 // Render checkout summary
 function renderCheckoutSummary() {
@@ -138,7 +143,7 @@ function renderCheckoutSummary() {
         const lineTotal = itemPrice * quantity;
         subtotal += lineTotal;
         totalQuantity += quantity;
-        checkoutItems.innerHTML += '<div>...</div>';  // Your HTML generation code
+        checkoutItems.innerHTML += '<div>...</div>';  // Your HTML generation
     });
 
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
@@ -159,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
     const addButtons = document.querySelectorAll('.add-to-cart');
     addButtons.forEach(button => {
-        button.addEventListener('click', window.addToCart);  // Use the global reference
+        button.addEventListener('click', window.addToCart);
     });
     if (document.getElementById('cart-items')) updateCart();
     if (document.getElementById('checkout-items')) renderCheckoutSummary();
