@@ -82,19 +82,23 @@ function updateCart() {
     if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
 }
 
-// Render checkout summary (for checkout.html) - Updated with debug logs
+// Render checkout summary (for checkout.html) - Further updated with more debug
 function renderCheckoutSummary() {
-    console.log('Rendering checkout summary...');  // Debug log
+    console.log('Attempting to render checkout summary...');  // Debug log
     const cartFromStorage = JSON.parse(localStorage.getItem('cart')) || [];
-    console.log('Cart from localStorage:', cartFromStorage);  // Check if cart is loaded
+    console.log('Cart contents: ', cartFromStorage);  // Log the actual cart
+    if (cartFromStorage.length === 0) {
+        console.log('Cart is empty!');
+        alert('Your cart is empty. Add items before checking out!');  // User-friendly alert
+    }
     const checkoutItems = document.getElementById('checkout-items');
     const subtotalEl = document.getElementById('checkout-subtotal');
     const shippingEl = document.getElementById('checkout-shipping');
     const grandTotalEl = document.getElementById('checkout-grand-total');
-    const emptyMsg = document.getElementById('empty-checkout-message');  // Assuming you have this in HTML
+    const emptyMsg = document.getElementById('empty-checkout-message');
 
     if (!checkoutItems) {
-        console.log('Checkout items element not found!');
+        console.log('Error: checkout-items element not found in HTML!');
         return;
     }
 
@@ -118,6 +122,7 @@ function renderCheckoutSummary() {
         const lineTotal = itemPrice * quantity;
         subtotal += lineTotal;
         totalQuantity += quantity;
+        console.log(`Processing item: ${item.name}, Price: ${itemPrice}, Quantity: ${quantity}`);  // Debug per item
 
         const imageSrc = item.image || 'images/default-supplement.png';
         const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
@@ -127,11 +132,11 @@ function renderCheckoutSummary() {
 
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
     const grandTotal = subtotal + shipping;
+    console.log(`Calculated: Subtotal $ ${subtotal.toFixed(2)}, Shipping $ ${shipping.toFixed(2)}, Grand Total $ ${grandTotal.toFixed(2)}`);
 
     if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
     if (shippingEl) shippingEl.textContent = '$' + shipping.toFixed(2);
     if (grandTotalEl) grandTotalEl.textContent = '$' + grandTotal.toFixed(2);
-    console.log('Summary rendered: Subtotal $' + subtotal.toFixed(2) + ', Shipping $' + shipping.toFixed(2) + ', Grand Total $' + grandTotal.toFixed(2));
 }
 
 // Handle checkout form submission
@@ -222,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCart();
     }
     if (document.getElementById('checkout-items')) {
-        renderCheckoutSummary();  // Ensure this is called on checkout page
+        renderCheckoutSummary();  // Ensure this is called
     }
     const checkoutForm = document.getElementById('checkout-form');
     if (checkoutForm) {
