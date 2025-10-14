@@ -88,10 +88,38 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const checkoutBtn = document.querySelector('a.btn.btn-success.w-100');
+    const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // If the button exists (on the cart page)
+    if (checkoutBtn) {
+        // If cart is empty, disable the button visually and functionally
+        if (!cartData || cartData.length === 0) {
+            checkoutBtn.classList.add("disabled");
+            checkoutBtn.style.pointerEvents = "none"; // prevent clicking
+            checkoutBtn.style.opacity = "0.6"; // look dimmed
+            checkoutBtn.textContent = "Cart is Empty";
+        }
+
+        // Add safety check when clicking
+        checkoutBtn.addEventListener("click", function(e) {
+            if (!cartData || cartData.length === 0) {
+                e.preventDefault();
+                alert("🛒 Your cart is empty. Please add items before checking out.");
+            }
+        });
+    }
+});
+</script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
