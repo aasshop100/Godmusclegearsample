@@ -1,238 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="keywords" content="muscle supplements, bodybuilding, testosterone, fitness gear, protein, peptides">
-<meta property="og:title" content="GOD MUSCLE GEARS">
-<meta property="og:description" content="Shop trusted fitness and supplement products.">
-<meta property="og:image" content="images/logo.png">
-<meta property="og:type" content="website">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Checkout - GOD MUSCLE GEARS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <!-- EmailJS SDK (required for emailjs.init/send) -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="keywords" content="muscle supplements, bodybuilding, testosterone, fitness gear, protein, peptides">
+  <meta property="og:title" content="GOD MUSCLE GEARS">
+  <meta property="og:description" content="Shop trusted fitness and supplement products.">
+  <meta property="og:image" content="images/logo.png">
+  <meta property="og:type" content="website">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - GOD MUSCLE GEARS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">GOD MUSCLE GEARS</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
-                    <li class="nav-item"><a class="nav-link" href="cart.html">Cart <span id="cart-count">0</span></a></li>
-                </ul>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">GOD MUSCLE GEARS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="cart.html">Cart <span id="cart-count">0</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+    <h2 class="text-center mb-4" style="color: #ff4500;">Checkout</h2>
+    <div class="row g-4"> <!-- add gutter (spacing) between columns -->
+      <div class="col-lg-8">
+        <form id="checkout-form" enctype="multipart/form-data">
+          <h5 class="mb-3" style="color: #ff4500;">Shipping Information</h5>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="full-name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="full-name" name="full-name" required>
             </div>
+            <div class="col-md-6 mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" name="phone" required>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="address" class="form-label">Street Address</label>
+              <input type="text" class="form-control" id="address" name="street-address" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="city" class="form-label">City</label>
+              <input type="text" class="form-control" id="city" name="city" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="state" class="form-label">State</label>
+              <input type="text" class="form-control" id="state" name="state" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="zip" class="form-label">ZIP Code</label>
+              <input type="text" class="form-control" id="zip" name="zip-code" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="country" class="form-label">Country</label>
+              <select class="form-select" id="country" name="country" required>
+                <option value="">Select Country</option>
+                <option value="US">United States</option>
+                <option value="PH">Philippines</option>
+                <option value="CA">Canada</option>
+                <option value="UK">United Kingdom</option>
+                <option value="AU">Australia</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-bold">Select Payment Method</label>
+
+            <div class="d-flex align-items-center mb-2">
+              <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="bitcoin" value="Bitcoin" onchange="showPaymentDetails('bitcoin-details')">
+              <label class="fw-semibold mb-0" for="bitcoin">Bitcoin</label>
+            </div>
+            <div id="bitcoin-details" class="payment-details" style="display: none; margin-left: 28px;">
+              <label class="form-label d-block small text-muted mt-1 mb-1">Bitcoin Address</label>
+              <div class="d-flex align-items-center">
+                <input type="text" class="form-control me-2" value="bc1qsamplebitcoinaddress123" id="btc-address" readonly>
+                <button type="button" class="btn btn-sm btn-outline-dark" onclick="copyToClipboard('btc-address')">Copy</button>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center mb-2 mt-3">
+              <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="paypal" value="PayPal" onchange="showPaymentDetails('paypal-details')">
+              <label class="fw-semibold mb-0" for="paypal">PayPal</label>
+            </div>
+            <div id="paypal-details" class="payment-details" style="display: none; margin-left: 28px;">
+              <label class="form-label d-block small text-muted mt-1 mb-1">PayPal Email</label>
+              <div class="d-flex align-items-center">
+                <input type="text" class="form-control me-2" value="paypal-sample@domain.com" id="paypal-address" readonly>
+                <button type="button" class="btn btn-sm btn-outline-dark" onclick="copyToClipboard('paypal-address')">Copy</button>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center mb-2 mt-3">
+              <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="wise" value="Wise" onchange="showPaymentDetails('wise-details')">
+              <label class="fw-semibold mb-0" for="wise">Wise</label>
+            </div>
+            <div id="wise-details" class="payment-details" style="display: none; margin-left: 28px;">
+              <label class="form-label d-block small text-muted mt-1 mb-1">Wise Email</label>
+              <div class="d-flex align-items-center">
+                <input type="text" class="form-control me-2" value="wise-sample@domain.com" id="wise-address" readonly>
+                <button type="button" class="btn btn-sm btn-outline-dark" onclick="copyToClipboard('wise-address')">Copy</button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="mb-4">
+            <label for="proof-upload" class="form-label" style="color: #ff4500;">Upload Proof of Payment (Screenshot)</label>
+            <input type="file" class="form-control" id="proof-upload" name="proof-upload" accept="image/*" required>
+            <div class="form-text">Upload a screenshot of your payment confirmation.</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Place Order</button>
+        </form>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card order-summary">
+          <div class="card-header" style="background-color: #ff4500; color: #ffffff;">
+            <h5 class="mb-0">Order Summary</h5>
+          </div>
+          <div class="card-body">
+            <p>Total Items: <span id="checkout-items">0</span></p>
+            <hr>
+            <p>Subtotal: $<span id="checkout-subtotal">0.00</span></p>
+            <p>Shipping: $<span id="checkout-shipping">0.00</span></p>
+            <hr>
+            <h5>Total: $<span id="checkout-grand-total">0.00</span></h5>
+          </div>
         </div>
-    </nav>
-
-    <div class="container my-5">
-        <h2 class="text-center mb-4" style="color: #ff4500;">Checkout</h2>
-
-        <div class="row">
-            <div class="col-md-8">
-                <form id="checkout-form" enctype="multipart/form-data">
-                    <h5 style="color: #ff4500;">Shipping Information</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <!-- ADDED name="full-name" -->
-                            <label for="full-name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="full-name" name="full-name" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <!-- ADDED name="email" -->
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Phone Number</label>
-                        <!-- ADDED name="phone" -->
-                        <input type="tel" class="form-control" id="phone" name="phone" required>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <!-- ADDED name="street-address" -->
-                            <label for="address" class="form-label">Street Address</label>
-                            <input type="text" class="form-control" id="address" name="street-address" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <!-- ADDED name="city" -->
-                            <label for="city" class="form-label">City</label>
-                            <input type="text" class="form-control" id="city" name="city" required>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <!-- ADDED name="state" -->
-                            <label for="state" class="form-label">State</label>
-                            <input type="text" class="form-control" id="state" name="state" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <!-- ADDED name="zip-code" -->
-                            <label for="zip" class="form-label">ZIP Code</label>
-                            <input type="text" class="form-control" id="zip" name="zip-code" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <!-- ADDED name="country" -->
-                            <label for="country" class="form-label">Country</label>
-                            <select class="form-select" id="country" name="country" required>
-                                <option value="">Select Country</option>
-                                <option value="US">United States</option>
-                                <option value="PH">Philippines</option>
-                                <option value="CA">Canada</option>
-                                <option value="UK">United Kingdom</option>
-                                <option value="AU">Australia</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Payment Options: change name attribute to payment-method (script expects payment-method) -->
-<div class="mb-4">
-  <label class="form-label fw-bold">Select Payment Method</label>
-
-  <!-- Bitcoin -->
-  <div class="d-flex align-items-center mb-2">
-    <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="bitcoin" value="Bitcoin" onchange="showPaymentDetails('bitcoin-details')">
-    <label class="fw-semibold mb-0" for="bitcoin">Bitcoin</label>
-  </div>
-  <div id="bitcoin-details" class="payment-details" style="display: none; margin-left: 28px;">
-    <label class="form-label d-block small text-muted mt-1 mb-1">Bitcoin Address</label>
-    <div class="d-flex align-items-center">
-      <input type="text" class="form-control me-2" value="bc1qsamplebitcoinaddress123" id="btc-address" readonly>
-      <button type="button" class="btn btn-sm btn-outline-dark" onclick="copyToClipboard('btc-address')">Copy</button>
+      </div>
     </div>
   </div>
 
-  <!-- PayPal -->
-  <div class="d-flex align-items-center mb-2 mt-3">
-    <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="paypal" value="PayPal" onchange="showPaymentDetails('paypal-details')">
-    <label class="fw-semibold mb-0" for="paypal">PayPal</label>
-  </div>
-  <div id="paypal-details" class="payment-details" style="display: none; margin-left: 28px;">
-    <label class="form-label d-block small text-muted mt-1 mb-1">PayPal Email</label>
-    <div class="d-flex align-items-center">
-      <input type="text" class="form-control me-2" value="paypal-sample@domain.com" id="paypal-address" readonly>
-      <button type="button" class="btn btn-sm btn-outline-dark" onclick="copyToClipboard('paypal-address')">Copy</button>
-    </div>
-  </div>
+  <footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2025 GOD MUSCLE GEARS. All rights reserved.</p>
+  </footer>
 
-  <!-- Wise -->
-  <div class="d-flex align-items-center mb-2 mt-3">
-    <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="wise" value="Wise" onchange="showPaymentDetails('wise-details')">
-    <label class="fw-semibold mb-0" for="wise">Wise</label>
-  </div>
-  <div id="wise-details" class="payment-details" style="display: none; margin-left: 28px;">
-    <label class="form-label d-block small text-muted mt-1 mb-1">Wise Email</label>
-    <div class="d-flex align-items-center">
-      <input type="text" class="form-control me-2" value="wise-sample@domain.com" id="wise-address" readonly>
-      <button type="button" class="btn btn-sm btn-outline-dark" onclick="copyToClipboard('wise-address')">Copy</button>
-    </div>
-  </div>
-</div>
-
-
-<script>
-  function showPaymentDetails(id) {
-    document.querySelectorAll('.payment-details').forEach(el => el.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-  }
-
-  function copyToClipboard(inputId) {
-    const copyText = document.getElementById(inputId);
-    navigator.clipboard.writeText(copyText.value).then(() => {
-      alert('Copied: ' + copyText.value);
-    });
-  }
-</script>
-
-<style>
-/* Force radio button to show black when selected */
-input[type="radio"].payment-radio {
-  appearance: none;          /* Remove default style */
-  width: 18px;
-  height: 18px;
-  border: 2px solid #000;     /* Black border */
-  border-radius: 50%;
-  position: relative;
-  cursor: pointer;
-  margin-top: 2px;
-}
-
-input[type="radio"].payment-radio:checked::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 10px;
-  height: 10px;
-  background-color: #000;     /* Black fill */
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-</style>
-
-
-
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <!-- ADDED name="proof-upload" so FormData works -->
-                        <label for="proof-upload" class="form-label" style="color: #ff4500;">Upload Proof of Payment (Screenshot)</label>
-                        <input type="file" class="form-control" id="proof-upload" name="proof-upload" accept="image/*" required>
-                        <div class="form-text">Upload a screenshot of your payment confirmation.</div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100">Place Order</button>
-                </form>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card order-summary">
-                    <div class="card-header" style="background-color: #ff4500; color: #ffffff;">
-                        <h5 class="mb-0">Order Summary</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Total Items: <span id="checkout-items">0</span></p>
-                        <hr>
-                        <p>Subtotal: $<span id="checkout-subtotal">0.00</span></p>
-                        <p>Shipping: $<span id="checkout-shipping">0.00</span></p>
-                        <hr>
-                        <h5>Total: $<span id="checkout-grand-total">0.00</span></h5> <!-- ID fixed to match script -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="bg-dark text-white text-center py-3">
-        <p>&copy; 2025 GOD MUSCLE GEARS. All rights reserved.</p>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- your main script -->
-    <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
