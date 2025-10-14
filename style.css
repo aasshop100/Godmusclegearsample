@@ -736,6 +736,17 @@ a.btn.disabled {
 }
 
 
+/* Clean divider between cart items */
+#cart-items .card {
+    border: 1px solid #333;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+#cart-items .card:not(:last-child) {
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ff4500; /* Red-orange separator */
+}
+
 
 
 
