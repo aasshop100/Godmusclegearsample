@@ -747,6 +747,39 @@ a.btn.disabled {
     border-bottom: 2px solid #ff4500; /* Red-orange separator */
 }
 
+/* === Added to Cart Toast (mobile friendly) === */
+.added-toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4500;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 0.4s ease, bottom 0.4s ease;
+}
+
+.added-toast.show {
+    opacity: 1;
+    bottom: 100px; /* Slide up slightly */
+}
+
+/* Adjust for mobile */
+@media (max-width: 768px) {
+    .added-toast {
+        bottom: 60px;
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
 
 
 
