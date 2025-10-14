@@ -896,6 +896,10 @@ a.btn.disabled {
   padding: 0.4rem 0.75rem;
 }
 
+.payment-details .btn {
+  transition: all 0.3s ease;
+}
+
 
 
 
