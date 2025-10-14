@@ -200,7 +200,7 @@ function handleCheckoutSubmit(event) {
     const userID = "8tIW2RqhekSLKVqLT";
 
     // Customer email payload
-  const customerPayload = {
+ const customerPayload = {
     service_id: serviceID,
     template_id: "template_0ry9w0v",
     user_id: userID,
@@ -211,9 +211,11 @@ function handleCheckoutSubmit(event) {
         payment_method: paymentMethod,
         full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
         items_summary: itemsSummary,
-        customer_email: customerEmail  // ✅ Added this line
+        customer_email: customerEmail,   // keep this
+        to_email: customerEmail          // ✅ add this
     }
 };
+
 
     // Owner email payload
     const ownerPayload = {
@@ -285,4 +287,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
 
