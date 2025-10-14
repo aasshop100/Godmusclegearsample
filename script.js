@@ -288,4 +288,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Highlight current page in navbar
+document.querySelectorAll('.nav-link').forEach(link => {
+  if (link.href.includes(location.pathname.split("/").pop())) {
+    link.classList.add('active');
+  } else {
+    link.classList.remove('active');
+  }
+});
+
 
