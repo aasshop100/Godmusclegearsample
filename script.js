@@ -1,22 +1,22 @@
-// Add this to the top of script.js if needed
-document.addEventListener('touchstart', function() {}, {passive: true}); // Improves mobile clicks
+// script.js - cleaned and patched for add-to-cart, cart, checkout, EmailJS
+
+document.addEventListener('touchstart', function() {}, {passive: true});
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
-const BASE_SHIPPING_PER_10 = 20.00; // $20 per 10 items (or part thereof)
+const BASE_SHIPPING_PER_10 = 20.00;
 
-// Global function to update navbar cart count
+// Update navbar cart count
 function updateCartCount() {
     const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
     const cartCountEl = document.getElementById('cart-count');
-    if (cartCountEl) {
-        cartCountEl.textContent = totalQuantity;
-    }
+    if (cartCountEl) cartCountEl.textContent = totalQuantity;
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-// Main cart update function
+// Render cart page
 function updateCart() {
     updateCartCount();
+
     const cartItems = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
     const shippingEl = document.getElementById('shipping-fee');
@@ -36,7 +36,6 @@ function updateCart() {
         if (grandTotalEl) grandTotalEl.textContent = '$0.00';
         return;
     }
-
     if (emptyMsg) emptyMsg.style.display = 'none';
 
     cart.forEach((item, index) => {
@@ -79,19 +78,15 @@ function updateCart() {
     if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
     if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
     if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    console.log('Cart updated:', { totalQuantity, subtotal, shipping, grandTotal });
 }
 
-// Add to cart function with debug and check
+// Add to cart (button element passed)
 function addToCart(button) {
-    if (!button) {
-        console.log('Error: Button is undefined in addToCart');
-        alert('Error: Button is not defined. Please check the console.');
-        return;
-    }
-    console.log('addToCart is defined and called with button:', button);  // Debug log
     const name = button.dataset.name || 'Unknown Item';
-    const priceStr = button.dataset.price || '0';
-    const price = Number(priceStr) || 0;
+    const price = Number(button.dataset.price) || 0;
     const id = button.dataset.id || name.toLowerCase().replace(/[^a-z0-9]/g, '-');
     const image = button.dataset.image || 'images/default-supplement.png';
 
@@ -101,73 +96,195 @@ function addToCart(button) {
     } else {
         cart.push({ id, name, price, quantity: 1, image });
     }
+
     updateCart();
     alert(`${name} added to cart!`);
 }
-window.addToCart = addToCart;  // Attach to global window object
 
-// Render checkout summary
+// Renders checkout summary
 function renderCheckoutSummary() {
-    console.log('Rendering checkout summary...');
-    const cartFromStorage = JSON.parse(localStorage.getItem('cart')) || [];
-    console.log('Cart: ', cartFromStorage);
-    const checkoutItems = document.getElementById('checkout-items');
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const checkoutItemsEl = document.getElementById('checkout-items');
     const subtotalEl = document.getElementById('checkout-subtotal');
     const shippingEl = document.getElementById('checkout-shipping');
     const grandTotalEl = document.getElementById('checkout-grand-total');
     const emptyMsg = document.getElementById('empty-checkout-message');
 
-    if (!checkoutItems) {
-        console.log('checkout-items not found!');
-        return;
-    }
+    if (!checkoutItemsEl) return;
 
     let subtotal = 0;
     let totalQuantity = 0;
-    checkoutItems.innerHTML = '';
+    checkoutItemsEl.innerHTML = '';
 
-    if (cartFromStorage.length === 0) {
-        console.log('Cart is empty');
+    if (storedCart.length === 0) {
         if (emptyMsg) emptyMsg.style.display = 'block';
-        if (subtotalEl) subtotalEl.textContent = '$0.00';
-        if (shippingEl) shippingEl.textContent = '$0.00';
-        if (grandTotalEl) grandTotalEl.textContent = '$0.00';
+        if (subtotalEl) subtotalEl.textContent = '0.00';
+        if (shippingEl) shippingEl.textContent = '0.00';
+        if (grandTotalEl) grandTotalEl.textContent = '0.00';
         return;
     }
-
     if (emptyMsg) emptyMsg.style.display = 'none';
 
-    cartFromStorage.forEach(item => {
+    storedCart.forEach(item => {
         const itemPrice = Number(item.price) || 0;
         const quantity = item.quantity || 1;
         const lineTotal = itemPrice * quantity;
         subtotal += lineTotal;
         totalQuantity += quantity;
-        checkoutItems.innerHTML += '<div>...</div>';  // Your HTML generation
+
+        const imageSrc = item.image || 'images/default-supplement.png';
+        const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
+        checkoutItemsEl.innerHTML += '<div class="d-flex align-items-center mb-2"><div>' + imageHtml + '</div><div class="ms-2"><h6 class="mb-0">' + item.name + '</h6><small class="text-muted">Qty: ' + quantity + ' | $' + itemPrice.toFixed(2) + ' each</small></div><div class="ms-auto"><strong>$' + lineTotal.toFixed(2) + '</strong></div></div><hr class="my-1">';
     });
 
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
     const grandTotal = subtotal + shipping;
-    if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
-    if (shippingEl) shippingEl.textContent = '$' + shipping.toFixed(2);
-    if (grandTotalEl) grandTotalEl.textContent = '$' + grandTotal.toFixed(2);
-    console.log('Summary calculated');
+
+    if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
+    if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
+    if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
+
+    console.log('Checkout summary rendered:', { subtotal, shipping, grandTotal, totalQuantity });
 }
 
-// Handle checkout form submission (unchanged)
+// Handle checkout submission and send emails via EmailJS
+function handleCheckoutSubmit(event) {
+    event.preventDefault();
+    const form = document.getElementById('checkout-form');
+    if (!form) return;
+    if (!form.checkValidity()) {
+        alert('Please fill all required fields!');
+        return;
+    }
 
-// Update quantity and remove functions (unchanged)
+    const formData = new FormData(form);
+    const fullName = formData.get('full-name');
+    const customerEmail = formData.get('email');
+    const street = formData.get('street-address');
+    const city = formData.get('city');
+    const state = formData.get('state');
+    const zip = formData.get('zip-code');
+    const country = formData.get('country');
+    const paymentMethod = formData.get('payment-method');
+    const proofFile = formData.get('proof-upload');
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Page loaded');
+    if (!proofFile || proofFile.size === 0) {
+        alert('Please upload proof of payment!');
+        return;
+    }
+
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
+    const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+    const grandTotal = subtotal + shipping;
+
+    const orderId = 'ORDER-' + Date.now();
+    const itemsSummary = storedCart.map(item => item.name + ' (Qty: ' + (item.quantity || 1) + ')').join(', ');
+    const cartDetails = JSON.stringify(storedCart, null, 2);
+
+    // Initialize EmailJS - replace USER_ID with your EmailJS user ID
+    if (typeof emailjs === 'undefined') {
+        console.error('EmailJS SDK not found. Did you include the EmailJS script in the HTML?');
+    } else {
+        try {
+            emailjs.init('REPLACE_WITH_YOUR_EMAILJS_USERID'); // <<< REPLACE THIS
+        } catch(err) {
+            console.warn('emailjs.init error (may already be initialized):', err);
+        }
+    }
+
+    // Prepare template params
+    const templateParams = {
+        order_id: orderId,
+        customer_name: fullName,
+        customer_email: customerEmail,
+        full_address: street + ', ' + city + ', ' + state + ' ' + zip + ', ' + country,
+        payment_method: paymentMethod,
+        proof_filename: proofFile.name,
+        total: grandTotal.toFixed(2),
+        items_summary: itemsSummary,
+        cart_details: cartDetails
+    };
+
+    // Send confirmation to customer
+    console.log('Attempting to send customer email to:', customerEmail);
+    templateParams.to_email = customerEmail;
+    emailjs.send('REPLACE_WITH_YOUR_SERVICE_ID', 'REPLACE_WITH_YOUR_CUSTOMER_TEMPLATE_ID', templateParams)
+        .then(function(response) {
+            console.log('Customer email sent', response);
+        }, function(error) {
+            console.error('Customer email failed', error);
+            alert('Confirmation email to customer failed to send. Check console & EmailJS settings.');
+        });
+
+    // Send order copy to owner
+    delete templateParams.to_email;
+    templateParams.to_email = 'aasshop100@gmail.com'; // change to your owner email if needed
+    emailjs.send('REPLACE_WITH_YOUR_SERVICE_ID', 'REPLACE_WITH_YOUR_OWNER_TEMPLATE_ID', templateParams)
+        .then(function(response) {
+            console.log('Owner email sent', response);
+        }, function(error) {
+            console.error('Owner email failed', error);
+            alert('Owner email failed to send. Check console & EmailJS settings.');
+        });
+
+    alert('Order Placed Successfully! Check your email for confirmation. If not found, check Spam folder.');
+
+    // clear cart & redirect
+    localStorage.setItem('cart', '[]');
+    cart = [];
     updateCartCount();
+    window.location.href = 'index.html';
+}
+
+// Update quantity
+function updateQuantity(index, newQty) {
+    const qty = parseInt(newQty) || 1;
+    if (qty < 1) {
+        removeFromCart(index);
+        return;
+    }
+    cart[index].quantity = qty;
+    updateCart();
+}
+
+// Remove item
+function removeFromCart(index) {
+    if (index < 0 || index >= cart.length) return;
+    cart.splice(index, 1);
+    updateCart();
+}
+
+// Clear cart (dev helper)
+function clearCart() {
+    cart = [];
+    updateCart();
+    alert('Cart cleared.');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // load cart from localStorage
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+    updateCartCount();
+
+    // Add event listeners to add-to-cart buttons (if any on page)
     const addButtons = document.querySelectorAll('.add-to-cart');
     addButtons.forEach(button => {
-        button.addEventListener('click', window.addToCart);
+        button.addEventListener('click', function() {
+            addToCart(this);
+        });
     });
-    if (document.getElementById('cart-items')) updateCart();
-    if (document.getElementById('checkout-items')) renderCheckoutSummary();
-    const checkoutForm = document.getElementById('checkout-form');
-    if (checkoutForm) checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+
+    // If we're on the cart page, render the cart
+    if (document.getElementById('cart-items')) {
+        updateCart();
+    }
+
+    // If we're on the checkout page, render checkout summary and hook submit handler
+    if (document.getElementById('checkout-items')) {
+        renderCheckoutSummary();
+        const checkoutForm = document.getElementById('checkout-form');
+        if (checkoutForm) checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+    }
 });
