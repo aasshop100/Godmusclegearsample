@@ -318,6 +318,8 @@ function updateCheckoutButton() {
 document.addEventListener('DOMContentLoaded', function() {
     cart = JSON.parse(localStorage.getItem('cart')) || [];
     updateCartCount();
+    updateCheckoutButton();
+
 
     const addButtons = document.querySelectorAll('.add-to-cart');
     addButtons.forEach(button => {
@@ -347,6 +349,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
 
