@@ -103,6 +103,9 @@ function updateCart() {
     if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
 
     localStorage.setItem('cart', JSON.stringify(cart));
+
+     // ✅ Update checkout button state after updating cart
+    updateCheckoutButton();
 }
 
 // Add to cart
@@ -344,6 +347,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
 
