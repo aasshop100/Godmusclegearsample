@@ -319,6 +319,7 @@ function updateCheckoutButton() {
 
 
 // ---------------- INIT ----------------
+// Run functions when the page is ready
 document.addEventListener("DOMContentLoaded", function() {
     updateCart();
     updateCartCount();
@@ -346,12 +347,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Highlight current page in navbar
 document.querySelectorAll('.nav-link').forEach(link => {
-  if (link.href.includes(location.pathname.split("/").pop())) {
-    link.classList.add('active');
-  } else {
-    link.classList.remove('active');
-  }
+    if (link.href.includes(location.pathname.split("/").pop())) {
+        link.classList.add('active');
+    } else {
+        link.classList.remove('active');
+    }
 });
+
 
 
 
