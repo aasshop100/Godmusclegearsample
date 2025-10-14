@@ -973,6 +973,15 @@ section#featured-products h2, .featured-products-section h2 {
 }
 
 
+/* Why Choose Us section tweaks */
+section.bg-light h5 {
+  color: #ff4500; /* make titles pop */
+}
+
+section.bg-light p {
+  color: #333; /* dark gray text for readability */
+}
+
 
 
 
