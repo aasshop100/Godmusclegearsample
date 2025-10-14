@@ -863,6 +863,20 @@ a.btn.disabled {
   }
 }
 
+.payment-details {
+  transition: all 0.3s ease;
+}
+
+.payment-details .input-group input {
+  background-color: #fff;
+  border-radius: 6px 0 0 6px;
+}
+
+.payment-details .btn {
+  border-radius: 0 6px 6px 0;
+  font-weight: 500;
+}
+
 
 
 
