@@ -396,6 +396,25 @@ function copyToClipboard(elementId) {
   });
 }
 
+// === Fade-in effect for Why Choose Us cards ===
+document.addEventListener("DOMContentLoaded", function() {
+  const cards = document.querySelectorAll(".why-choose .p-4");
+
+  const revealOnScroll = () => {
+    const triggerBottom = window.innerHeight * 0.9;
+
+    cards.forEach(card => {
+      const cardTop = card.getBoundingClientRect().top;
+      if (cardTop < triggerBottom) {
+        card.classList.add("visible");
+      }
+    });
+  };
+
+  window.addEventListener("scroll", revealOnScroll);
+  revealOnScroll(); // run once on load
+});
+
 
 
 
