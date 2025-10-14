@@ -243,14 +243,16 @@ function handleCheckoutSubmit(event) {
             alert('Owner email failed to send.');
         });
 
-    alert('Order Placed Successfully! Check your email for confirmation.');
+ alert('Order Placed Successfully! Check your email for confirmation.');
 
-    // Clear cart
-    localStorage.setItem('cart', '[]');
-    cart = [];
-    updateCartCount();
-    window.location.href = 'index.html';
-}
+// Clear cart correctly
+localStorage.setItem('cart', JSON.stringify([]));
+cart = [];
+updateCartCount();
+
+// Redirect to homepage
+window.location.href = 'index.html';
+
 
 // Quantity change
 function updateQuantity(index, newQty) {
@@ -293,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
 
 
 
