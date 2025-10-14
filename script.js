@@ -56,12 +56,19 @@ function updateCart() {
     cartItems.innerHTML = '';
 
     if (cart.length === 0) {
-        if (emptyMsg) emptyMsg.style.display = 'block';
-        if (subtotalEl) subtotalEl.textContent = '$0.00';
-        if (shippingEl) shippingEl.textContent = '$0.00';
-        if (grandTotalEl) grandTotalEl.textContent = '$0.00';
-        return;
+    if (emptyMsg) emptyMsg.style.display = 'block';
+    if (subtotalEl) subtotalEl.textContent = '$0.00';
+    if (shippingEl) shippingEl.textContent = '$0.00';
+    if (grandTotalEl) grandTotalEl.textContent = '$0.00';
+
+    // Ensure checkout button updates when cart becomes empty
+    if (typeof updateCheckoutButton === 'function') {
+        updateCheckoutButton();
     }
+
+    return;
+}
+
     if (emptyMsg) emptyMsg.style.display = 'none';
 
     cart.forEach((item, index) => {
@@ -355,6 +362,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
     }
 });
+
 
 
 
