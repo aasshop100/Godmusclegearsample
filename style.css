@@ -651,6 +651,19 @@ p, li, span, label, input, select, textarea {
     /* Empty or add mobile tweaks here if needed - this closes the rule properly */
 }
 
+/* === Small Visual Enhancements === */
+
+/* Active nav link style */
+.navbar-nav .nav-link.active {
+    color: #ff4500 !important;
+    text-decoration: underline;
+}
+
+/* Smooth scrolling for a modern feel */
+html {
+    scroll-behavior: smooth;
+}
+
 
 
 
