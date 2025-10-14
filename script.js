@@ -50,28 +50,25 @@ function updateCart() {
         const imageSrc = item.image || 'images/default-supplement.png';
         const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 60px; height: 60px; object-fit: cover;">`;
 
-        cartItems.innerHTML += `
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-2">${imageHtml}</div>
-                        <div class="col-md-3">
-                            <h6 class="mb-1">${item.name}</h6>
-                            <p class="mb-1 text-muted">$${itemPrice.toFixed(2)} each</p>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="number" class="form-control w-75 d-inline" value="${quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
-                        </div>
-                        <div class="col-md-2">
-                            <strong>$${lineTotal.toFixed(2)}</strong>
-                        </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
-                        </div>
-                    </div>
-                </div>
+       cartItems.innerHTML += `
+    <div class="card mb-3">
+        <div class="card-body d-flex align-items-center flex-wrap gap-3">
+            <img src="${imageSrc}" alt="${item.name}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+            
+            <div class="flex-grow-1">
+                <h6 class="mb-1">${item.name}</h6>
+                <p class="mb-1 text-muted">$${itemPrice.toFixed(2)} each</p>
             </div>
-        `;
+
+            <div class="d-flex align-items-center gap-2">
+                <input type="number" class="form-control" value="${quantity}" min="1" style="width: 70px;" onchange="updateQuantity(${index}, this.value)">
+                <strong>$${lineTotal.toFixed(2)}</strong>
+                <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
+            </div>
+        </div>
+    </div>
+`;
+
     });
 
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
@@ -300,6 +297,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
 
