@@ -81,9 +81,9 @@ function updateCart() {
     if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
 }
 
-// Add to cart function with debug
+// Add to cart function with debug and global attachment
 function addToCart(button) {
-    console.log('addToCart function called!');  // Debug log to confirm it's defined
+    console.log('addToCart is defined and called!');  // Debug log
     const name = button.dataset.name || 'Unknown Item';
     const priceStr = button.dataset.price || '0';
     const price = Number(priceStr) || 0;
@@ -99,8 +99,9 @@ function addToCart(button) {
     updateCart();
     alert(`${name} added to cart!`);
 }
+window.addToCart = addToCart;  // Attach to global window object to ensure accessibility
 
-// Render checkout summary with more debug
+// Render checkout summary
 function renderCheckoutSummary() {
     console.log('Rendering checkout summary...');
     const cartFromStorage = JSON.parse(localStorage.getItem('cart')) || [];
@@ -137,7 +138,7 @@ function renderCheckoutSummary() {
         const lineTotal = itemPrice * quantity;
         subtotal += lineTotal;
         totalQuantity += quantity;
-        checkoutItems.innerHTML += '<div>...</div>';  // Simplified for brevity
+        checkoutItems.innerHTML += '<div>...</div>';  // Your HTML generation code
     });
 
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
@@ -148,20 +149,17 @@ function renderCheckoutSummary() {
     console.log('Summary calculated');
 }
 
-// Handle checkout form submission
-function handleCheckoutSubmit(event) {
-    // (Your original code here, unchanged)
-}
+// Handle checkout form submission (unchanged)
 
-// Update quantity and remove functions remain the same
+// Update quantity and remove functions (unchanged)
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Page loaded, setting up events');
+    console.log('Page loaded');
     updateCartCount();
     const addButtons = document.querySelectorAll('.add-to-cart');
     addButtons.forEach(button => {
-        button.addEventListener('click', addToCart);
+        button.addEventListener('click', window.addToCart);  // Use the global reference
     });
     if (document.getElementById('cart-items')) updateCart();
     if (document.getElementById('checkout-items')) renderCheckoutSummary();
