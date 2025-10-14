@@ -839,6 +839,30 @@ a.btn.disabled {
 }
 
 
+/* === Checkout Page Spacing and Layout Fixes === */
+#checkout-form .mb-3 {
+  margin-bottom: 1.25rem !important;
+}
+
+#checkout-form h5 {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Add soft background and padding */
+#checkout-form {
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile fix */
+@media (max-width: 767px) {
+  #checkout-form .row > [class*="col-"] {
+    width: 100%;
+  }
+}
+
 
 
 
