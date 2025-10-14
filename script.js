@@ -205,7 +205,7 @@ function handleCheckoutSubmit(event) {
 
     // Initialize EmailJS with your User ID
     try {
-        emailjs.init('eHXhTKYnIawMoj-Im');
+        emailjs.init(Ylc8ivuwjh3t5i7Bp);
     } catch (err) {
         console.warn('EmailJS init might have already happened:', err);
     }
@@ -295,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
 
 
 
