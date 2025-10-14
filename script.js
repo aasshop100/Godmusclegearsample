@@ -318,10 +318,11 @@ function updateCheckoutButton() {
 
 
 // ---------------- INIT ----------------
-document.addEventListener('DOMContentLoaded', function() {
-    cart = JSON.parse(localStorage.getItem('cart')) || [];
+document.addEventListener("DOMContentLoaded", function() {
+    updateCart();
     updateCartCount();
     updateCheckoutButton();
+});
 
 
     const addButtons = document.querySelectorAll('.add-to-cart');
@@ -352,6 +353,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
 
