@@ -139,13 +139,15 @@ function updateQuantity(index, newQty) {
 
 // Remove item
 function removeFromCart(index) {
+    // Remove item from the cart array
     cart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(cart));
 
-    // ✅ Refresh the cart display and checkout button
+    // ✅ Re-render the cart so UI updates immediately
     updateCart();
     updateCartCount();
 }
+
 
 
 // ---------------- CHECKOUT FUNCTIONS ----------------
@@ -353,6 +355,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
     }
 });
+
 
 
 
