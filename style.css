@@ -983,6 +983,27 @@ section.bg-light p {
 }
 
 
+/* === WHY CHOOSE US SECTION FIX === */
+section.bg-light,
+section.bg-light * {
+  color: #212529 !important; /* force readable dark text */
+}
+
+section.bg-light h2 {
+  color: #ff4500 !important; /* keep your brand orange for title */
+}
+
+section.bg-light h5 {
+  color: #ff4500 !important; /* make subheadings (icons) orange too */
+  font-weight: 600;
+}
+
+section.bg-light .p-4 {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+}
+
 
 
 
