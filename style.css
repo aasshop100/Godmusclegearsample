@@ -1036,6 +1036,18 @@ section.bg-light .p-4 {
   transition: 0.3s ease;
 }
 
+/* === Fade-in Animation for Why Choose Us cards === */
+.why-choose .p-4 {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.why-choose .p-4.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 
 
 
