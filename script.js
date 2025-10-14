@@ -144,6 +144,7 @@ function removeFromCart(index) {
 
     // ✅ Refresh the cart display and checkout button
     updateCart();
+    updateCartCount();
 }
 
 
@@ -353,6 +354,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
 
