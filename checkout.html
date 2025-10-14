@@ -96,7 +96,7 @@
 
   <!-- Bitcoin -->
   <div class="form-check mb-2 d-flex align-items-center">
-    <input class="form-check-input payment-radio me-2" type="radio" name="payment-method" id="bitcoin" value="Bitcoin" onchange="showPaymentDetails('bitcoin-details')">
+    <input class="form-check-input payment-radio me-2 ms-1" type="radio" name="payment-method" id="bitcoin" value="Bitcoin" onchange="showPaymentDetails('bitcoin-details')">
     <label class="form-check-label fw-semibold" for="bitcoin">Bitcoin</label>
   </div>
   <div id="bitcoin-details" class="payment-details" style="display: none;">
@@ -109,7 +109,7 @@
 
   <!-- PayPal -->
   <div class="form-check mb-2 mt-3 d-flex align-items-center">
-    <input class="form-check-input payment-radio me-2" type="radio" name="payment-method" id="paypal" value="PayPal" onchange="showPaymentDetails('paypal-details')">
+    <input class="form-check-input payment-radio me-2 ms-1" type="radio" name="payment-method" id="paypal" value="PayPal" onchange="showPaymentDetails('paypal-details')">
     <label class="form-check-label fw-semibold" for="paypal">PayPal</label>
   </div>
   <div id="paypal-details" class="payment-details" style="display: none;">
@@ -122,7 +122,7 @@
 
   <!-- Wise -->
   <div class="form-check mb-2 mt-3 d-flex align-items-center">
-    <input class="form-check-input payment-radio me-2" type="radio" name="payment-method" id="wise" value="Wise" onchange="showPaymentDetails('wise-details')">
+    <input class="form-check-input payment-radio me-2 ms-1" type="radio" name="payment-method" id="wise" value="Wise" onchange="showPaymentDetails('wise-details')">
     <label class="form-check-label fw-semibold" for="wise">Wise</label>
   </div>
   <div id="wise-details" class="payment-details" style="display: none;">
@@ -149,11 +149,12 @@
 </script>
 
 <style>
-  /* Make radio circle black when selected */
-  .payment-radio:checked {
-    accent-color: #000000 !important;
+  /* Force radio button to use black when selected */
+  input[type="radio"].payment-radio:checked {
+    accent-color: #000 !important;
   }
 </style>
+
 
 
                                 </div>
@@ -199,5 +200,6 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
