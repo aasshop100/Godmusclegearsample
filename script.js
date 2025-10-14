@@ -15,6 +15,20 @@ function updateCartCount() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
+// Show "Added to Cart" popup message
+function showAddedToast(itemName) {
+    let toast = document.createElement('div');
+    toast.className = 'added-toast';
+    toast.textContent = `✅ ${itemName} added to cart!`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('show'), 10); // small delay for animation
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400); // cleanup
+    }, 2000);
+}
+
 // Render cart page
 function updateCart() {
     updateCartCount();
@@ -96,7 +110,7 @@ function addToCart(button) {
     }
 
     updateCart();
-    alert(`${name} added to cart!`);
+    showAddedToast(name);
 }
 
 // Quantity change
@@ -297,6 +311,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
 
