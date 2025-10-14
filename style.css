@@ -815,6 +815,29 @@ a.btn.disabled {
     animation: cartPop 0.4s ease;
 }
 
+/* Checkout Page Spacing and Alignment */
+#checkout-form .mb-3 {
+    margin-bottom: 1.25rem;
+}
+#checkout-form h5 {
+    margin-bottom: 1.5rem;
+}
+
+/* Make inputs full width on small screens */
+@media (max-width: 767px) {
+    #checkout-form .row > [class*="col-"] {
+        width: 100%;
+    }
+}
+
+/* Optional: subtle border or shadow to the form container */
+#checkout-form {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
 
 
 
