@@ -1,9 +1,11 @@
-// script.js - cleaned and patched for add-to-cart, cart, checkout, EmailJS
+// script.js - fixed version with cart + checkout + EmailJS via fetch()
 
 document.addEventListener('touchstart', function() {}, {passive: true});
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const BASE_SHIPPING_PER_10 = 20.00;
+
+// ---------------- CART FUNCTIONS ----------------
 
 // Update navbar cart count
 function updateCartCount() {
@@ -80,7 +82,6 @@ function updateCart() {
     if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
 
     localStorage.setItem('cart', JSON.stringify(cart));
-    console.log('Cart updated:', { totalQuantity, subtotal, shipping, grandTotal });
 }
 
 // Add to cart
@@ -101,159 +102,6 @@ function addToCart(button) {
     alert(`${name} added to cart!`);
 }
 
-// Render checkout
-function renderCheckoutSummary() {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    const checkoutItemsEl = document.getElementById('checkout-items');
-    const subtotalEl = document.getElementById('checkout-subtotal');
-    const shippingEl = document.getElementById('checkout-shipping');
-    const grandTotalEl = document.getElementById('checkout-grand-total');
-    const emptyMsg = document.getElementById('empty-checkout-message');
-
-    if (!checkoutItemsEl) return;
-
-    let subtotal = 0;
-    let totalQuantity = 0;
-    checkoutItemsEl.innerHTML = '';
-
-    if (storedCart.length === 0) {
-        if (emptyMsg) emptyMsg.style.display = 'block';
-        if (subtotalEl) subtotalEl.textContent = '0.00';
-        if (shippingEl) shippingEl.textContent = '0.00';
-        if (grandTotalEl) grandTotalEl.textContent = '0.00';
-        return;
-    }
-    if (emptyMsg) emptyMsg.style.display = 'none';
-
-    storedCart.forEach(item => {
-        const itemPrice = Number(item.price) || 0;
-        const quantity = item.quantity || 1;
-        const lineTotal = itemPrice * quantity;
-        subtotal += lineTotal;
-        totalQuantity += quantity;
-
-        const imageSrc = item.image || 'images/default-supplement.png';
-        const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
-        checkoutItemsEl.innerHTML += `
-            <div class="d-flex align-items-center mb-2">
-                <div>${imageHtml}</div>
-                <div class="ms-2">
-                    <h6 class="mb-0">${item.name}</h6>
-                    <small class="text-muted">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
-                </div>
-                <div class="ms-auto">
-                    <strong>$${lineTotal.toFixed(2)}</strong>
-                </div>
-            </div>
-            <hr class="my-1">
-        `;
-    });
-
-    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-    const grandTotal = subtotal + shipping;
-
-    if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
-    if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
-    if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
-
-    console.log('Checkout summary rendered:', { subtotal, shipping, grandTotal, totalQuantity });
-}
-
-// Handle checkout submission + EmailJS
-function handleCheckoutSubmit(event) {
-    event.preventDefault();
-    const form = document.getElementById('checkout-form');
-    if (!form) return;
-    if (!form.checkValidity()) {
-        alert('Please fill all required fields!');
-        return;
-    }
-
-    const formData = new FormData(form);
-    const fullName = formData.get('full-name');
-    const customerEmail = formData.get('email');
-    const street = formData.get('street-address');
-    const city = formData.get('city');
-    const state = formData.get('state');
-    const zip = formData.get('zip-code');
-    const country = formData.get('country');
-    const paymentMethod = formData.get('payment-method');
-    const proofFile = formData.get('proof-upload');
-
-    if (!proofFile || proofFile.size === 0) {
-        alert('Please upload proof of payment!');
-        return;
-    }
-
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    const subtotal = storedCart.reduce(
-        (sum, item) => sum + (Number(item.price) * (item.quantity || 1)),
-        0
-    );
-    const totalQuantity = storedCart.reduce(
-        (sum, item) => sum + (item.quantity || 1),
-        0
-    );
-    const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-    const grandTotal = subtotal + shipping;
-
-    const orderId = 'ORDER-' + Date.now();
-    const itemsSummary = storedCart
-        .map(item => `${item.name} (Qty: ${item.quantity || 1})`)
-        .join(', ');
-    const cartDetails = JSON.stringify(storedCart, null, 2);
-
-    // Initialize EmailJS with your User ID
-    try {
-        emailjs.init('eHXhTKYnIawMoj-Im');
-    } catch (err) {
-        console.warn('EmailJS init might have already happened:', err);
-    }
-
-    // Template params
-    const templateParams = {
-        order_id: orderId,
-        customer_name: fullName,
-        customer_email: customerEmail,
-        full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
-        payment_method: paymentMethod,
-        proof_filename: proofFile.name,
-        total: grandTotal.toFixed(2),
-        items_summary: itemsSummary,
-        cart_details: cartDetails
-    };
-
-    // Send to customer
-    templateParams.to_email = customerEmail;
-    emailjs.send('service_uerk41r', 'template_0ry9w0v', templateParams)
-        .then(function(response) {
-            console.log('Customer email sent', response);
-        }, function(error) {
-            console.error('Customer email failed', error);
-            alert('Confirmation email to customer failed to send.');
-        });
-
-    // Send to owner
-    templateParams.to_email = 'aasshop100@gmail.com';
-    emailjs.send('service_uerk41r', 'template_8x2z86l', templateParams)
-        .then(function(response) {
-            console.log('Owner email sent', response);
-        }, function(error) {
-            console.error('Owner email failed', error);
-            alert('Owner email failed to send.');
-        });
-
- alert('Order Placed Successfully! Check your email for confirmation.');
-
-// Clear cart correctly
-localStorage.setItem('cart', JSON.stringify([]));
-cart = [];
-updateCartCount();
-
-// Redirect to homepage
-window.location.href = 'index.html';
-
-
 // Quantity change
 function updateQuantity(index, newQty) {
     const qty = parseInt(newQty) || 1;
@@ -272,6 +120,147 @@ function removeFromCart(index) {
     updateCart();
 }
 
+// ---------------- CHECKOUT FUNCTIONS ----------------
+
+// Render checkout summary
+function renderCheckoutSummary() {
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const checkoutItemsEl = document.getElementById('checkout-items');
+    const subtotalEl = document.getElementById('checkout-subtotal');
+    const shippingEl = document.getElementById('checkout-shipping');
+    const grandTotalEl = document.getElementById('checkout-grand-total');
+
+    if (!checkoutItemsEl) return;
+
+    let subtotal = 0;
+    let totalQuantity = 0;
+    checkoutItemsEl.innerHTML = '';
+
+    storedCart.forEach(item => {
+        const itemPrice = Number(item.price) || 0;
+        const quantity = item.quantity || 1;
+        const lineTotal = itemPrice * quantity;
+        subtotal += lineTotal;
+        totalQuantity += quantity;
+
+        const imageSrc = item.image || 'images/default-supplement.png';
+        checkoutItemsEl.innerHTML += `
+            <div class="d-flex align-items-center mb-2">
+                <img src="${imageSrc}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                <div class="ms-2">
+                    <h6 class="mb-0">${item.name}</h6>
+                    <small class="text-muted">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
+                </div>
+                <div class="ms-auto"><strong>$${lineTotal.toFixed(2)}</strong></div>
+            </div>
+            <hr class="my-1">
+        `;
+    });
+
+    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+    const grandTotal = subtotal + shipping;
+
+    if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
+    if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
+    if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
+}
+
+// Handle checkout submission + EmailJS via fetch
+function handleCheckoutSubmit(event) {
+    event.preventDefault();
+    const form = document.getElementById('checkout-form');
+    if (!form.checkValidity()) {
+        alert('Please fill all required fields!');
+        return;
+    }
+
+    const formData = new FormData(form);
+    const fullName = formData.get('full-name');
+    const customerEmail = formData.get('email');
+    const street = formData.get('street-address');
+    const city = formData.get('city');
+    const state = formData.get('state');
+    const zip = formData.get('zip-code');
+    const country = formData.get('country');
+    const paymentMethod = formData.get('payment-method');
+    const proofFile = formData.get('proof-upload');
+
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
+    const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+    const grandTotal = subtotal + shipping;
+
+    const orderId = 'ORDER-' + Date.now();
+    const itemsSummary = storedCart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
+    const cartDetails = JSON.stringify(storedCart, null, 2);
+
+    // Common payload info
+    const serviceID = "service_uerk41r";
+    const userID = "8tIW2RqhekSLKVqLT";
+
+    // Customer email payload
+    const customerPayload = {
+        service_id: serviceID,
+        template_id: "template_0ry9w0v",
+        user_id: userID,
+        template_params: {
+            order_id: orderId,
+            customer_name: fullName,
+            total: grandTotal.toFixed(2),
+            payment_method: paymentMethod,
+            full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
+            items_summary: itemsSummary
+        }
+    };
+
+    // Owner email payload
+    const ownerPayload = {
+        service_id: serviceID,
+        template_id: "template_8x2z86l",
+        user_id: userID,
+        template_params: {
+            order_id: orderId,
+            total: grandTotal.toFixed(2),
+            customer_name: fullName,
+            customer_email: customerEmail,
+            full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
+            payment_method: paymentMethod,
+            proof_filename: proofFile ? proofFile.name : "N/A",
+            items_summary: itemsSummary,
+            cart_details: cartDetails,
+            to_email: "aasshop100@gmail.com"
+        }
+    };
+
+    // Send to customer
+    fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(customerPayload)
+    })
+    .then(res => res.ok ? console.log("Customer email sent") : console.error("Customer email failed", res))
+    .catch(err => console.error("Customer email error", err));
+
+    // Send to owner
+    fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ownerPayload)
+    })
+    .then(res => res.ok ? console.log("Owner email sent") : console.error("Owner email failed", res))
+    .catch(err => console.error("Owner email error", err));
+
+    alert('Order Placed Successfully! Check your email for confirmation.');
+
+    // Clear cart and redirect
+    localStorage.setItem('cart', JSON.stringify([]));
+    cart = [];
+    updateCartCount();
+    window.location.href = 'index.html';
+}
+
+// ---------------- INIT ----------------
 document.addEventListener('DOMContentLoaded', function() {
     cart = JSON.parse(localStorage.getItem('cart')) || [];
     updateCartCount();
