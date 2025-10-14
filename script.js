@@ -246,7 +246,7 @@ function handleCheckoutSubmit(event) {
     alert('Order Placed Successfully! Check your email for confirmation.');
 
     // Clear cart
-    localStorage.setItem('cart', '[]);
+    localStorage.setItem('cart', '[]');
     cart = [];
     updateCartCount();
     window.location.href = 'index.html';
@@ -293,5 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
 
 
