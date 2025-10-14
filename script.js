@@ -139,10 +139,13 @@ function updateQuantity(index, newQty) {
 
 // Remove item
 function removeFromCart(index) {
-    if (index < 0 || index >= cart.length) return;
     cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // ✅ Refresh the cart display and checkout button
     updateCart();
 }
+
 
 // ---------------- CHECKOUT FUNCTIONS ----------------
 
@@ -349,6 +352,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
 
