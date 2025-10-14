@@ -1,7 +1,7 @@
 // Add this to the top of script.js if needed
 document.addEventListener('touchstart', function() {}, {passive: true}); // Improves mobile clicks
 
-let cart = JSON.parse(localStorage.getItem('cart')) || [];  // This is your original declaration—kept it here once.
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const BASE_SHIPPING_PER_10 = 20.00; // $20 per 10 items (or part thereof)
 
 // Global function to update navbar cart count (call on all pages)
@@ -20,14 +20,14 @@ function updateCart() {
 
     const cartItems = document.getElementById('cart-items');
     const subtotalEl = document.getElementById('cart-subtotal');
-    const shippingEl = document.getElementById('shipping-fee'); // Requires id="shipping-fee" in HTML
+    const shippingEl = document.getElementById('shipping-fee');
     const grandTotalEl = document.getElementById('cart-grand-total');
-    const emptyMsg = document.getElementById('empty-cart-message'); // Requires this div in HTML
+    const emptyMsg = document.getElementById('empty-cart-message');
 
-    if (!cartItems) return; // Only run if on cart page
+    if (!cartItems) return;
 
     let subtotal = 0;
-    let totalQuantity = 0; // Track total items for shipping
+    let totalQuantity = 0;
     cartItems.innerHTML = '';
 
     if (cart.length === 0) {
@@ -47,7 +47,6 @@ function updateCart() {
         subtotal += lineTotal;
         totalQuantity += quantity;
 
-        // Use image if available, fallback to placeholder
         const imageSrc = item.image || 'images/default-supplement.png';
         const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 60px; height: 60px; object-fit: cover;">`;
 
@@ -75,7 +74,6 @@ function updateCart() {
         `;
     });
 
-    // Quantity-based shipping: $20 per 10 items (or part thereof)
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
     const grandTotal = subtotal + shipping;
 
@@ -84,47 +82,27 @@ function updateCart() {
     if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
 }
 
-// Add to cart (merges duplicates by ID, increments quantity) - Added debug alert
-function addToCart(button) {
-    // Debug: Show an alert to confirm the function is running
-    alert('Adding item to cart...');  // This will pop up when you click the button
-    console.log('Add to Cart button clicked!');  // Check console for this message
-
-    const name = button.dataset.name || 'Unknown Item';
-    const priceStr = button.dataset.price || '0';
-    const price = Number(priceStr) || 0;
-    const id = button.dataset.id || name.toLowerCase().replace(/[^a-z0-9]/g, '-'); // Use data-id or generate one
-    const image = button.dataset.image || 'images/default-supplement.png';
-
-    let existingItem = cart.find(item => item.id === id);
-    if (existingItem) {
-        existingItem.quantity = (existingItem.quantity || 1) + 1;
-        console.log(`Updated quantity for ${name} to ${existingItem.quantity}`);
-    } else {
-        cart.push({ id, name, price, quantity: 1, image });
-        console.log(`Added new item: ${name}`);
-    }
-
-    updateCart(); // Updates count, saves, and re-renders if on cart page
-    alert(`${name} added to cart! (Total Qty: ${existingItem ? existingItem.quantity : 1})`); // Feedback
-}
-
-// Render checkout summary (for checkout.html)
+// Render checkout summary (for checkout.html) - Updated with debug logs
 function renderCheckoutSummary() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    console.log('Rendering checkout summary...');  // Debug log
+    const cartFromStorage = JSON.parse(localStorage.getItem('cart')) || [];
+    console.log('Cart from localStorage:', cartFromStorage);  // Check if cart is loaded
     const checkoutItems = document.getElementById('checkout-items');
     const subtotalEl = document.getElementById('checkout-subtotal');
     const shippingEl = document.getElementById('checkout-shipping');
     const grandTotalEl = document.getElementById('checkout-grand-total');
-    const emptyMsg = document.getElementById('empty-checkout-message');
+    const emptyMsg = document.getElementById('empty-checkout-message');  // Assuming you have this in HTML
 
-    if (!checkoutItems) return;
+    if (!checkoutItems) {
+        console.log('Checkout items element not found!');
+        return;
+    }
 
     let subtotal = 0;
     let totalQuantity = 0;
     checkoutItems.innerHTML = '';
 
-    if (cart.length === 0) {
+    if (cartFromStorage.length === 0) {
         if (emptyMsg) emptyMsg.style.display = 'block';
         if (subtotalEl) subtotalEl.textContent = '$0.00';
         if (shippingEl) shippingEl.textContent = '$0.00';
@@ -134,7 +112,7 @@ function renderCheckoutSummary() {
 
     if (emptyMsg) emptyMsg.style.display = 'none';
 
-    cart.forEach(item => {
+    cartFromStorage.forEach(item => {
         const itemPrice = Number(item.price) || 0;
         const quantity = item.quantity || 1;
         const lineTotal = itemPrice * quantity;
@@ -153,6 +131,7 @@ function renderCheckoutSummary() {
     if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
     if (shippingEl) shippingEl.textContent = '$' + shipping.toFixed(2);
     if (grandTotalEl) grandTotalEl.textContent = '$' + grandTotal.toFixed(2);
+    console.log('Summary rendered: Subtotal $' + subtotal.toFixed(2) + ', Shipping $' + shipping.toFixed(2) + ', Grand Total $' + grandTotal.toFixed(2));
 }
 
 // Handle checkout form submission
@@ -243,10 +222,10 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCart();
     }
     if (document.getElementById('checkout-items')) {
-        renderCheckoutSummary();
-        const checkoutForm = document.getElementById('checkout-form');
-        if (checkoutForm) {
-            checkoutForm.addEventListener('submit', handleCheckoutSubmit);
-        }
+        renderCheckoutSummary();  // Ensure this is called on checkout page
+    }
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', handleCheckoutSubmit);
     }
 });
