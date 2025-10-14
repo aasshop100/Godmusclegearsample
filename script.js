@@ -377,23 +377,26 @@ function copyToClipboard(elementId) {
   const input = document.getElementById(elementId);
   if (!input) return;
 
-  // Find the button right next to the input
   const button = input.parentElement.querySelector("button");
 
-  // Copy text to clipboard
   navigator.clipboard.writeText(input.value).then(() => {
-    // Change button text temporarily
     const originalText = button.textContent;
-    button.textContent = "✅ Copied!";
-    button.disabled = true; // Prevent spamming
 
-    // Revert back after 2 seconds
+    // ✅ Change text and color
+    button.textContent = "✅ Copied!";
+    button.classList.add("copied");
+    button.disabled = true;
+
+    // Revert after 2 seconds
     setTimeout(() => {
       button.textContent = originalText;
+      button.classList.remove("copied");
       button.disabled = false;
     }, 2000);
   });
 }
+
+
 
 
 
