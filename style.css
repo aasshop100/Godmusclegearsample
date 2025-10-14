@@ -1004,6 +1004,38 @@ section.bg-light .p-4 {
   border-radius: 10px;
 }
 
+/* === WHY CHOOSE US FIX (FINAL) === */
+.why-choose {
+  background-color: #f8f9fa; /* light gray background */
+  color: #212529; /* default readable dark gray text */
+}
+
+.why-choose * {
+  color: #212529 !important; /* force all inner text to dark */
+}
+
+.why-choose h2 {
+  color: #ff4500 !important; /* orange heading */
+}
+
+.why-choose h5 {
+  color: #ff4500 !important;
+  font-weight: 600;
+}
+
+.why-choose .p-4 {
+  background-color: #ffffff; /* white boxes */
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+}
+
+/* Optional: lift effect when hovered */
+.why-choose .p-4:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease;
+}
+
 
 
 
