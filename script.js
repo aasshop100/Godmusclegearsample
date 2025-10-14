@@ -288,6 +288,29 @@ window.location.href = "index.html";
     window.location.href = 'index.html';
 }
 
+// ✅ Enable or disable checkout button based on cart content
+function updateCheckoutButton() {
+    const checkoutBtn = document.querySelector('a.btn.btn-success.w-100');
+    const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+
+    if (!checkoutBtn) return; // if not on cart page, exit
+
+    if (cartData.length === 0) {
+        // Disable checkout
+        checkoutBtn.classList.add("disabled");
+        checkoutBtn.style.pointerEvents = "none";
+        checkoutBtn.style.opacity = "0.6";
+        checkoutBtn.textContent = "Cart is Empty";
+    } else {
+        // Enable checkout
+        checkoutBtn.classList.remove("disabled");
+        checkoutBtn.style.pointerEvents = "auto";
+        checkoutBtn.style.opacity = "1";
+        checkoutBtn.textContent = "Checkout";
+    }
+}
+
+
 // ---------------- INIT ----------------
 document.addEventListener('DOMContentLoaded', function() {
     cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -321,6 +344,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
 
