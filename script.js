@@ -83,7 +83,7 @@ function updateCart() {
     console.log('Cart updated:', { totalQuantity, subtotal, shipping, grandTotal });
 }
 
-// Add to cart (button element passed)
+// Add to cart
 function addToCart(button) {
     const name = button.dataset.name || 'Unknown Item';
     const price = Number(button.dataset.price) || 0;
@@ -101,7 +101,7 @@ function addToCart(button) {
     alert(`${name} added to cart!`);
 }
 
-// Renders checkout summary
+// Render checkout
 function renderCheckoutSummary() {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     const checkoutItemsEl = document.getElementById('checkout-items');
@@ -134,7 +134,19 @@ function renderCheckoutSummary() {
 
         const imageSrc = item.image || 'images/default-supplement.png';
         const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">`;
-        checkoutItemsEl.innerHTML += '<div class="d-flex align-items-center mb-2"><div>' + imageHtml + '</div><div class="ms-2"><h6 class="mb-0">' + item.name + '</h6><small class="text-muted">Qty: ' + quantity + ' | $' + itemPrice.toFixed(2) + ' each</small></div><div class="ms-auto"><strong>$' + lineTotal.toFixed(2) + '</strong></div></div><hr class="my-1">';
+        checkoutItemsEl.innerHTML += `
+            <div class="d-flex align-items-center mb-2">
+                <div>${imageHtml}</div>
+                <div class="ms-2">
+                    <h6 class="mb-0">${item.name}</h6>
+                    <small class="text-muted">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
+                </div>
+                <div class="ms-auto">
+                    <strong>$${lineTotal.toFixed(2)}</strong>
+                </div>
+            </div>
+            <hr class="my-1">
+        `;
     });
 
     let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
@@ -147,7 +159,7 @@ function renderCheckoutSummary() {
     console.log('Checkout summary rendered:', { subtotal, shipping, grandTotal, totalQuantity });
 }
 
-// Handle checkout submission and send emails via EmailJS
+// Handle checkout submission + EmailJS
 function handleCheckoutSubmit(event) {
     event.preventDefault();
     const form = document.getElementById('checkout-form');
@@ -174,32 +186,36 @@ function handleCheckoutSubmit(event) {
     }
 
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
-    const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const subtotal = storedCart.reduce(
+        (sum, item) => sum + (Number(item.price) * (item.quantity || 1)),
+        0
+    );
+    const totalQuantity = storedCart.reduce(
+        (sum, item) => sum + (item.quantity || 1),
+        0
+    );
     const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
     const grandTotal = subtotal + shipping;
 
     const orderId = 'ORDER-' + Date.now();
-    const itemsSummary = storedCart.map(item => item.name + ' (Qty: ' + (item.quantity || 1) + ')').join(', ');
+    const itemsSummary = storedCart
+        .map(item => `${item.name} (Qty: ${item.quantity || 1})`)
+        .join(', ');
     const cartDetails = JSON.stringify(storedCart, null, 2);
 
-    // Initialize EmailJS - replace USER_ID with your EmailJS user ID
-    if (typeof emailjs === 'undefined') {
-        console.error('EmailJS SDK not found. Did you include the EmailJS script in the HTML?');
-    } else {
-        try {
-            emailjs.init('REPLACE_WITH_YOUR_EMAILJS_USERID'); // <<< REPLACE THIS
-        } catch(err) {
-            console.warn('emailjs.init error (may already be initialized):', err);
-        }
+    // Initialize EmailJS with your User ID
+    try {
+        emailjs.init('eHXhTKYnIawMoj-Im');
+    } catch (err) {
+        console.warn('EmailJS init might have already happened:', err);
     }
 
-    // Prepare template params
+    // Template params
     const templateParams = {
         order_id: orderId,
         customer_name: fullName,
         customer_email: customerEmail,
-        full_address: street + ', ' + city + ', ' + state + ' ' + zip + ', ' + country,
+        full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
         payment_method: paymentMethod,
         proof_filename: proofFile.name,
         total: grandTotal.toFixed(2),
@@ -207,38 +223,36 @@ function handleCheckoutSubmit(event) {
         cart_details: cartDetails
     };
 
-    // Send confirmation to customer
-    console.log('Attempting to send customer email to:', customerEmail);
+    // Send to customer
     templateParams.to_email = customerEmail;
-    emailjs.send('REPLACE_WITH_YOUR_SERVICE_ID', 'REPLACE_WITH_YOUR_CUSTOMER_TEMPLATE_ID', templateParams)
+    emailjs.send('service_uerk41r', 'template_0ry9w0v', templateParams)
         .then(function(response) {
             console.log('Customer email sent', response);
         }, function(error) {
             console.error('Customer email failed', error);
-            alert('Confirmation email to customer failed to send. Check console & EmailJS settings.');
+            alert('Confirmation email to customer failed to send.');
         });
 
-    // Send order copy to owner
-    delete templateParams.to_email;
-    templateParams.to_email = 'aasshop100@gmail.com'; // change to your owner email if needed
-    emailjs.send('REPLACE_WITH_YOUR_SERVICE_ID', 'REPLACE_WITH_YOUR_OWNER_TEMPLATE_ID', templateParams)
+    // Send to owner
+    templateParams.to_email = 'aasshop100@gmail.com';
+    emailjs.send('service_uerk41r', 'template_8x2z86l', templateParams)
         .then(function(response) {
             console.log('Owner email sent', response);
         }, function(error) {
             console.error('Owner email failed', error);
-            alert('Owner email failed to send. Check console & EmailJS settings.');
+            alert('Owner email failed to send.');
         });
 
-    alert('Order Placed Successfully! Check your email for confirmation. If not found, check Spam folder.');
+    alert('Order Placed Successfully! Check your email for confirmation.');
 
-    // clear cart & redirect
-    localStorage.setItem('cart', '[]');
+    // Clear cart
+    localStorage.setItem('cart', '[]);
     cart = [];
     updateCartCount();
     window.location.href = 'index.html';
 }
 
-// Update quantity
+// Quantity change
 function updateQuantity(index, newQty) {
     const qty = parseInt(newQty) || 1;
     if (qty < 1) {
@@ -256,19 +270,10 @@ function removeFromCart(index) {
     updateCart();
 }
 
-// Clear cart (dev helper)
-function clearCart() {
-    cart = [];
-    updateCart();
-    alert('Cart cleared.');
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    // load cart from localStorage
     cart = JSON.parse(localStorage.getItem('cart')) || [];
     updateCartCount();
 
-    // Add event listeners to add-to-cart buttons (if any on page)
     const addButtons = document.querySelectorAll('.add-to-cart');
     addButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -276,15 +281,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // If we're on the cart page, render the cart
     if (document.getElementById('cart-items')) {
         updateCart();
     }
 
-    // If we're on the checkout page, render checkout summary and hook submit handler
     if (document.getElementById('checkout-items')) {
         renderCheckoutSummary();
         const checkoutForm = document.getElementById('checkout-form');
-        if (checkoutForm) checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+        }
     }
 });
