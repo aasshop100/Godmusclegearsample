@@ -672,6 +672,25 @@ a.btn.disabled {
     color: #ccc !important;
 }
 
+/* === Fix: Prevent overlap between Shopping Cart title and Order Summary === */
+#cart-items {
+    min-height: 200px; /* Ensures there's always some vertical space */
+}
+
+#empty-cart-message {
+    margin-top: 2rem; /* Push the empty cart message down a bit */
+    margin-bottom: 3rem; /* Adds spacing before the Order Summary card */
+}
+
+/* Optional: Center the empty cart message beautifully */
+#cart-items:has(#empty-cart-message[style*="display: block"]) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
 
 
 
