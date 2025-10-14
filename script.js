@@ -323,8 +323,6 @@ document.addEventListener("DOMContentLoaded", function() {
     updateCart();
     updateCartCount();
     updateCheckoutButton();
-});
-
 
     const addButtons = document.querySelectorAll('.add-to-cart');
     addButtons.forEach(button => {
@@ -354,6 +352,8 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
+
 
 
 
