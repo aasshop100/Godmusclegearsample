@@ -374,12 +374,19 @@ function showPaymentDetails(id) {
 }
 
 function copyToClipboard(elementId) {
-  const el = document.getElementById(elementId);
-  if (el) {
-    navigator.clipboard.writeText(el.value);
-    alert("Copied to clipboard!");
-  }
+  const input = document.getElementById(elementId);
+  if (!input) return;
+
+  navigator.clipboard.writeText(input.value)
+    .then(() => {
+      alert("Copied to clipboard!");
+    })
+    .catch(() => {
+      alert("Failed to copy. Please try manually.");
+    });
 }
+
+
 
 
 
