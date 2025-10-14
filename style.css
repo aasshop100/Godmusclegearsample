@@ -900,6 +900,20 @@ a.btn.disabled {
   transition: all 0.3s ease;
 }
 
+/* Smooth transition for Copy button */
+.payment-details .btn {
+  background-color: #212529 !important;   /* default dark */
+  color: #fff !important;
+  border: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* When copied */
+.payment-details .btn.copied {
+  background-color: #28a745 !important;   /* Bootstrap green */
+  color: #fff !important;
+}
+
 
 
 
