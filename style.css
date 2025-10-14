@@ -664,6 +664,14 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Disabled checkout button style */
+a.btn.disabled {
+    cursor: not-allowed !important;
+    background-color: #777 !important;
+    border-color: #777 !important;
+    color: #ccc !important;
+}
+
 
 
 
