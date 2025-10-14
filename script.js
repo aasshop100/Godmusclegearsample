@@ -254,7 +254,11 @@ function handleCheckoutSubmit(event) {
     .then(res => res.ok ? console.log("Owner email sent") : console.error("Owner email failed", res))
     .catch(err => console.error("Owner email error", err));
 
-    alert('Order Placed Successfully! Check your email for confirmation.');
+    // ✅ Show success message and clear cart
+alert("✅ Thank you! Your order has been submitted. Check your email for confirmation.");
+localStorage.removeItem('cart');
+window.location.href = "index.html";
+
 
     // Clear cart and redirect
     localStorage.setItem('cart', JSON.stringify([]));
@@ -296,5 +300,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   }
 });
+
 
 
