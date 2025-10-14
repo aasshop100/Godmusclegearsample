@@ -200,19 +200,20 @@ function handleCheckoutSubmit(event) {
     const userID = "8tIW2RqhekSLKVqLT";
 
     // Customer email payload
-    const customerPayload = {
-        service_id: serviceID,
-        template_id: "template_0ry9w0v",
-        user_id: userID,
-        template_params: {
-            order_id: orderId,
-            customer_name: fullName,
-            total: grandTotal.toFixed(2),
-            payment_method: paymentMethod,
-            full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
-            items_summary: itemsSummary
-        }
-    };
+  const customerPayload = {
+    service_id: serviceID,
+    template_id: "template_0ry9w0v",
+    user_id: userID,
+    template_params: {
+        order_id: orderId,
+        customer_name: fullName,
+        total: grandTotal.toFixed(2),
+        payment_method: paymentMethod,
+        full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
+        items_summary: itemsSummary,
+        customer_email: customerEmail  // ✅ Added this line
+    }
+};
 
     // Owner email payload
     const ownerPayload = {
@@ -284,3 +285,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
