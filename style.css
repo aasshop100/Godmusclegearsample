@@ -892,6 +892,10 @@ a.btn.disabled {
   color: #fff !important;
 }
 
+.payment-details .btn {
+  padding: 0.4rem 0.75rem;
+}
+
 
 
 
