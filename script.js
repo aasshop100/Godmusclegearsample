@@ -551,8 +551,21 @@ if (heroContent) {
   }, 400);
 }
 
+    // Hide scroll hint when user scrolls down
+window.addEventListener('scroll', () => {
+  const scrollHint = document.querySelector('.scroll-hint');
+  if (scrollHint) {
+    if (window.scrollY > 100) {
+      scrollHint.style.opacity = '0';
+      scrollHint.style.pointerEvents = 'none';
+    } else {
+      scrollHint.style.opacity = '1';
+      scrollHint.style.pointerEvents = 'auto';
+    }
+  }
 
 });
+
 
 
 
