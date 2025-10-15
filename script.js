@@ -551,7 +551,7 @@ if (heroContent) {
   }, 400);
 }
 
-    // Hide scroll hint when user scrolls down
+ // Hide scroll hint when user scrolls down
 window.addEventListener('scroll', () => {
   const scrollHint = document.querySelector('.scroll-hint');
   if (scrollHint) {
@@ -563,6 +563,6 @@ window.addEventListener('scroll', () => {
       scrollHint.style.pointerEvents = 'auto';
     }
   }
-}); // ✅ properly closed
+}); // closes the scroll event listener
 
-
+}); // ✅ closes the big DOMContentLoaded block
