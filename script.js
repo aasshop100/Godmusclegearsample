@@ -522,19 +522,19 @@ if (featured) {
   observer.observe(featured);
 }
 
-    // === Fade-in for Why Choose Us Section ===
+// === Fade-in for Why Choose Us Section ===
 const whyChoose = document.getElementById('why-choose');
 if (whyChoose) {
-  const cards = whyChoose.querySelectorAll('.card');
-  cards.forEach((card, i) => {
-    card.style.transitionDelay = `${0.15 * (i + 1)}s`;
+  const cols = whyChoose.querySelectorAll('.col-md-4');
+  cols.forEach((col, i) => {
+    col.style.transitionDelay = `${0.15 * (i + 1)}s`;
   });
 
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         whyChoose.classList.add('visible');
-        obs.unobserve(entry.target); // animate once
+        obs.unobserve(entry.target);
       }
     });
   }, { threshold: 0.2 });
@@ -543,7 +543,9 @@ if (whyChoose) {
 }
 
 
+
 });
+
 
 
 
