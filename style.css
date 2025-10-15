@@ -399,11 +399,12 @@ if (featuredSection) {
 #featured-products.visible .product-card:nth-child(2) { transition-delay: 0.30s; }
 #featured-products.visible .product-card:nth-child(3) { transition-delay: 0.45s; }
 
-/* === Fade-in Animation for Why Choose Us Section === */
+/* === Fade-in Animation for Why Choose Us Section (Corrected for Your Structure) === */
 #why-choose {
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.8s ease, transform 0.8s ease;
+  text-align: center;
 }
 
 #why-choose.visible {
@@ -411,19 +412,21 @@ if (featuredSection) {
   transform: translateY(0);
 }
 
-/* Animate each card inside with a small delay */
-#why-choose .card {
+/* Animate each column inside the section */
+#why-choose .col-md-4 {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s ease, transform 0.8s ease;
   will-change: opacity, transform;
+  text-align: center;
 }
 
-#why-choose.visible .card {
+#why-choose.visible .col-md-4 {
   opacity: 1;
   transform: translateY(0);
 }
 
-#why-choose.visible .card:nth-child(1) { transition-delay: 0.15s; }
-#why-choose.visible .card:nth-child(2) { transition-delay: 0.30s; }
-#why-choose.visible .card:nth-child(3) { transition-delay: 0.45s; }
+/* Add staggered delay for a smooth cascade */
+#why-choose.visible .col-md-4:nth-child(1) { transition-delay: 0.15s; }
+#why-choose.visible .col-md-4:nth-child(2) { transition-delay: 0.30s; }
+#why-choose.visible .col-md-4:nth-child(3) { transition-delay: 0.45s; }
