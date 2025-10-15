@@ -416,24 +416,38 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// === Telegram Popup Logic ===
+// === Telegram Popup Logic (shows once per day) ===
 document.addEventListener("DOMContentLoaded", function() {
   const popup = document.getElementById("telegram-popup");
+  if (!popup) return;
+
   const closeBtn = popup.querySelector(".close-btn");
+  const popupKey = "telegramPopupClosedAt";
 
-  // Show popup after 3 seconds
-  setTimeout(() => {
-    popup.classList.add("show");
-  }, 3000);
+  // Check if the user closed it within the last 24 hours
+  const lastClosed = localStorage.getItem(popupKey);
+  const now = Date.now();
 
-  // Close popup on button click
-  closeBtn.addEventListener("click", () => {
+  const oneDay = 24 * 60 * 60 * 1000;
+  const shouldShow = !lastClosed || now - lastClosed > oneDay;
+
+  if (shouldShow) {
+    setTimeout(() => {
+      popup.classList.add("show");
+    }, 3000);
+  }
+
+  // When closed, record the time
+  const closePopup = () => {
     popup.classList.remove("show");
-  });
+    localStorage.setItem(popupKey, Date.now());
+  };
 
-  // Optional: close when clicking outside the box
+  closeBtn.addEventListener("click", closePopup);
+
+  // Close when clicking outside the box
   popup.addEventListener("click", e => {
-    if (e.target === popup) popup.classList.remove("show");
+    if (e.target === popup) closePopup();
   });
 });
 
