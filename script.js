@@ -457,13 +457,20 @@ document.addEventListener("DOMContentLoaded", function() {
   updateCartCount();
   updateCheckoutButton();
 
-  // Add-to-cart button listeners
-  const addButtons = document.querySelectorAll('.add-to-cart');
-  addButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      addToCart(this);
-    });
+  // ✅ Add-to-cart button event binding (safe single-binding version)
+const addButtons = document.querySelectorAll('.add-to-cart');
+addButtons.forEach(button => {
+  // Remove any existing listener before reattaching (prevents double-fire)
+  button.replaceWith(button.cloneNode(true));
+});
+
+const refreshedButtons = document.querySelectorAll('.add-to-cart');
+refreshedButtons.forEach(button => {
+  button.addEventListener('click', function() {
+    addToCart(this);
   });
+});
+
 
   // Update cart or checkout summary if on respective pages
   if (document.getElementById('cart-items')) {
@@ -596,6 +603,7 @@ if (backToTopButton) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
+
 
 
 
