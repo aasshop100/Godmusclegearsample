@@ -552,4 +552,46 @@ if (featuredSection) {
   }
 }
 
+/* === Floating Cart Button === */
+.floating-cart {
+  position: fixed;
+  bottom: 95px; /* slightly above the back-to-top */
+  right: 25px;
+  background-color: #ff4500;
+  color: white;
+  font-size: 22px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  z-index: 9999;
+}
+
+.floating-cart:hover {
+  background-color: #e03e00;
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* === Floating Cart Count Badge === */
+.floating-cart span {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background-color: #ffffff;
+  color: #ff4500;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
 
