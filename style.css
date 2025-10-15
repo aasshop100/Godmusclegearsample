@@ -537,3 +537,7 @@ if (featuredSection) {
   transform: translateY(-3px);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
