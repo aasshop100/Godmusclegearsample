@@ -57,7 +57,7 @@ section.light {
   position: relative;
   background: #000000; /* solid black background */
   overflow: hidden;
-  min-height: 95vh; /* slightly taller hero section */
+  min-height: 70vh; /* slightly taller hero section */
   display: flex;
   align-items: center;
   justify-content: center;
