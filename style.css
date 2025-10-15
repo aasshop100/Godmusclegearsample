@@ -369,3 +369,30 @@ footer a:hover {
   margin: 10px auto 0;
   border-radius: 2px;
 }
+
+/* === FORCE FIX: Featured Products Title Visibility === */
+#featured-products h2,
+#featured-products h2 *,
+#featured-products .section-title {
+  color: #ffffff !important; /* absolute white text */
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.3); /* make it pop on dark backgrounds */
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center !important;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+/* Add an accent line under the title */
+#featured-products h2::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #ff4500, #e03e00);
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
