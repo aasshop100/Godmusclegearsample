@@ -542,9 +542,18 @@ if (whyChoose) {
   observer.observe(whyChoose);
 }
 
+// === Fade-in Animation for Hero Section ===
+const heroContent = document.querySelector('.hero-content');
+if (heroContent) {
+  // Delay a bit so it feels natural when page loads
+  setTimeout(() => {
+    heroContent.classList.add('visible');
+  }, 400);
+}
 
 
 });
+
 
 
 
