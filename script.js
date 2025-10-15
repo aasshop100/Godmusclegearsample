@@ -522,7 +522,29 @@ if (featured) {
   observer.observe(featured);
 }
 
+    // === Fade-in for Why Choose Us Section ===
+const whyChoose = document.getElementById('why-choose');
+if (whyChoose) {
+  const cards = whyChoose.querySelectorAll('.card');
+  cards.forEach((card, i) => {
+    card.style.transitionDelay = `${0.15 * (i + 1)}s`;
+  });
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        whyChoose.classList.add('visible');
+        obs.unobserve(entry.target); // animate once
+      }
+    });
+  }, { threshold: 0.2 });
+
+  observer.observe(whyChoose);
+}
+
+
 });
+
 
 
 
