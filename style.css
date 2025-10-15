@@ -430,3 +430,16 @@ if (featuredSection) {
 #why-choose.visible .col-md-4:nth-child(1) { transition-delay: 0.15s; }
 #why-choose.visible .col-md-4:nth-child(2) { transition-delay: 0.30s; }
 #why-choose.visible .col-md-4:nth-child(3) { transition-delay: 0.45s; }
+
+/* === Hero Section Fade-in Animation === */
+.hero-content {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.hero-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
