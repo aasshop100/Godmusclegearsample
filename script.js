@@ -416,41 +416,70 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// === Telegram Popup Logic (shows once per day) ===
+// === Combined Page Initialization ===
 document.addEventListener("DOMContentLoaded", function() {
-  const popup = document.getElementById("telegram-popup");
-  if (!popup) return;
+  // === CART INITIALIZATION ===
+  updateCart();
+  updateCartCount();
+  updateCheckoutButton();
 
-  const closeBtn = popup.querySelector(".close-btn");
-  const popupKey = "telegramPopupClosedAt";
+  // Add-to-cart button listeners
+  const addButtons = document.querySelectorAll('.add-to-cart');
+  addButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      addToCart(this);
+    });
+  });
 
-  // Check if the user closed it within the last 24 hours
-  const lastClosed = localStorage.getItem(popupKey);
-  const now = Date.now();
-
-  const oneDay = 24 * 60 * 60 * 1000;
-  const shouldShow = !lastClosed || now - lastClosed > oneDay;
-
-  if (shouldShow) {
-    setTimeout(() => {
-      popup.classList.add("show");
-    }, 3000);
+  // Update cart or checkout summary if on respective pages
+  if (document.getElementById('cart-items')) {
+    updateCart();
+  }
+  if (document.getElementById('checkout-items')) {
+    renderCheckoutSummary();
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+      checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+    }
   }
 
-  // When closed, record the time
-  const closePopup = () => {
-    popup.classList.remove("show");
-    localStorage.setItem(popupKey, Date.now());
-  };
-
-  closeBtn.addEventListener("click", closePopup);
-
-  // Close when clicking outside the box
-  popup.addEventListener("click", e => {
-    if (e.target === popup) closePopup();
+  // Highlight current page in navbar
+  document.querySelectorAll('.nav-link').forEach(link => {
+    if (link.href.includes(location.pathname.split("/").pop())) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
   });
-});
 
+  // === TELEGRAM POPUP (once per day) ===
+  const popup = document.getElementById("telegram-popup");
+  if (popup) {
+    const closeBtn = popup.querySelector(".close-btn");
+    const popupKey = "telegramPopupClosedAt";
+
+    const lastClosed = localStorage.getItem(popupKey);
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1000;
+    const shouldShow = !lastClosed || now - lastClosed > oneDay;
+
+    if (shouldShow) {
+      setTimeout(() => {
+        popup.classList.add("show");
+      }, 3000);
+    }
+
+    const closePopup = () => {
+      popup.classList.remove("show");
+      localStorage.setItem(popupKey, Date.now());
+    };
+
+    closeBtn.addEventListener("click", closePopup);
+    popup.addEventListener("click", e => {
+      if (e.target === popup) closePopup();
+    });
+  }
+});
 
 
 
