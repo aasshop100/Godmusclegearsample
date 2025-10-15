@@ -52,21 +52,26 @@ section.light {
   font-weight: 600;
 }
 
-/* === HERO SECTION WITH BACKGROUND LOGO === */
+/* === HERO SECTION WITH STRONGER BACKGROUND LOGO === */
 .hero {
   position: relative;
-  background: linear-gradient(135deg, #000000, #111111);
+  background: #000000; /* solid black background */
   overflow: hidden;
+  min-height: 95vh; /* slightly taller hero section */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("images/logo.png") center/220px no-repeat;
-  opacity: 0.08; /* subtle watermark effect */
+  background: url("images/logo.png") center/260px no-repeat;
+  opacity: 0.16; /* slightly more visible logo */
   transform: scale(1);
-  animation: heroLogoZoom 12s ease-in-out infinite alternate;
+  animation: heroLogoZoom 15s ease-in-out infinite alternate;
 }
 
 .hero .container {
@@ -74,16 +79,26 @@ section.light {
   z-index: 2;
 }
 
+/* Optional: Add a subtle overlay so text stays readable */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25); /* darkens just slightly */
+  z-index: 1;
+}
+
 @keyframes heroLogoZoom {
   from {
     transform: scale(1);
-    opacity: 0.08;
+    opacity: 0.16;
   }
   to {
     transform: scale(1.1);
-    opacity: 0.12;
+    opacity: 0.2;
   }
 }
+
 
 
 /* === Why Choose Us Section === */
