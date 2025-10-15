@@ -52,29 +52,24 @@ section.light {
   font-weight: 600;
 }
 
-/* === Hero Section === */
+/* === Hero Section (Responsive Height) === */
 .hero {
-  height: 80vh;
-  min-height: 500px;
-  background: linear-gradient(135deg, #000000, #1a1a1a, #222222);
+  background: linear-gradient(135deg, #000000, #1a1a1a);
+  color: #fff;
+  padding: 120px 0;
+  text-align: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  min-height: 80vh; /* Fill screen nicely but not too tall */
 }
 
-.hero h1, .hero p {
-  color: #fff;
-}
-
-.hero .btn-danger {
-  background-color: #ff4500;
-  border: none;
-  transition: background-color 0.3s ease;
-}
-
-.hero .btn-danger:hover {
-  background-color: #e03e00;
+@media (max-width: 768px) {
+  .hero {
+    padding: 80px 20px;
+    min-height: 60vh; /* smaller on phones */
+  }
 }
 
 /* === Why Choose Us Section === */
