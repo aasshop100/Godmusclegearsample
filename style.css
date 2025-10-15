@@ -595,3 +595,14 @@ if (featuredSection) {
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
+/* Pop animation for cart count */
+.pop {
+  animation: popScale 0.3s ease;
+}
+
+@keyframes popScale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
