@@ -1102,6 +1102,12 @@ section.bg-light .p-4 {
   background-color: #e03e00;
 }
 
+/* Force readable dark text inside popup */
+.popup-content, 
+.popup-content * {
+  color: #212529 !important; /* dark gray for readability */
+}
+
 .close-btn {
   position: absolute;
   top: 8px;
