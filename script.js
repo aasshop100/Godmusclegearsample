@@ -416,7 +416,26 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+// === Telegram Popup Logic ===
+document.addEventListener("DOMContentLoaded", function() {
+  const popup = document.getElementById("telegram-popup");
+  const closeBtn = popup.querySelector(".close-btn");
 
+  // Show popup after 3 seconds
+  setTimeout(() => {
+    popup.classList.add("show");
+  }, 3000);
+
+  // Close popup on button click
+  closeBtn.addEventListener("click", () => {
+    popup.classList.remove("show");
+  });
+
+  // Optional: close when clicking outside the box
+  popup.addEventListener("click", e => {
+    if (e.target === popup) popup.classList.remove("show");
+  });
+});
 
 
 
