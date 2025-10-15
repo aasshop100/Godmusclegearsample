@@ -276,8 +276,8 @@ footer a:hover {
   transform: translateX(-50%) translateY(0);
 }
 
-/* === Shop Now Button with Glow === */
-.btn-primary {
+/* === Shop Now Button Glow Animation === */
+.btn-danger {
   background-color: #ff4500;
   border: none;
   color: #fff;
@@ -289,7 +289,7 @@ footer a:hover {
   animation: pulseGlow 2.5s infinite;
 }
 
-.btn-primary:hover {
+.btn-danger:hover {
   background-color: #e03e00;
   transform: scale(1.05);
 }
