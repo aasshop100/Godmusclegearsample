@@ -563,5 +563,6 @@ window.addEventListener('scroll', () => {
       scrollHint.style.pointerEvents = 'auto';
     }
   }
+}); // ✅ properly closed
 
-});
+
