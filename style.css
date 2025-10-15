@@ -1048,7 +1048,8 @@ section.bg-light .p-4 {
   transform: translateY(0);
 }
 
-/* === Telegram Popup (Fixed Full-Screen Overlay) === */
+
+/* === Telegram Popup (Fixed Full-Screen Overlay - Final Fix) === */
 .telegram-popup {
   position: fixed;
   top: 0;
@@ -1068,7 +1069,8 @@ section.bg-light .p-4 {
 }
 
 .popup-content {
-  background: #ffffff;
+  background: #ffffff !important;
+  color: #212529 !important; /* Force all base text to dark */
   padding: 30px 25px;
   border-radius: 12px;
   max-width: 350px;
@@ -1078,12 +1080,22 @@ section.bg-light .p-4 {
   position: relative;
 }
 
+/* Force readable dark text for everything inside popup */
+.popup-content *,
+.popup-content h5,
+.popup-content p,
+.popup-content a,
+.popup-content button {
+  color: #212529 !important;
+}
+
 .popup-content h5 {
-  color: #ff4500;
+  color: #ff4500 !important; /* orange title */
+  font-weight: 700;
 }
 
 .popup-content p {
-  color: #333;
+  color: #333 !important; /* readable gray for body text */
 }
 
 .popup-content img {
@@ -1091,21 +1103,15 @@ section.bg-light .p-4 {
 }
 
 .popup-content .btn {
-  background-color: #ff4500;
+  background-color: #ff4500 !important;
   border: none;
-  color: #fff;
+  color: #fff !important;
   font-weight: 500;
   transition: background-color 0.3s ease;
 }
 
 .popup-content .btn:hover {
-  background-color: #e03e00;
-}
-
-/* Force readable dark text inside popup */
-.popup-content, 
-.popup-content * {
-  color: #212529 !important; /* dark gray for readability */
+  background-color: #e03e00 !important;
 }
 
 .close-btn {
@@ -1115,7 +1121,7 @@ section.bg-light .p-4 {
   background: none;
   border: none;
   font-size: 1.6rem;
-  color: #666;
+  color: #666 !important;
   cursor: pointer;
 }
 
