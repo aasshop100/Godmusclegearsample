@@ -314,19 +314,22 @@ footer a:hover {
   letter-spacing: 1px;
 }
 
-/* === Featured Products Title === */
+/* === Featured Products Title (Force Visible) === */
 #featured-products h2 {
-  color: #111 !important;           /* strong dark text */
-  font-weight: 700;                 /* bold and confident */
-  text-transform: uppercase;        /* ALL CAPS for emphasis */
-  letter-spacing: 1px;              /* subtle spacing for polish */
+  color: #111 !important;             /* force dark text color */
+  background: transparent !important; /* remove any inherited background */
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   text-align: center;
-  position: relative;
   display: inline-block;
+  width: 100%;
   margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
 }
 
-/* === Stylish underline accent === */
+/* === Orange underline accent === */
 #featured-products h2::after {
   content: "";
   display: block;
