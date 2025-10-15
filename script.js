@@ -7,20 +7,33 @@ const BASE_SHIPPING_PER_10 = 20.00;
 
 // ---------------- CART FUNCTIONS ----------------
 
-// Update navbar cart count
+// Update navbar + floating cart count
 function updateCartCount() {
     const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
     const cartCountEl = document.getElementById('cart-count');
-    
+    const floatingCartCount = document.getElementById('floating-cart-count');
+
+    // === Navbar Cart Count ===
     if (cartCountEl) {
         cartCountEl.textContent = totalQuantity;
 
-        // ✨ Trigger pop animation
-        cartCountEl.classList.remove('pop'); // reset animation if running
-        void cartCountEl.offsetWidth; // force reflow for restart
+        // ✨ Trigger pop animation (navbar)
+        cartCountEl.classList.remove('pop');
+        void cartCountEl.offsetWidth; // reset animation
         cartCountEl.classList.add('pop');
     }
 
+    // === Floating Cart Count ===
+    if (floatingCartCount) {
+        floatingCartCount.textContent = totalQuantity;
+
+        // ✨ Trigger pop animation (floating)
+        floatingCartCount.classList.remove('pop');
+        void floatingCartCount.offsetWidth; // reset animation
+        floatingCartCount.classList.add('pop');
+    }
+
+    // Save cart data
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
@@ -583,5 +596,6 @@ if (backToTopButton) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
+
 
 
