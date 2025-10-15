@@ -500,7 +500,23 @@ document.addEventListener("DOMContentLoaded", function() {
       if (e.target === popup) closePopup();
     });
   }
+
+    // === Fade-in for Featured Products Section ===
+const featuredSection = document.getElementById('featured-products');
+if (featuredSection) {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        featuredSection.classList.add('visible');
+        observer.unobserve(featuredSection); // Animate once only
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  observer.observe(featuredSection);
+}
 });
+
 
 
 
