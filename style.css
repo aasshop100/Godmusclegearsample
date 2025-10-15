@@ -524,20 +524,32 @@ if (featuredSection) {
   border-radius: 50%;
   font-size: 22px;
   cursor: pointer;
-  display: none; /* hidden by default */
+  display: none;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 15px rgba(255, 69, 0, 0.4);
   transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 999;
+  z-index: 9999;
+  animation: pulseGlow 2s infinite;
 }
 
 .back-to-top:hover {
   background-color: #e03e00;
-  transform: translateY(-3px);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);
 }
 
-html {
-  scroll-behavior: smooth;
+/* Glowing pulse animation */
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 8px rgba(255, 69, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(255, 69, 0, 0.3);
+  }
 }
+
 
