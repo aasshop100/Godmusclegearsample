@@ -1,935 +1,127 @@
-/* GOD MUSCLE GEARS - Custom Styles (Updated for White Text) */
-/* General Reset and Fonts */
-* {
-    box-sizing: border-box;
-}
-
+/* === Base Body Styles === */
 body {
-    font-family: 'Arial', sans-serif; /* Clean, bold font for fitness theme */
-    background-color: #1a1a1a; /* Dark gray-black for modern look */
-    color: #ffffff !important; /* Explicit white text everywhere */
-    line-height: 1.6;
+  font-family: 'Arial', sans-serif;
+  background-color: #1a1a1a;
+  color: #ffffff; /* keep white for dark background areas */
+  margin: 0;
+  padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-    color: #ff4500 !important; /* Red-orange for headings */
+/* Containers or sections with light backgrounds */
+.light-section,
+.light-section *,
+.popup-content,
+.why-choose,
+.why-choose *,
+.card,
+.contact-form,
+footer.bg-light,
+section.bg-light,
+section.light {
+  color: #212529 !important; /* dark text */
+  background-color: #ffffff;
 }
 
-/* Navbar Tweaks - Make it sticky and mobile-friendly */
+/* Headings inside light sections */
+.light-section h2, 
+.light-section h3, 
+.light-section h5,
+.why-choose h2, 
+.why-choose h5 {
+  color: #ff4500 !important; /* brand orange */
+}
+
+/* === Navbar === */
 .navbar {
-    background-color: #000000 !important; /* Pure black */
-    box-shadow: 0 2px 10px rgba(255, 69, 0, 0.3); /* Red glow shadow */
-    padding: 0.5rem 1rem; /* Slimmer padding */
+  background-color: #000;
+  border-bottom: 2px solid #ff4500;
 }
 
 .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ff4500 !important; /* Red brand name */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+  font-weight: bold;
+  color: #ff4500 !important;
 }
 
-.nav-link {
-    color: #ffffff !important; /* White links */
-    transition: color 0.3s ease; /* Smooth hover */
+.navbar-nav .nav-link {
+  color: #fff !important;
+  margin-left: 15px;
 }
 
-.nav-link:hover {
-    color: #ff4500 !important; /* Red on hover */
-}
-
-#cart-count {
-    background-color: #ff4500;
-    color: #ffffff !important; /* White count */
-    border-radius: 50%;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.8rem;
-    font-weight: bold;
-    margin-left: 0.3rem;
-}
-
-/* Product Cards - Better for Supplements */
-.card {
-    background-color: #2a2a2a; /* Dark card background */
-    border: 1px solid #ff4500; /* Red border */
-    color: #ffffff !important; /* White text in cards */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover animation */
-    margin-bottom: 1.5rem;
-}
-
-.card h6, .card p, .card strong {
-    color: #ffffff !important; /* Explicit white for card text */
-}
-
-.card:hover {
-    transform: translateY(-5px); /* Lift on hover */
-    box-shadow: 0 5px 15px rgba(255, 69, 0, 0.3); /* Red glow */
-}
-
-.card-img-top {
-    height: 200px;
-    object-fit: cover; /* Fit images nicely */
-    border-bottom: 2px solid #ff4500;
-}
-
-.btn-primary, .btn-success, .btn-danger {
-    background-color: #ff4500; /* Red buttons */
-    border-color: #ff4500;
-    color: #ffffff !important; /* White button text */
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.btn-primary:hover, .btn-success:hover, .btn-danger:hover {
-    background-color: #cc3700; /* Darker red on hover */
-    color: #ffffff !important; /* Keep white on hover */
-    transform: scale(1.05); /* Slight grow */
-}
-
-.add-to-cart {
-    width: 100%; /* Full-width add buttons on products */
-    margin-top: 0.5rem;
-}
-
-/* Footer Tweaks */
-footer {
-    background-color: #000000;
-    color: #ffffff !important; /* White footer text */
-    padding: 1rem 0;
-    margin-top: 2rem;
-}
-
-footer p {
-    margin: 0;
-    color: #ffffff !important;
-}
-
-/* General Responsive Tweaks */
-.container {
-    max-width: 1200px; /* Wider on desktop */
-}
-
-/* Mobile General - Ensure no horizontal scroll */
-@media (max-width: 768px) {
-    .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-    
-    .navbar-brand {
-        font-size: 1.2rem;
-    }
-    
-    .nav-link {
-        text-align: center;
-        padding: 0.5rem;
-        color: #ffffff !important; /* White on mobile */
-    }
-    
-    .card {
-        margin-bottom: 1rem;
-        color: #ffffff !important; /* White cards on mobile */
-    }
-    
-    .card h6, .card p, .card strong {
-        color: #ffffff !important;
-    }
-    
-    .btn {
-        width: 100%; /* Full-width buttons on mobile */
-        margin-bottom: 0.5rem;
-        color: #ffffff !important;
-    }
-}
-
-/* Specific Mobile Cart Improvements (cart.html) */
-@media (max-width: 768px) {
-    /* Stack cart rows vertically for mobile */
-    #cart-items .row {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    #cart-items .col-md-2, #cart-items .col-md-3, #cart-items .col-md-2:nth-child(3), #cart-items .col-md-2:nth-child(4), #cart-items .col-md-3:nth-child(5) {
-        margin-bottom: 0.5rem;
-        text-align: center;
-        color: #ffffff !important; /* White text in cart columns */
-    }
-    
-    /* Smaller images on mobile */
-    #cart-items img {
-        width: 100px !important;
-        height: 100px !important;
-        margin: 0 auto;
-        display: block;
-    }
-    
-    /* Full-width quantity input and buttons */
-    #cart-items input[type="number"] {
-        width: 100% !important;
-        max-width: 100px;
-        margin: 0 auto;
-        display: block;
-        background-color: #3a3a3a; /* Dark input bg */
-        color: #ffffff !important; /* White input text */
-        border: 1px solid #ff4500;
-    }
-    
-    #cart-items input[type="number"]::placeholder {
-        color: #cccccc !important; /* Light gray placeholder */
-    }
-    
-    #cart-items .btn {
-        width: 100%;
-        margin-top: 0.5rem;
-        color: #ffffff !important;
-    }
-    
-    /* Order summary on mobile - stack totals */
-    .order-summary .row {
-        flex-direction: column;
-    }
-    
-    .order-summary .col-md-6 {
-        margin-bottom: 0.5rem;
-        color: #ffffff !important;
-    }
-    
-    /* Scrollable cart items if many */
-    #cart-items {
-        max-height: 60vh;
-        overflow-y: auto;
-        padding-right: 0.5rem;
-    }
-    
-    #cart-items::-webkit-scrollbar {
-        width: 5px;
-    }
-    
-    #cart-items::-webkit-scrollbar-track {
-        background: #2a2a2a;
-    }
-    
-    #cart-items::-webkit-scrollbar-thumb {
-        background: #ff4500;
-        border-radius: 5px;
-    }
-}
-
-/* Checkout Form Mobile Tweaks (checkout.html) */
-@media (max-width: 768px) {
-    #checkout-form .row {
-        flex-direction: column;
-    }
-    
-    #checkout-form .col-md-6, #checkout-form .col-md-4 {
-        margin-bottom: 1rem;
-        color: #ffffff !important;
-    }
-    
-   #checkout-form input, #checkout-form select, #checkout-form label, #checkout-form textarea {
-    color: #000000 !important; /* Black text for readability */
-    background-color: #ffffff !important; /* White background */
-    border: 1px solid #ff4500 !important; /* Red border to match theme */
-}
-
-#checkout-form input::placeholder, #checkout-form select::placeholder {
-    color: #999999 !important; /* Gray placeholder text */
-}
-
-#checkout-form input:focus, #checkout-form select:focus {
-    border-color: #ff4500 !important;
-    box-shadow: 0 0 0 0.2rem rgba(255, 69, 0, 0.25) !important; /* Red glow on focus */
-    color: #000000 !important;
-    background-color: #ffffff !important;
-}
-    
-    #checkout-form input::placeholder {
-        color: #cccccc !important; /* Light gray placeholder */
-    }
-    
-    #checkout-form .form-check-label {
-        color: #ffffff !important;
-    }
-    
-    .order-summary {
-        margin-top: 2rem;
-        color: #ffffff !important;
-    }
-    
-    .form-check {
-        padding-left: 0;
-        text-align: left;
-    }
-    
-    .form-check-input {
-        margin-right: 0.5rem;
-    }
-}
-
-/* Product Grid Mobile */
-@media (max-width: 768px) {
-    .product-grid .row {
-        margin-left: 0;
-        margin-right: 0;
-    }
-    
-    .product-grid .col-md-4 {
-        padding: 0.5rem;
-    }
-    
-    .product-grid .card {
-        height: 100%;
-        color: #ffffff !important;
-    }
-    
-    .product-grid .card h6, .product-grid .card p {
-        color: #ffffff !important;
-    }
-}
-
-/* Hover Effects for Products (Desktop Only) */
-@media (min-width: 769px) {
-    .card {
-        transition: all 0.3s ease;
-    }
-    
-    .card:hover .card-img-top {
-        transform: scale(1.05); /* Zoom image on hover */
-    }
-    
-    .add-to-cart:hover {
-        background-color: #cc3700;
-        color: #ffffff !important;
-    }
-}
-
-/* Loading Animation for Add to Cart (Optional Fun) */
-.add-to-cart {
-    position: relative;
-    overflow: hidden;
-}
-
-.add-to-cart.loading {
-    pointer-events: none;
-}
-
-.add-to-cart.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid #ffffff; /* White spinner */
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Ensure all text elements are white globally */
-p, li, span, label, input, select, textarea {
-    color: #ffffff !important;
-}
-
-.text-muted {
-    color: #cccccc !important; /* Light gray for muted text, but still readable */
-}
-
-/* Checkout Dropdown Fix - Black Text for Options */
-#checkout-form .form-select {
-    color: #ffffff !important; /* White text in the select box */
-    background-color: #3a3a3a !important; /* Dark background for box */
-    border: 1px solid #ff4500 !important; /* Red border */
-}
-
-#checkout-form .form-select option {
-    color: #000000 !important; /* Black text for dropdown options */
-    background-color: #ffffff !important; /* White background for options */
-}
-
-#checkout-form .form-select option:checked {
-    color: #000000 !important; /* Black for selected option too */
-    background-color: #ff4500 !important; /* Red highlight for selected */
-}
-
-/* Mobile Dropdown - Ensure visibility */
-@media (max-width: 768px) {
-    #checkout-form .form-select {
-        font-size: 16px; /* Prevent zoom on iOS */
-        min-height: 48px; /* Taller for touch */
-    }
-}
-
-/* Video Section Styles */
-.video-section {
-    background-color: #1a1a1a; /* Dark bg matching site */
-}
-
-.video-card {
-    background-color: #2a2a2a; /* Dark card */
-    border: 1px solid #ff4500; /* Red border */
-    color: #ffffff !important; /* White text */
-    transition: transform 0.3s ease;
-}
-
-.video-card:hover {
-    transform: translateY(-5px); /* Lift on hover */
-    box-shadow: 0 5px 15px rgba(255, 69, 0, 0.3); /* Red glow */
-}
-
-.video-card h5 {
-    color: #ff4500 !important; /* Red titles */
-    font-size: 1.1rem;
-}
-
-.video-card p {
-    color: #ffffff !important; /* White descriptions */
-    font-size: 0.95rem;
-}
-
-/* Responsive Video Embeds (Bootstrap Ratio Utility) */
-.ratio iframe {
-    border: none;
-    border-radius: 8px;
-}
-
-/* Mobile Video Section */
-@media (max-width: 768px) {
-    .video-section h2 {
-        font-size: 1.5rem;
-    }
-    
-    .video-card {
-        margin-bottom: 1rem;
-    }
-    
-    .ratio {
-        max-width: 100%;
-    }
-    
-    .video-card p {
-        font-size: 0.9rem;
-    }
-}
-
-/* Minimal Fix: Shop Now Text Color on Mobile Only */
-   @media (max-width: 768px) {
-       /* Target buttons/links with "Shop Now" text */
-       a[href*="shop"], button:contains("Shop Now"), .btn:contains("Shop Now") {
-           color: #000000 !important; /* Black text for visibility */
-       }
-       
-       /* If it's a specific class (e.g., .shop-now-btn), use this instead */
-       .shop-now-btn {
-           color: #000000 !important; /* Black on mobile */
-       }
-   }
-   
-/* Search Bar Text Visibility Fix - For id="product-search" */
-#product-search {
-    color: #000000 !important; /* Black text when typing */
-    background-color: #ffffff !important; /* White background for contrast */
-    border: 1px solid #ff4500 !important; /* Red border to match theme */
-}
-
-#product-search::placeholder {
-    color: #cccccc !important; /* Light gray placeholder */
-}
-
-#product-search:focus {
-    color: #000000 !important; /* Black text on focus */
-    background-color: #ffffff !important; /* White bg on focus */
-    border-color: #ff4500 !important; /* Red border on focus */
-    box-shadow: 0 0 0 0.2rem rgba(255, 69, 0, 0.25); /* Red glow */
-}
-
-/* Mobile - Ensure larger/touch-friendly, no extra space */
-@media (max-width: 768px) {
-    #product-search {
-        font-size: 16px; /* Prevent zoom on iOS */
-        min-height: 48px; /* Taller for easy tapping */
-        width: 100%; /* Full-width on mobile */
-        margin-bottom: 0 !important; /* Remove space below search bar */
-    }
-    
-    /* Pull product grid up to eliminate gap */
-    .product-grid, .row.product-row {
-        margin-top: -1rem !important; /* Negative margin to close gap */
-        padding-top: 0 !important; /* No padding above products */
-    }
-    
-    /* Ensure filtered products have no extra space */
-    .card {
-        margin-bottom: 0.5rem !important; /* Tighter spacing between cards on mobile */
-    }
-}
-
-/* Fix Gap Below Search Bar on Mobile (Products Page) */
-@media (max-width: 768px) {
-    /* Remove space below navbar/search bar */
-    .navbar {
-        margin-bottom: 0 !important; /* No gap after navbar */
-        padding-bottom: 0 !important;
-    }
-    
-    #product-search {
-        margin-bottom: 0 !important; /* No space below search input */
-        border-radius: 0.375rem 0 0 0.375rem; /* Slight rounding if needed */
-    }
-    
-    /* Pull product container/row up to touch search bar */
-    .container:first-of-type .row { /* Targets the first row after search (your products) */
-        margin-top: -1rem !important; /* Negative margin to close gap */
-        padding-top: 0 !important; /* No padding above products */
-        margin-bottom: 1rem !important; /* Normal space below */
-    }
-    
-    /* Tighter spacing for visible cards after filtering */
-    .row .col-md-4 {
-        padding: 0.25rem !important; /* Less padding between columns on mobile */
-        margin-bottom: 0.5rem !important; /* Tighter card spacing */
-    }
-    
-    .card {
-        margin-bottom: 0.5rem !important; /* No extra space between filtered cards */
-    }
-    
-    /* Hide empty columns if all cards in row are hidden */
-    .row .col-md-4:empty {
-        display: none !important; /* Remove empty spaces from hidden cards */
-    }
-}
-
-/* General - Ensure no gaps on desktop too */
-.container .row {
-    margin-top: 0.5rem; /* Minimal top space on desktop */
-}
-
-/* Checkout Payment Section Design (Appealing & Fixed Overlap) */
-.payment-section {
-    background-color: #1a1a1a; /* Dark theme */
-}
-
-.payment-card {
-    background-color: #2a2a2a; /* Dark card bg */
-    border: 1px solid #ff4500; /* Red border */
-    color: #ffffff !important; /* White text */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 0.5rem; /* Rounded corners */
-}
-
-.payment-card:hover {
-    transform: translateY(-2px); /* Subtle lift */
-    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.2); /* Red glow */
-}
-
-.payment-icon i {
-    transition: color 0.3s ease;
-}
-
-.payment-card:hover .payment-icon i {
-    color: #ffffff !important; /* White on hover */
-}
-
-.form-check-input:checked {
-    background-color: #ff4500; /* Red radio when selected */
-    border-color: #ff4500;
-}
-
-.wallet-address {
-    font-family: 'Courier New', monospace; /* Monospace for addresses */
-    font-size: 0.8rem; /* Smaller text */
-    line-height: 1.3;
-    max-height: 60px; /* Limit height */
-    overflow-y: auto; /* Scroll if long */
-}
-
-.copy-btn {
-    font-size: 0.75rem; /* Smaller text */
-    padding: 0.3rem 0.6rem; /* Compact padding */
-    margin-top: 0.25rem; /* Small space above */
-    border-radius: 0.25rem; /* Rounded */
-    background-color: #ff4500; /* Red */
-    color: #ffffff !important; /* White text */
-    border: none;
-    transition: all 0.3s ease;
-    width: 100%; /* Full-width but small */
-}
-
-/* Checkout Form Inputs - Strong Override for Desktop Readability (Fix for White Text Issue) */
-#checkout-form {
-    color: #000000 !important; /* Base black for form */
-}
-
-#checkout-form input[type="text"],
-#checkout-form input[type="email"],
-#checkout-form input[type="tel"],
-#checkout-form input[type="file"],
-#checkout-form select,
-#checkout-form textarea {
-    color: #000000 !important; /* Black text - stronger specificity for desktop */
-    background-color: #ffffff !important; /* White background */
-    border: 1px solid #ff4500 !important; /* Red border */
-    padding: 0.5rem; /* Extra padding for comfort */
-    font-size: 1rem; /* Standard size */
-}
-
-/* Placeholders - Gray text like "Enter your email" */
-#checkout-form input[type="text"]::-webkit-input-placeholder,
-#checkout-form input[type="email"]::-webkit-input-placeholder,
-#checkout-form input[type="tel"]::-webkit-input-placeholder,
-#checkout-form input[type="file"]::-webkit-input-placeholder,
-#checkout-form select option,
-#checkout-form textarea::-webkit-input-placeholder {
-    color: #999999 !important; /* Gray placeholders */
-}
-
-/* Firefox-specific placeholder */
-#checkout-form input::-moz-placeholder,
-#checkout-form textarea::-moz-placeholder {
-    color: #999999 !important;
-    opacity: 1;
-}
-
-/* Focus effects - Red glow when clicking in box */
-#checkout-form input:focus,
-#checkout-form select:focus,
-#checkout-form textarea:focus {
-    color: #000000 !important;
-    background-color: #ffffff !important;
-    border-color: #ff4500 !important;
-    box-shadow: 0 0 0 0.2rem rgba(255, 69, 0, 0.25) !important; /* Red focus glow */
-    outline: none; /* Remove default outline */
-}
-
-/* Labels in checkout - Black for readability */
-#checkout-form label {
-    color: #000000 !important; /* Black labels */
-    font-weight: bold;
-}
-
-/* Desktop-specific: Force black/white override (beats global white rule) */
-@media (min-width: 769px) {
-    #checkout-form input,
-    #checkout-form select,
-    #checkout-form textarea,
-    #checkout-form label {
-        color: #000000 !important;
-        background-color: #ffffff !important;
-    }
-
-    #checkout-form input::placeholder {
-        color: #999999 !important;
-    }
-}
-
-/* Mobile: Reinforce black/white (already working, but ensure consistency) */
-@media (max-width: 768px) {
-    #checkout-form input,
-    #checkout-form select,
-    #checkout-form textarea,
-    #checkout-form label {
-        color: #000000 !important;
-        background-color: #ffffff !important;
-    }
-
-    #checkout-form input::placeholder {
-        color: #999999 !important;
-    }
-}
-
-/* Complete the incomplete media query from original file (if present - this fixes VS Code error) */
-@media (max-width: 768px) {
-    /* Empty or add mobile tweaks here if needed - this closes the rule properly */
-}
-
-/* === Small Visual Enhancements === */
-
-/* Active nav link style */
 .navbar-nav .nav-link.active {
-    color: #ff4500 !important;
-    text-decoration: underline;
+  color: #ff4500 !important;
+  font-weight: 600;
 }
 
-/* Smooth scrolling for a modern feel */
-html {
-    scroll-behavior: smooth;
+/* === Hero Section === */
+.hero {
+  height: 80vh;
+  min-height: 500px;
+  background: linear-gradient(135deg, #000000, #1a1a1a, #222222);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-/* Disabled checkout button style */
-a.btn.disabled {
-    cursor: not-allowed !important;
-    background-color: #777 !important;
-    border-color: #777 !important;
-    color: #ccc !important;
+.hero h1, .hero p {
+  color: #fff;
 }
 
-/* === Fix: Prevent overlap between Shopping Cart title and Order Summary === */
-#cart-items {
-    min-height: 200px; /* Ensures there's always some vertical space */
-}
-
-#empty-cart-message {
-    margin-top: 2rem; /* Push the empty cart message down a bit */
-    margin-bottom: 3rem; /* Adds spacing before the Order Summary card */
-}
-
-/* Optional: Center the empty cart message beautifully */
-#cart-items:has(#empty-cart-message[style*="display: block"]) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 300px;
-}
-
-/* === Fix Cart Item Layout Alignment === */
-#cart-items .card-body .row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-/* Make sure the image stays on the left and aligned */
-#cart-items .col-md-2 img {
-    display: block;
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-right: 1rem;
-}
-
-/* Ensure item info (name, price, quantity) aligns next to image nicely */
-#cart-items .col-md-3, 
-#cart-items .col-md-2, 
-#cart-items .col-md-3:last-child {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-/* Tidy up spacing and text alignment */
-#cart-items h6 {
-    margin-bottom: 0.25rem;
-}
-
-#cart-items p.text-muted {
-    margin-bottom: 0.25rem;
-    font-size: 0.9rem;
-}
-
-/* Optional: Keep cart layout tighter on desktop (no wrapping) */
-@media (min-width: 992px) {
-    #cart-items .card-body .row {
-        flex-wrap: nowrap;
-    }
-}
-
-
-/* Clean divider between cart items */
-#cart-items .card {
-    border: 1px solid #333;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-}
-
-#cart-items .card:not(:last-child) {
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #ff4500; /* Red-orange separator */
-}
-
-/* === Added to Cart Toast (mobile friendly) === */
-.added-toast {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ff4500;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-weight: bold;
-    font-size: 0.95rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transition: opacity 0.4s ease, bottom 0.4s ease;
-}
-
-/* === Added to Cart Toast (with smooth slide animation) === */
-.added-toast {
-    position: fixed;
-    bottom: -60px; /* start hidden below screen */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ff4500;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-weight: bold;
-    font-size: 0.95rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transition: opacity 0.4s ease, bottom 0.5s ease-out;
-}
-
-.added-toast.show {
-    opacity: 1;
-    bottom: 100px; /* slides up smoothly */
-}
-
-/* Adjust for mobile */
-@media (max-width: 768px) {
-    .added-toast {
-        bottom: -50px;
-        font-size: 0.9rem;
-        padding: 8px 16px;
-    }
-
-    .added-toast.show {
-        bottom: 80px;
-    }
-}
-
-/* === Cart Count Pop Animation === */
-@keyframes cartPop {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.4); }
-    60% { transform: scale(0.9); }
-    100% { transform: scale(1); }
-}
-
-#cart-count.pop {
-    animation: cartPop 0.4s ease;
-}
-
-/* Checkout Page Spacing and Alignment */
-#checkout-form .mb-3 {
-    margin-bottom: 1.25rem;
-}
-#checkout-form h5 {
-    margin-bottom: 1.5rem;
-}
-
-/* Make inputs full width on small screens */
-@media (max-width: 767px) {
-    #checkout-form .row > [class*="col-"] {
-        width: 100%;
-    }
-}
-
-/* Optional: subtle border or shadow to the form container */
-#checkout-form {
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-
-/* === Checkout Page Spacing and Layout Fixes === */
-#checkout-form .mb-3 {
-  margin-bottom: 1.25rem !important;
-}
-
-#checkout-form h5 {
-  margin-bottom: 1.5rem !important;
-}
-
-/* Add soft background and padding */
-#checkout-form {
-  padding: 1.5rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Mobile fix */
-@media (max-width: 767px) {
-  #checkout-form .row > [class*="col-"] {
-    width: 100%;
-  }
-}
-
-.payment-details {
-  transition: all 0.3s ease;
-}
-
-.payment-details .input-group input {
-  background-color: #fff;
-  border-radius: 6px 0 0 6px;
-}
-
-.payment-details .btn {
-  border-radius: 0 6px 6px 0;
-  font-weight: 500;
-}
-
-/* Fix invisible Copy button text and style it nicely */
-.payment-details .btn {
-  background-color: #212529 !important; /* dark button */
-  color: #fff !important;               /* white text */
+.hero .btn-danger {
+  background-color: #ff4500;
   border: none;
-  font-weight: 500;
-  border-radius: 0 6px 6px 0;
   transition: background-color 0.3s ease;
 }
 
-.payment-details .btn:hover {
-  background-color: #ff4500 !important; /* match your orange theme */
-  color: #fff !important;
+.hero .btn-danger:hover {
+  background-color: #e03e00;
 }
 
-.payment-details .btn {
-  padding: 0.4rem 0.75rem;
+/* === Why Choose Us Section === */
+.why-choose {
+  background-color: #f8f9fa;
+  color: #212529 !important;
 }
 
-.payment-details .btn {
+.why-choose * {
+  color: #212529 !important;
+}
+
+.why-choose h2 {
+  color: #ff4500 !important;
+}
+
+.why-choose h5 {
+  color: #ff4500 !important;
+  font-weight: 600;
+}
+
+.why-choose .p-4 {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
   transition: all 0.3s ease;
 }
 
-/* Smooth transition for Copy button */
-.payment-details .btn {
-  background-color: #212529 !important;   /* default dark */
-  color: #fff !important;
-  border: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
+.why-choose .p-4:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* When copied */
-.payment-details .btn.copied {
-  background-color: #28a745 !important;   /* Bootstrap green */
-  color: #fff !important;
-}
-
-/* ==== FEATURED PRODUCTS STYLE UPGRADE ==== */
-
-/* Container spacing */
-section#featured-products, .featured-products-section {
+/* === Featured Products === */
+section#featured-products,
+.featured-products-section {
   background-color: #f8f9fa;
   padding: 60px 0;
 }
 
-/* Headline */
-section#featured-products h2, .featured-products-section h2 {
+section#featured-products h2,
+.featured-products-section h2 {
   color: #ff4500;
   font-weight: 700;
   margin-bottom: 2rem;
 }
 
-/* Product cards */
 .card {
   border: none;
   border-radius: 10px;
@@ -943,13 +135,11 @@ section#featured-products h2, .featured-products-section h2 {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-/* Product image */
 .card img {
   height: 250px;
   object-fit: cover;
 }
 
-/* Product title and text */
 .card-title {
   font-weight: 600;
   color: #333;
@@ -959,7 +149,6 @@ section#featured-products h2, .featured-products-section h2 {
   color: #666;
 }
 
-/* Product button */
 .card .btn {
   background-color: #ff4500;
   color: #fff;
@@ -972,84 +161,23 @@ section#featured-products h2, .featured-products-section h2 {
   background-color: #e03e00;
 }
 
-
-/* Why Choose Us section tweaks */
-section.bg-light h5 {
-  color: #ff4500; /* make titles pop */
+/* === Footer === */
+footer {
+  background-color: #000;
+  color: #fff;
+  padding: 20px 0;
 }
 
-section.bg-light p {
-  color: #333; /* dark gray text for readability */
+footer a {
+  color: #ff4500;
+  text-decoration: none;
 }
 
-
-/* === WHY CHOOSE US SECTION FIX === */
-section.bg-light,
-section.bg-light * {
-  color: #212529 !important; /* force readable dark text */
+footer a:hover {
+  text-decoration: underline;
 }
 
-section.bg-light h2 {
-  color: #ff4500 !important; /* keep your brand orange for title */
-}
-
-section.bg-light h5 {
-  color: #ff4500 !important; /* make subheadings (icons) orange too */
-  font-weight: 600;
-}
-
-section.bg-light .p-4 {
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-}
-
-/* === WHY CHOOSE US FIX (FINAL) === */
-.why-choose {
-  background-color: #f8f9fa; /* light gray background */
-  color: #212529; /* default readable dark gray text */
-}
-
-.why-choose * {
-  color: #212529 !important; /* force all inner text to dark */
-}
-
-.why-choose h2 {
-  color: #ff4500 !important; /* orange heading */
-}
-
-.why-choose h5 {
-  color: #ff4500 !important;
-  font-weight: 600;
-}
-
-.why-choose .p-4 {
-  background-color: #ffffff; /* white boxes */
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-}
-
-/* Optional: lift effect when hovered */
-.why-choose .p-4:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: 0.3s ease;
-}
-
-/* === Fade-in Animation for Why Choose Us cards === */
-.why-choose .p-4 {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.why-choose .p-4.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-
-/* === Telegram Popup (Fixed Full-Screen Overlay - Final Fix) === */
+/* === Telegram Popup (Final Fix) === */
 .telegram-popup {
   position: fixed;
   top: 0;
@@ -1060,7 +188,7 @@ section.bg-light .p-4 {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* make sure it's above everything */
+  z-index: 9999;
 }
 
 .telegram-popup.show {
@@ -1070,7 +198,7 @@ section.bg-light .p-4 {
 
 .popup-content {
   background: #ffffff !important;
-  color: #212529 !important; /* Force all base text to dark */
+  color: #212529 !important;
   padding: 30px 25px;
   border-radius: 12px;
   max-width: 350px;
@@ -1080,7 +208,6 @@ section.bg-light .p-4 {
   position: relative;
 }
 
-/* Force readable dark text for everything inside popup */
 .popup-content *,
 .popup-content h5,
 .popup-content p,
@@ -1090,12 +217,12 @@ section.bg-light .p-4 {
 }
 
 .popup-content h5 {
-  color: #ff4500 !important; /* orange title */
+  color: #ff4500 !important;
   font-weight: 700;
 }
 
 .popup-content p {
-  color: #333 !important; /* readable gray for body text */
+  color: #333 !important;
 }
 
 .popup-content img {
@@ -1129,4 +256,3 @@ section.bg-light .p-4 {
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
 }
-
