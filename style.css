@@ -68,7 +68,7 @@ section.light {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("images/logo.png") center/340px no-repeat;
+  background: url("images/logo.png") center/400px no-repeat;
   opacity: 0.16; /* slightly more visible logo */
   transform: scale(1);
   animation: heroLogoZoom 15s ease-in-out infinite alternate;
