@@ -501,21 +501,29 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-    // === Fade-in for Featured Products Section ===
-const featuredSection = document.getElementById('featured-products');
-if (featuredSection) {
-  const observer = new IntersectionObserver(entries => {
+ // === Fade-in for Featured Products Section ===
+const featured = document.getElementById('featured-products');
+if (featured) {
+  const cards = featured.querySelectorAll('.product-card');
+
+  cards.forEach((card, i) => {
+    card.style.transitionDelay = `${0.15 * (i + 1)}s`;
+  });
+
+  const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        featuredSection.classList.add('visible');
-        observer.unobserve(featuredSection); // Animate once only
+        featured.classList.add('visible');
+        obs.unobserve(entry.target);
       }
     });
   }, { threshold: 0.2 });
-  
-  observer.observe(featuredSection);
+
+  observer.observe(featured);
 }
+
 });
+
 
 
 
