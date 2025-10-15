@@ -307,52 +307,14 @@ footer a:hover {
   }
 }
 
-#featured-products h2 {
-  color: #212529 !important; /* dark gray, visible on light backgrounds */
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* === Featured Products Title (Force Visible) === */
-#featured-products h2 {
-  color: #111 !important;             /* force dark text color */
-  background: transparent !important; /* remove any inherited background */
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-align: center;
-  display: inline-block;
-  width: 100%;
-  margin-bottom: 2rem;
-  position: relative;
-  z-index: 2;
-}
-
-/* === Orange underline accent === */
-#featured-products h2::after {
-  content: "";
-  display: block;
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(90deg, #ff4500, #e03e00);
-  margin: 10px auto 0;
-  border-radius: 2px;
-}
-
-*#featured-products h2 {
-  color: black !important;
-}
-
-/* === Fix for Featured Products on Dark Background === */
+/* === Featured Products Section Fix === */
 #featured-products {
-  background-color: #111; /* keep the dark section */
+  background-color: #111; /* keep your dark section */
   padding: 60px 0;
-  text-align: center;
 }
 
 #featured-products h2 {
-  color: #fff !important; /* bright white for visibility */
+  color: #ffffff !important; /* bright white */
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -370,29 +332,4 @@ footer a:hover {
   border-radius: 2px;
 }
 
-/* === FORCE FIX: Featured Products Title Visibility === */
-#featured-products h2,
-#featured-products h2 *,
-#featured-products .section-title {
-  color: #ffffff !important; /* absolute white text */
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.3); /* make it pop on dark backgrounds */
-  font-weight: 800 !important;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-align: center !important;
-  margin-bottom: 2rem;
-  position: relative;
-  z-index: 10;
-}
-
-/* Add an accent line under the title */
-#featured-products h2::after {
-  content: "";
-  display: block;
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(90deg, #ff4500, #e03e00);
-  margin: 10px auto 0;
-  border-radius: 2px;
-}
 
