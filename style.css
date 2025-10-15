@@ -344,3 +344,28 @@ footer a:hover {
   color: black !important;
 }
 
+/* === Fix for Featured Products on Dark Background === */
+#featured-products {
+  background-color: #111; /* keep the dark section */
+  padding: 60px 0;
+  text-align: center;
+}
+
+#featured-products h2 {
+  color: #fff !important; /* bright white for visibility */
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+#featured-products h2::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #ff4500, #e03e00);
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
