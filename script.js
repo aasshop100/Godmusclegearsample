@@ -24,6 +24,27 @@ function updateCartCount() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
+// === Show Floating Notification ===
+function showCartNotification(message) {
+  // Remove any existing notification first
+  const existing = document.querySelector('.cart-notification');
+  if (existing) existing.remove();
+
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = 'cart-notification';
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  // Trigger fade-in
+  setTimeout(() => notification.classList.add('show'), 50);
+
+  // Auto-hide after 3 seconds
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 400);
+  }, 3000);
+}
 
 // Show "Added to Cart" popup message
 function showAddedToast(itemName) {
