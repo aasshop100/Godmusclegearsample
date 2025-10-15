@@ -151,7 +151,7 @@ function addToCart(button) {
     }
 
     updateCart();
-    showAddedToast(name);
+    showCartNotification(`✅ ${name} added to cart!`);
 }
 
 // Quantity change
