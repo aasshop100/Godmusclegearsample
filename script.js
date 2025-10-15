@@ -566,3 +566,22 @@ window.addEventListener('scroll', () => {
 }); // closes the scroll event listener
 
 }); // ✅ closes the big DOMContentLoaded block
+
+// === Back to Top Button ===
+const backToTopButton = document.getElementById("backToTop");
+
+if (backToTopButton) {
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      backToTopButton.style.display = "flex";
+    } else {
+      backToTopButton.style.display = "none";
+    }
+  });
+
+  backToTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+
