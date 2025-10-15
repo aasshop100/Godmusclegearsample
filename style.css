@@ -275,3 +275,34 @@ footer a:hover {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* === Shop Now Button with Glow === */
+.btn-primary {
+  background-color: #ff4500;
+  border: none;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 0 0 rgba(255, 69, 0, 0.5);
+  animation: pulseGlow 2.5s infinite;
+}
+
+.btn-primary:hover {
+  background-color: #e03e00;
+  transform: scale(1.05);
+}
+
+/* === Pulse Glow Animation === */
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 69, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(255, 69, 0, 0.5);
+  }
+}
