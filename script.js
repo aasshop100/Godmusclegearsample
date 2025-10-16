@@ -604,6 +604,29 @@ if (backToTopButton) {
   });
 }
 
+// === Product Image Modal Preview ===
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = new bootstrap.Modal(document.getElementById('productModal'));
+  const modalImage = document.getElementById('modalProductImage');
+  const modalTitle = document.getElementById('modalProductTitle');
+  const modalDesc = document.getElementById('modalProductDescription');
+
+  document.querySelectorAll('.card-img-top').forEach(img => {
+    img.style.cursor = 'pointer'; // show it's clickable
+    img.addEventListener('click', () => {
+      const card = img.closest('.card');
+      const title = card.querySelector('.card-title')?.textContent || 'Product';
+      const desc = card.querySelector('.card-text')?.innerHTML || '';
+      const src = img.getAttribute('src');
+
+      modalImage.src = src;
+      modalTitle.textContent = title;
+      modalDesc.innerHTML = desc;
+      modal.show();
+    });
+  });
+});
+
 
 
 
