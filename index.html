@@ -171,10 +171,25 @@
   </div>
 </div>
 
+document.querySelectorAll('.card-img-top').forEach(img => {
+  img.style.cursor = 'pointer';
+  img.addEventListener('click', () => {
+    const card = img.closest('.card');
+    const title = card.querySelector('.card-title')?.textContent || 'Product';
+    const desc = card.querySelector('.card-text')?.innerHTML || '';
+    const src = img.getAttribute('src');
+
+    modalImage.src = src;
+    modalTitle.textContent = title;
+    modalDesc.innerHTML = desc;
+    productModal.show();
+  });
+});
 
 
 </body>
 </html>
+
 
 
 
