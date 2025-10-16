@@ -171,24 +171,26 @@
   </div>
 </div>
 
-document.querySelectorAll('.card-img-top').forEach(img => {
-  img.style.cursor = 'pointer';
-  img.addEventListener('click', () => {
-    const card = img.closest('.card');
-    const title = card.querySelector('.card-title')?.textContent || 'Product';
-    const desc = card.querySelector('.card-text')?.innerHTML || '';
-    const src = img.getAttribute('src');
-
-    modalImage.src = src;
-    modalTitle.textContent = title;
-    modalDesc.innerHTML = desc;
-    productModal.show();
-  });
-});
+<!-- Product Image Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalProductTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="modalProductImage" src="" alt="Product Image" class="img-fluid rounded mb-3" style="max-height: 400px; object-fit: cover;">
+        <p id="modalProductDescription"></p>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 </body>
 </html>
+
 
 
 
