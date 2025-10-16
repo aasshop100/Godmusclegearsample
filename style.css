@@ -627,3 +627,13 @@ if (featuredSection) {
   }
 }
 
+/* === Fix Modal Text Color (Product Image Preview) === */
+.modal-content {
+  background-color: #fff;
+  color: #212529 !important; /* force readable dark text */
+}
+
+.modal-content h5,
+.modal-content p {
+  color: #212529 !important;
+}
