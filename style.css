@@ -637,3 +637,54 @@ if (featuredSection) {
 .modal-content p {
   color: #212529 !important;
 }
+
+/* === Product Modal Smooth Zoom Effect === */
+
+/* Make sure the modal background and text remain readable */
+.modal-content {
+  background-color: #fff;
+  color: #212529 !important;
+  border-radius: 10px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: fadeInModal 0.3s ease;
+}
+
+/* Animate the modal container itself */
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Subtle zoom animation for the product image */
+#modalProductImage {
+  transition: transform 0.6s ease, opacity 0.4s ease;
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+.modal.show #modalProductImage {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Ensure the title and description remain crisp and easy to read */
+.modal-title {
+  font-weight: 600;
+  color: #111 !important;
+  text-transform: capitalize;
+}
+
+#modalProductDescription {
+  color: #333 !important;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
