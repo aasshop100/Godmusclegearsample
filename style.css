@@ -688,3 +688,11 @@ if (featuredSection) {
   margin-top: 10px;
 }
 
+#product-search, #brand-filter, #type-filter {
+  border: 2px solid #ff4500;
+  border-radius: 6px;
+}
+#brand-filter:focus, #type-filter:focus, #product-search:focus {
+  box-shadow: 0 0 5px #ff4500;
+}
+
