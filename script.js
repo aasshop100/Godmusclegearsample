@@ -648,7 +648,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const name = card.querySelector(".card-title")?.textContent.toLowerCase() || "";
       const brand = card.getAttribute("data-brand") || "";
       const type = card.getAttribute("data-type") || "";
-      const col = card.closest(".col-6, .col-md-4"); // find nearest column wrapper
+      const col = card.closest(".col-6, .col-md-4"); // Find nearest column
 
       const matchesSearch = !searchTerm || name.includes(searchTerm);
       const matchesBrand = !brandValue || brand === brandValue;
@@ -677,7 +677,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (brandFilter) brandFilter.value = "";
       if (typeFilter) typeFilter.value = "";
 
-      // ✅ Force all visible again
+      // ✅ Force show all products again
       productCards.forEach(card => {
         const col = card.closest(".col-6, .col-md-4");
         if (col) col.classList.remove("d-none");
@@ -685,8 +685,13 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => card.classList.add("show"), 50);
       });
 
-      // ✅ Run filter once to normalize everything
-      setTimeout(filterProducts, 100);
+      // ✅ Reset filtering logic after re-showing
+      setTimeout(() => {
+        productCards.forEach(card => {
+          const col = card.closest(".col-6, .col-md-4");
+          if (col) col.classList.remove("d-none");
+        });
+      }, 100);
 
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -695,24 +700,3 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Initial load ===
   filterProducts();
 });
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
