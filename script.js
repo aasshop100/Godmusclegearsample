@@ -604,15 +604,18 @@ if (backToTopButton) {
   });
 }
 
-// === Product Image Modal Preview ===
+// === Product Image Modal Preview (Safe for All Pages) ===
 document.addEventListener("DOMContentLoaded", () => {
-  const modal = new bootstrap.Modal(document.getElementById('productModal'));
+  const modalElement = document.getElementById('productModal');
+  if (!modalElement) return; // ✅ Skip if this page has no modal
+
+  const modal = new bootstrap.Modal(modalElement);
   const modalImage = document.getElementById('modalProductImage');
   const modalTitle = document.getElementById('modalProductTitle');
   const modalDesc = document.getElementById('modalProductDescription');
 
   document.querySelectorAll('.card-img-top').forEach(img => {
-    img.style.cursor = 'pointer'; // show it's clickable
+    img.style.cursor = 'pointer';
     img.addEventListener('click', () => {
       const card = img.closest('.card');
       const title = card.querySelector('.card-title')?.textContent || 'Product';
@@ -626,6 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
 
 
 // ========== PRODUCT FILTERING + CLEAR FILTERS ==========
@@ -699,6 +703,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Initial load ===
   filterProducts();
 }); // ✅ This closing brace and parenthesis are essential!
+
 
 
 
