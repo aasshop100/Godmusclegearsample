@@ -653,7 +653,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const matchesType = !typeValue || type === typeValue;
 
       if (matchesSearch && matchesBrand && matchesType) {
-        col.style.display = "block";
+        col.style.display = "";
         card.classList.remove("show");
         card.classList.add("product-fade");
         setTimeout(() => card.classList.add("show"), 50);
@@ -691,6 +691,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Initial load ===
   filterProducts();
 });
+
 
 
 
