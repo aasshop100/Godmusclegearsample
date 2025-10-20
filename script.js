@@ -636,12 +636,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const clearBtn = document.getElementById("clear-filters");
   const productCards = document.querySelectorAll("#product-list .card.h-100");
 
-  // ⚠️ Only run filtering logic if product elements exist
-  if (!productCards.length) return;
+  if (!productCards.length) return; // Stop if no products exist
 
   // === Filter products ===
   function filterProducts() {
-    const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : "";
     const brandValue = brandFilter ? brandFilter.value : "";
     const typeValue = typeFilter ? typeFilter.value : "";
 
@@ -649,7 +648,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const name = card.querySelector(".card-title")?.textContent.toLowerCase() || "";
       const brand = card.getAttribute("data-brand") || "";
       const type = card.getAttribute("data-type") || "";
-      const col = card.parentElement;
+      const col = card.closest(".col-6, .col-md-4"); // find nearest column wrapper
 
       const matchesSearch = !searchTerm || name.includes(searchTerm);
       const matchesBrand = !brandValue || brand === brandValue;
@@ -657,7 +656,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (matchesSearch && matchesBrand && matchesType) {
         col.classList.remove("d-none");
-        card.classList.remove("show");
         card.classList.add("product-fade");
         setTimeout(() => card.classList.add("show"), 50);
       } else {
@@ -679,18 +677,16 @@ document.addEventListener("DOMContentLoaded", function () {
       if (brandFilter) brandFilter.value = "";
       if (typeFilter) typeFilter.value = "";
 
+      // ✅ Force all visible again
       productCards.forEach(card => {
-        const col = card.parentElement;
-        col.classList.remove("d-none");
-      });
-
-      filterProducts();
-
-      productCards.forEach(card => {
-        card.classList.remove("show");
+        const col = card.closest(".col-6, .col-md-4");
+        if (col) col.classList.remove("d-none");
         card.classList.add("product-fade");
         setTimeout(() => card.classList.add("show"), 50);
       });
+
+      // ✅ Run filter once to normalize everything
+      setTimeout(filterProducts, 100);
 
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -699,6 +695,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Initial load ===
   filterProducts();
 });
+
+});
+
 
 
 
