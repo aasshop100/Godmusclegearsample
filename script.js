@@ -675,11 +675,15 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Clear Filters Button ===
 if (clearBtn) {
   clearBtn.addEventListener("click", () => {
+    // Reset all filters
     searchInput.value = "";
     brandFilter.value = "";
     typeFilter.value = "";
 
-    // ✅ Show all products again with fade-in
+    // ✅ Re-run the main filter logic
+    filterProducts();
+
+    // ✅ Add fade-in for everything again
     productCards.forEach(card => {
       const col = card.parentElement;
       col.classList.remove("d-none");
@@ -688,14 +692,17 @@ if (clearBtn) {
       setTimeout(() => card.classList.add("show"), 50);
     });
 
+    // Optional: scroll back to top
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
 
 
+
   // === Initial load ===
   filterProducts();
 });
+
 
 
 
