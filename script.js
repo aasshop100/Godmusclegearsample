@@ -628,70 +628,71 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// ========== PRODUCT FILTERING ==========
-document.addEventListener("DOMContentLoaded", function() {
+// ========== PRODUCT FILTERING + CLEAR FILTERS ==========
+document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("product-search");
   const brandFilter = document.getElementById("brand-filter");
   const typeFilter = document.getElementById("type-filter");
+  const clearBtn = document.getElementById("clear-filters");
   const productCards = document.querySelectorAll("#product-list .card.h-100");
 
- function filterProducts() {
-  const searchTerm = searchInput.value.toLowerCase();
-  const brandValue = brandFilter.value;
-  const typeValue = typeFilter.value;
+  // === Filter products ===
+  function filterProducts() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const brandValue = brandFilter.value;
+    const typeValue = typeFilter.value;
 
-  productCards.forEach(card => {
-    const name = card.querySelector(".card-title").textContent.toLowerCase();
-    const brand = card.getAttribute("data-brand");
-    const type = card.getAttribute("data-type");
-    const col = card.parentElement; // the product column wrapper
+    productCards.forEach(card => {
+      const name = card.querySelector(".card-title").textContent.toLowerCase();
+      const brand = card.getAttribute("data-brand");
+      const type = card.getAttribute("data-type");
+      const col = card.parentElement;
 
-    const matchesSearch = name.includes(searchTerm);
-    const matchesBrand = !brandValue || brand === brandValue;
-    const matchesType = !typeValue || type === typeValue;
+      const matchesSearch = name.includes(searchTerm);
+      const matchesBrand = !brandValue || brand === brandValue;
+      const matchesType = !typeValue || type === typeValue;
 
-    if (matchesSearch && matchesBrand && matchesType) {
-      // Reset for animation
-      col.style.display = "block";
-      card.classList.remove("show");
-      card.classList.add("product-fade");
+      if (matchesSearch && matchesBrand && matchesType) {
+        col.style.display = "block";
+        card.classList.remove("show");
+        card.classList.add("product-fade");
+        setTimeout(() => card.classList.add("show"), 50);
+      } else {
+        col.style.display = "none";
+        card.classList.remove("show");
+      }
+    });
+  }
 
-      // Trigger fade-in after a tiny delay
-      setTimeout(() => card.classList.add("show"), 50);
-    } else {
-      col.style.display = "none";
-      card.classList.remove("show");
-    }
-  });
-}
-
-
-  // Attach event listeners
+  // === Filter triggers ===
   if (searchInput) searchInput.addEventListener("input", filterProducts);
   if (brandFilter) brandFilter.addEventListener("change", filterProducts);
   if (typeFilter) typeFilter.addEventListener("change", filterProducts);
+
+  // === Clear Filters Button ===
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      // Reset all filter fields
+      searchInput.value = "";
+      brandFilter.value = "";
+      typeFilter.value = "";
+
+      // Show all products again with fade-in
+      productCards.forEach(card => {
+        const col = card.parentElement;
+        col.style.display = "block";
+        card.classList.remove("show");
+        card.classList.add("product-fade");
+        setTimeout(() => card.classList.add("show"), 50);
+      });
+    });
+  }
+
+  // === Initial load ===
+  filterProducts();
 });
 
-// ========== CLEAR FILTER BUTTON ==========
-const clearBtn = document.getElementById("clear-filters");
-if (clearBtn) {
-  clearBtn.addEventListener("click", () => {
-    // Reset all filters
-    searchInput.value = "";
-    brandFilter.value = "";
-    typeFilter.value = "";
 
-    // Show all products with fade-in
-    productCards.forEach(card => {
-      const col = card.parentElement;
-      col.style.display = "block";
-      card.classList.remove("show");
-      card.classList.add("product-fade");
-
-      setTimeout(() => card.classList.add("show"), 50);
-    });
-  });
-}
 
 
 
