@@ -628,5 +628,40 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+// ========== PRODUCT FILTERING ==========
+document.addEventListener("DOMContentLoaded", function() {
+  const searchInput = document.getElementById("product-search");
+  const brandFilter = document.getElementById("brand-filter");
+  const typeFilter = document.getElementById("type-filter");
+  const productCards = document.querySelectorAll("#product-list .card.h-100");
+
+  function filterProducts() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const brandValue = brandFilter.value;
+    const typeValue = typeFilter.value;
+
+    productCards.forEach(card => {
+      const name = card.querySelector(".card-title").textContent.toLowerCase();
+      const brand = card.getAttribute("data-brand");
+      const type = card.getAttribute("data-type");
+
+      const matchesSearch = name.includes(searchTerm);
+      const matchesBrand = !brandValue || brand === brandValue;
+      const matchesType = !typeValue || type === typeValue;
+
+      if (matchesSearch && matchesBrand && matchesType) {
+        card.parentElement.style.display = "block";
+      } else {
+        card.parentElement.style.display = "none";
+      }
+    });
+  }
+
+  // Attach event listeners
+  if (searchInput) searchInput.addEventListener("input", filterProducts);
+  if (brandFilter) brandFilter.addEventListener("change", filterProducts);
+  if (typeFilter) typeFilter.addEventListener("change", filterProducts);
+});
+
 
 
