@@ -636,11 +636,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const clearBtn = document.getElementById("clear-filters");
   const productCards = document.querySelectorAll("#product-list .card.h-100");
 
-  if (!productCards.length) return; // Stop if no products exist
-
   // === Filter products ===
   function filterProducts() {
-    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : "";
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
     const brandValue = brandFilter ? brandFilter.value : "";
     const typeValue = typeFilter ? typeFilter.value : "";
 
@@ -648,19 +646,19 @@ document.addEventListener("DOMContentLoaded", function () {
       const name = card.querySelector(".card-title")?.textContent.toLowerCase() || "";
       const brand = card.getAttribute("data-brand") || "";
       const type = card.getAttribute("data-type") || "";
-      const col = card.closest(".col-6, .col-md-4"); // Find nearest column
+      const col = card.closest(".col-6, .col-md-4");
 
-      const matchesSearch = !searchTerm || name.includes(searchTerm);
+      const matchesSearch = name.includes(searchTerm);
       const matchesBrand = !brandValue || brand === brandValue;
       const matchesType = !typeValue || type === typeValue;
 
       if (matchesSearch && matchesBrand && matchesType) {
-        col.classList.remove("d-none");
+        if (col) col.classList.remove("d-none");
+        card.style.display = ""; // ensure visible
         card.classList.add("product-fade");
         setTimeout(() => card.classList.add("show"), 50);
       } else {
-        col.classList.add("d-none");
-        card.classList.remove("show");
+        if (col) col.classList.add("d-none");
       }
     });
   }
@@ -670,32 +668,39 @@ document.addEventListener("DOMContentLoaded", function () {
   if (brandFilter) brandFilter.addEventListener("change", filterProducts);
   if (typeFilter) typeFilter.addEventListener("change", filterProducts);
 
- // === Clear Filters Button ===
-if (clearBtn) {
-  clearBtn.addEventListener("click", () => {
-    if (searchInput) searchInput.value = "";
-    if (brandFilter) brandFilter.value = "";
-    if (typeFilter) typeFilter.value = "";
+  // === Clear Filters Button ===
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      if (searchInput) searchInput.value = "";
+      if (brandFilter) brandFilter.value = "";
+      if (typeFilter) typeFilter.value = "";
 
-    // Remove any inline styles and d-none from columns/cards
-    productCards.forEach(card => {
-      const col = card.closest(".col-6, .col-md-4");
-      if (col) {
-        col.classList.remove("d-none");
-        col.style.display = ""; // reset inline style if present
-      }
-      card.style.display = ""; // reset inline style if present
-      card.classList.remove("show");
-      card.classList.add("product-fade");
-      setTimeout(() => card.classList.add("show"), 50);
+      // Remove any inline styles and d-none from columns/cards
+      productCards.forEach(card => {
+        const col = card.closest(".col-6, .col-md-4");
+        if (col) {
+          col.classList.remove("d-none");
+          col.style.display = ""; // reset inline style if present
+        }
+        card.style.display = ""; // reset inline style if present
+        card.classList.remove("show");
+        card.classList.add("product-fade");
+        setTimeout(() => card.classList.add("show"), 50);
+      });
+
+      // Re-run the filter logic once to be consistent (should show all)
+      setTimeout(filterProducts, 100);
+
+      // Smooth scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
+  }
 
-    // Re-run the filter logic once to be consistent (should show all)
-    setTimeout(filterProducts, 80);
+  // === Initial load ===
+  filterProducts();
+}); // ✅ This closing brace and parenthesis are essential!
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-}
+
 
 
 
