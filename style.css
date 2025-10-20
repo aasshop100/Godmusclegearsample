@@ -708,3 +708,15 @@ if (featuredSection) {
   color: #fff;
 }
 
+/* === Smooth Fade Animation for Product Filter === */
+.product-fade {
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.product-fade.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
