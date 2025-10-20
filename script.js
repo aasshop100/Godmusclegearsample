@@ -677,17 +677,24 @@ const clearBtn = document.getElementById("clear-filters");
 if (clearBtn) {
   clearBtn.addEventListener("click", () => {
     // Reset all filters
-    document.getElementById("product-search").value = "";
-    document.getElementById("brand-filter").value = "";
-    document.getElementById("type-filter").value = "";
+    searchInput.value = "";
+    brandFilter.value = "";
+    typeFilter.value = "";
 
-    // Re-run the filter function to show all products again
-    const productCards = document.querySelectorAll("#product-list .card.h-100");
+    // Show all products with fade-in
     productCards.forEach(card => {
-      card.parentElement.style.display = "block";
+      const col = card.parentElement;
+      col.style.display = "block";
+      card.classList.remove("show");
+      card.classList.add("product-fade");
+
+      setTimeout(() => card.classList.add("show"), 50);
     });
   });
 }
+
+
+
 
 
 
