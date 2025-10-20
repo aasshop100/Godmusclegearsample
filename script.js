@@ -635,27 +635,36 @@ document.addEventListener("DOMContentLoaded", function() {
   const typeFilter = document.getElementById("type-filter");
   const productCards = document.querySelectorAll("#product-list .card.h-100");
 
-  function filterProducts() {
-    const searchTerm = searchInput.value.toLowerCase();
-    const brandValue = brandFilter.value;
-    const typeValue = typeFilter.value;
+ function filterProducts() {
+  const searchTerm = searchInput.value.toLowerCase();
+  const brandValue = brandFilter.value;
+  const typeValue = typeFilter.value;
 
-    productCards.forEach(card => {
-      const name = card.querySelector(".card-title").textContent.toLowerCase();
-      const brand = card.getAttribute("data-brand");
-      const type = card.getAttribute("data-type");
+  productCards.forEach(card => {
+    const name = card.querySelector(".card-title").textContent.toLowerCase();
+    const brand = card.getAttribute("data-brand");
+    const type = card.getAttribute("data-type");
+    const col = card.parentElement; // the product column wrapper
 
-      const matchesSearch = name.includes(searchTerm);
-      const matchesBrand = !brandValue || brand === brandValue;
-      const matchesType = !typeValue || type === typeValue;
+    const matchesSearch = name.includes(searchTerm);
+    const matchesBrand = !brandValue || brand === brandValue;
+    const matchesType = !typeValue || type === typeValue;
 
-      if (matchesSearch && matchesBrand && matchesType) {
-        card.parentElement.style.display = "block";
-      } else {
-        card.parentElement.style.display = "none";
-      }
-    });
-  }
+    if (matchesSearch && matchesBrand && matchesType) {
+      // Reset for animation
+      col.style.display = "block";
+      card.classList.remove("show");
+      card.classList.add("product-fade");
+
+      // Trigger fade-in after a tiny delay
+      setTimeout(() => card.classList.add("show"), 50);
+    } else {
+      col.style.display = "none";
+      card.classList.remove("show");
+    }
+  });
+}
+
 
   // Attach event listeners
   if (searchInput) searchInput.addEventListener("input", filterProducts);
@@ -679,6 +688,7 @@ if (clearBtn) {
     });
   });
 }
+
 
 
 
