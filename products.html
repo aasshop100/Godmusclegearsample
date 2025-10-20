@@ -35,15 +35,34 @@
 
     <section class="container my-5">
         <h2 class="text-center mb-4">All Products</h2>
-        <div class="row mb-4">
-        <div class="col-md-6 mx-auto">
-            <input id="product-search" class="form-control me-2" type="search" placeholder="Search products (e.g., peptides)..." aria-label="Search">
-        </div>
+      <div class="row mb-4 g-2 align-items-center">
+  <div class="col-md-4">
+      <input id="product-search" class="form-control" type="search" placeholder="Search products..." aria-label="Search">
+  </div>
+
+  <div class="col-md-4">
+      <select id="brand-filter" class="form-select">
+          <option value="">All Brands</option>
+          <option value="Beligas">Beligas</option>
+          <option value="Sixpex">Sixpex</option>
+          <option value="Xeno">Xeno</option>
+      </select>
+  </div>
+
+  <div class="col-md-4">
+      <select id="type-filter" class="form-select">
+          <option value="">All Types</option>
+          <option value="Injectable">Injectable</option>
+          <option value="Oral">Oral</option>
+      </select>
+  </div>
 </div>
+
+        
         <div class="row" id="product-list">
             <!-- Featured from Home + More -->
             <div class="col-6 col-md-4 mb-4">
-                  <div class="card h-100">
+                  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/sustanon400mg.jpg" class="card-img-top" alt="Testosterone Esters Blend, 400mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Esters Blend, 400mg (1 vial)</h5>
@@ -53,8 +72,9 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-6 col-md-4 mb-4">
-                  <div class="card h-100">    
+                  <div class="card h-100" data-brand="Beligas" data-type="Injectable">    
                     <img src="images/testc250mg.jpg" class="card-img-top" alt="Testosterone Cypionate, 250mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Cypionate, 250mg (1 vial)</h5>
@@ -64,8 +84,9 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-6 col-md-4 mb-4">
-              <div class="card h-100">
+              <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/teste450mg.jpg" class="card-img-top" alt="Testosterone Enanthate, 450mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Enanthate, 450mg (1 vial)</h5>
@@ -75,8 +96,9 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-6 col-md-4 mb-4">
-              <div class="card h-100">
+              <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/trena100mg.jpg" class="card-img-top" alt="Trenbolone Acetate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Trenbolone Acetate, 100mg (1 vial)</h5>
@@ -86,8 +108,9 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">    
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">    
                     <img src="images/trene200mg.jpg" class="card-img-top" alt="Trenbolone Enanthate, 200mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Trenbolone Enanthate, 200mg (1 vial)</h5>
@@ -97,8 +120,9 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/tritestpro400mg.jpg" class="card-img-top" alt="TriTest Pro, 400mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TriTest Pro, 400mg (1 vial)</h5>
@@ -110,7 +134,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/quanteq300mg.jpg" class="card-img-top" alt="Quant Equipoise, 300mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Quant Equipoise, 300mg (1 vial)</h5>
@@ -122,7 +146,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/quanteq500mg.jpg" class="card-img-top" alt="Quant Equipoise, 500mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Quant Equipoise, 500mg (1 vial)</h5>
@@ -132,8 +156,9 @@
                     </div>
                 </div>
             </div>
+            
 <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/helioclenyohimbine40mcg55mg.jpg" class="card-img-top" alt="Clenbuterol 40mcg Yohimbine 5.5mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Clenbuterol 40mcg Yohimbine 5.5mg (1 vial)</h5>
@@ -145,7 +170,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/maste200mg.jpg" class="card-img-top" alt="Masteron Enanthate, 200mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Masteron Enanthate, 200mg (1 vial)</h5>
@@ -157,7 +182,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/dhb1TestC100mg.jpg" class="card-img-top" alt="Dihydroboldenone Cypionate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Dihydroboldenone Cypionate, 100mg (1 vial)</h5>
@@ -169,7 +194,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/mastp100mg.jpg" class="card-img-top" alt="Masteron Propionate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Masteron Propionate, 100mg (1 vial)</h5>
@@ -181,7 +206,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/primoe100mg.jpg" class="card-img-top" alt=Primobolan Enanthate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Primobolan Enanthate, 100mg (1 vial)</h5>
@@ -193,7 +218,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/primoe200mg.jpg" class="card-img-top" alt=Primobolan Enanthate, 200mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Primobolan Enanthate, 200mg (1 vial)</h5>
@@ -205,7 +230,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/npp100mg.jpg" class="card-img-top" alt=Npp, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Npp, 100mg (1 vial)</h5>
@@ -217,7 +242,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/npp150mg.jpg" class="card-img-top" alt=Npp, 150mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Npp, 150mg (1 vial)</h5>
@@ -229,7 +254,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/hexotren100mg.jpg" class="card-img-top" alt="Hexo Trenbolone, 100mg" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Hexo Trenbolone, 100mg (1 vial)</h5>
@@ -241,7 +266,7 @@
             </div>
             
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/testc200mg.png" class="card-img-top" alt="Testosterone Cypionate, 200mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Cypionate, 200mg (1 vial)</h5>
@@ -253,7 +278,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/teste300mg.png" class="card-img-top" alt="Testosterone Enanthate, 300mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Enanthate, 300mg (1 vial)</h5>
@@ -265,7 +290,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/testnpp1500mg.jpg" class="card-img-top" alt="Testosterone NPP Blend, 150mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone NPP Blend, 150mg (1 vial)</h5>
@@ -277,7 +302,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/testp100mg.png" class="card-img-top" alt="Testosterone Propionate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Propionate, 100mg (1 vial)</h5>
@@ -289,7 +314,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/testsuspension100mg.jpg" class="card-img-top" alt="Testosterone Suspension, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Suspension, 100mg (1 vial)</h5>
@@ -301,7 +326,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/testtrenboldblend400mg.jpg" class="card-img-top" alt="Test Tren Bold Blend, 400mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Test Tren Bold Blend, 400mg (1 vial)</h5>
@@ -313,7 +338,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/testtrenlong300mg.jpg" class="card-img-top" alt="Test Tren Long, 300mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Test Tren Long, 300mg (1 vial)</h5>
@@ -325,7 +350,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/trentestmastlong300mg.jpg" class="card-img-top" alt="Tren Test Mast Long, 300mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Tren Test Mast Long, 300mg (1 vial)</h5>
@@ -337,7 +362,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/trentestmastshort150mg.jpg" class="card-img-top" alt="Tren Test Mast Short, 150mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Tren Test Mast Short, 150mg (1 vial)</h5>
@@ -349,7 +374,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/triren150mg.jpg" class="card-img-top" alt="Tri Trenbolone, 150mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Tri Trenbolone, 150mg (1 vial)</h5>
@@ -361,7 +386,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/tritestlite350mg.jpg" class="card-img-top" alt="Tri Testosterone Lite, 350mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Tri Testosterone Lite, 350mg (1 vial)</h5>
@@ -373,7 +398,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
                     <img src="images/winstrolsuspension50mg.jpg" class="card-img-top" alt="Winstrol Suspension, 50mg (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Winstrol Suspension, 50mg (1 vial)</h5>
@@ -385,7 +410,7 @@
             </div>
 
         <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/5amino1mq.jpg" class="card-img-top" alt="5-Amino 1MQ, 50mg (100 tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">5-Amino 1MQ, 50mg (100 tabs)</h5>
@@ -397,7 +422,7 @@
             </div>
         
          <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/anadrol50mg100tabs.jpg" class="card-img-top" alt="Anadrol, 50mg (100 tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Anadrol, 50mg (100 tabs)</h5>
@@ -409,7 +434,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/anavar10mg100tabs.jpg" class="card-img-top" alt="Anavar lite, 10mg (100 tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Anavar lite, 10mg (100 tabs)</h5>
@@ -421,7 +446,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/anavar50mg100tabs.jpg" class="card-img-top" alt="Anavar, 50mg (100 tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Anavar, 50mg (100 tabs)</h5>
@@ -433,7 +458,7 @@
             </div>
 
                 <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/arimidex1mg.webp" class="card-img-top" alt="Arimidex, 1mg (100 tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Arimidex, 1mg (100 tabs)</h5>
@@ -445,7 +470,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/bacwater30ml.webp" class="card-img-top" alt="Bacteriostatic Water, 30ml (1 vial)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Bacteriostatic Water, 30ml (1 vial)</h5>
@@ -457,7 +482,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/clen40mcg100tabs.jpg" class="card-img-top" alt="Clenbuterol, 40mcg (100 tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Clenbuterol, 40mcg (100 tabs)</h5>
@@ -469,7 +494,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/dianabol20mg100tabs.jpg" class="card-img-top" alt="Dianabol, 20mg (100 tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Dianabol, 20mg (100 tabs)</h5>
@@ -481,7 +506,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/dianabol50mg100tabs.jpg" class="card-img-top" alt="Dianabol, 50mg (100 tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Dianabol, 50mg (100 tabs)</h5>
@@ -493,7 +518,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/prodostinex1mg.jpg" class="card-img-top" alt="Pro-Dostinex, 1mg (Bottle of 10 tablets)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Pro-Dostinex, 1mg (Bottle of 10 tablets)</h5>
@@ -505,7 +530,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/primo25mg100tabs.jpg" class="card-img-top" alt="Primoboloan, 25mg (100tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Primoboloan, 25mg (100tabs)</h5>
@@ -517,7 +542,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/superdrol10mg100tabs.jpg" class="card-img-top" alt="Superdrol, 10mg (100tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Superdrol, 10mg (100tabs)</h5>
@@ -529,7 +554,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/winstrol20mg100tabs.jpg" class="card-img-top" alt="Winstrol, 20mg (100tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Winstrol, 20mg (100tabs)</h5>
@@ -541,7 +566,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/winstrol50mg100tabs.jpg" class="card-img-top" alt="Winstrol, 50mg (100tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Winstrol, 50mg (100tabs)</h5>
@@ -553,7 +578,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/winstrol50mg100tabs.jpg" class="card-img-top" alt="Winstrol, 50mg (100tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Winstrol, 50mg (100tabs)</h5>
@@ -565,7 +590,7 @@
             </div>
 
            <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/cialis25mg50tabs.jpg" class="card-img-top" alt="Cialis, 25mg (50 Tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Cialis, 25mg (50 Tabs)</h5>
@@ -577,7 +602,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/cialis5mg100tabs.jpg" class="card-img-top" alt="Cialis, 5mg (100 Tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Cialis, 5mg (100 Tabs)</h5>
@@ -589,19 +614,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
-                    <img src="images/t4100mcg.jpg" class="card-img-top" alt="T4, 100mcg (100 Tabs)" style="height: 200px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title">T4, 100mcg (100 Tabs)</h5>
-                        <p class="card-text">Active Ingredient: Levothyroxine</p>
-                        <p class="fw-bold">$99.99</p>
-                        <button class="btn btn-primary add-to-cart" data-name="T4, 100mcg (100 Tabs)" data-id="t4100mcg" data-price="99.99" data-image="images/t4100mcg.jpg">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-
-              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/t4100mcg.jpg" class="card-img-top" alt="T4, 100mcg (100 Tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">T4, 100mcg (100 Tabs)</h5>
@@ -613,7 +626,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+   <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/turinabol10mg.webp" class="card-img-top" alt="Turinabol, 10mg (100 Tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Turinabol, 10mg (100 Tabs)</h5>
@@ -625,7 +638,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+   <div class="card h-100" data-brand="Beligas" data-type="Oral">
                     <img src="images/viagra50mg100tabs.jpg" class="card-img-top" alt="Viagra, 50mg (100 Tabs)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Viagra, 50mg (100 Tabs)</h5>
@@ -637,7 +650,7 @@
             </div>
 
                 <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-bolde.jpg" class="card-img-top" alt="BOLDEPEX 200" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">BOLDEPEX 200</h5>
@@ -649,7 +662,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-cutpex.jpg" class="card-img-top" alt="CUTPEX B320" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">CUTPEX B320</h5>
@@ -661,7 +674,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-decapex.jpg" class="card-img-top" alt="DECAPEX 200" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">DECAPEX 200</h5>
@@ -673,7 +686,7 @@
             </div>
 
                  <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-durapex.jpg" class="card-img-top" alt="DURAPEX 100" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">DURAPEX 100</h5>
@@ -685,7 +698,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-mastepex-e200.jpg" class="card-img-top" alt="MASTEPEX E200" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">MASTEPEX E200</h5>
@@ -698,7 +711,7 @@
 
             
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-mastepex-p100.jpg" class="card-img-top" alt="MASTEPEX P100" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">MASTEPEX P100</h5>
@@ -710,7 +723,7 @@
             </div>
 
                 <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-parabopex.jpg" class="card-img-top" alt="PARABOPEX 75" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">PARABOPEX 75</h5>
@@ -722,7 +735,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-primopex100.jpg" class="card-img-top" alt="PRIMOPEX 100" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">PRIMOPEX 100</h5>
@@ -734,7 +747,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-testopex-b300.jpg" class="card-img-top" alt="TESTOPEX B300" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TESTOPEX B300</h5>
@@ -746,7 +759,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-testopex-b500.jpg" class="card-img-top" alt="TESTOPEX B500" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TESTOPEX B500</h5>
@@ -758,7 +771,7 @@
             </div>
 
                    <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-testopex-c200.jpg" class="card-img-top" alt="TESTOPEX C200" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TESTOPEX C200</h5>
@@ -770,7 +783,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-testopex-e250.jpg" class="card-img-top" alt="TESTOPEX E250" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TESTOPEX E250</h5>
@@ -782,7 +795,7 @@
             </div>
 
                 <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-testopex-p100.jpg" class="card-img-top" alt="TESTOPEX P100" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TESTOPEX P100</h5>
@@ -794,7 +807,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-trenbopex-a100.jpg" class="card-img-top" alt="TRENBOPEX A100" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TRENBOPEX A100</h5>
@@ -806,7 +819,7 @@
             </div>
 
                    <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-trenbopex-b150.jpg" class="card-img-top" alt="TRENBOPEX B150" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TRENBOPEX B150</h5>
@@ -818,7 +831,7 @@
             </div>
 
                 <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-trenbopex-e200.jpg" class="card-img-top" alt="TRENBOPEX E200" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TRENBOPEX E200</h5>
@@ -830,7 +843,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-cialipex.jpg" class="card-img-top" alt="CIALIPEX 20" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">CIALIPEX 20</h5>
@@ -842,7 +855,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-clen40.jpg" class="card-img-top" alt="CLENPEX 40" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">CLENPEX 40</h5>
@@ -854,7 +867,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-halopex.jpg" class="card-img-top" alt="HALOPEX 10" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">HALOPEX 10</h5>
@@ -866,7 +879,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-methapex-20.jpg" class="card-img-top" alt="METHAPEX 20" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">METHAPEX 20</h5>
@@ -878,7 +891,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-methapex50.jpg" class="card-img-top" alt="METHAPEX 50" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">METHAPEX 50</h5>
@@ -890,7 +903,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-oxapex10.jpg" class="card-img-top" alt="OXAPEX 10" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">OXAPEX 10</h5>
@@ -903,7 +916,7 @@
 
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-oxapex25.jpg" class="card-img-top" alt="OXAPEX 25" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">OXAPEX 25</h5>
@@ -915,7 +928,7 @@
             </div>
             
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-oxypex.jpg" class="card-img-top" alt="OXYPEX 50" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">OXYPEX 50</h5>
@@ -927,7 +940,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-primopex25.jpg" class="card-img-top" alt="PRIMOPEX 25" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">PRIMOPEX 25</h5>
@@ -939,7 +952,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-provipex.jpg" class="card-img-top" alt="PROVIPEX 25" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">PROVIPEX 25</h5>
@@ -951,7 +964,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-sildepex-100.jpg" class="card-img-top" alt="SILDEPEX 100" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">SILDEPEX 100</h5>
@@ -963,7 +976,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-stanopex10.jpg" class="card-img-top" alt="STANOPEX 10" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">STANOPEX 10</h5>
@@ -975,7 +988,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-stanopex50.jpg" class="card-img-top" alt="STANOPEX 50" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">STANOPEX 50</h5>
@@ -987,7 +1000,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-turipex.jpg" class="card-img-top" alt="TURIPEX 10" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TURIPEX 10</h5>
@@ -999,7 +1012,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-arimipex.jpg" class="card-img-top" alt="ARIMIPEX 1" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">ARIMIPEX 1</h5>
@@ -1011,7 +1024,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-aromapex.jpg" class="card-img-top" alt="AROMAPEX 25" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">AROMAPEX 25</h5>
@@ -1023,7 +1036,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-caberpex1.jpg" class="card-img-top" alt="CABERPEX 1" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">CABERPEX 1</h5>
@@ -1035,7 +1048,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-clomipex.jpg" class="card-img-top" alt="CLOMIPEX 50" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">CLOMIPEX 50</h5>
@@ -1047,7 +1060,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-t3.jpg" class="card-img-top" alt="CYTOPEX T3" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">CYTOPEX T3</h5>
@@ -1059,7 +1072,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-finapex.jpg" class="card-img-top" alt="FINAPEX 1" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">FINAPEX 1</h5>
@@ -1071,7 +1084,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-letropex.jpg" class="card-img-top" alt="LETROPEX 2.5" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">LETROPEX 2.5</h5>
@@ -1083,7 +1096,7 @@
             </div>
 
                  <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-nolvapex.jpg" class="card-img-top" alt="NOLVAPEX 20" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">NOLVAPEX 20</h5>
@@ -1095,7 +1108,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-t4.jpg" class="card-img-top" alt="THYROPEX T4" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">THYROPEX T4</h5>
@@ -1107,7 +1120,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
                     <img src="images/sixpex-t4.jpg" class="card-img-top" alt="THYROPEX T4" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">THYROPEX T4</h5>
@@ -1119,7 +1132,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-hcg5000.jpg" class="card-img-top" alt="GONADOPEX 5000 (HCG)" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">GONADOPEX 5000 (HCG)</h5>
@@ -1131,7 +1144,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-hgh100.jpg" class="card-img-top" alt="SOMATROPEX 100" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">SOMATROPEX 100</h5>
@@ -1143,7 +1156,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-bpc157.jpg" class="card-img-top" alt="BPC-157 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">BPC-157 5MG</h5>
@@ -1155,7 +1168,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-cagrilintide.jpg" class="card-img-top" alt="CAGRILINTIDE ACETATE 10MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">CAGRILINTIDE ACETATE 10MG</h5>
@@ -1167,7 +1180,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-cjc-1295-dac.jpg" class="card-img-top" alt="CJC-1295 DAC 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">CJC-1295 DAC 5MG</h5>
@@ -1179,7 +1192,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-cjc-1295-wo-dac.jpg" class="card-img-top" alt="CJC-1295 wo DAC 2MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">CJC-1295 wo DAC 2MG</h5>
@@ -1191,7 +1204,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-ghk-cu-50.jpg" class="card-img-top" alt="GHK-CU 50MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">GHK-CU 50MG</h5>
@@ -1203,7 +1216,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-ghrp-2.jpg" class="card-img-top" alt="GHRP-2 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">GHRP-2 5MG</h5>
@@ -1215,7 +1228,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-ghrp-6.jpg" class="card-img-top" alt="GHRP-6 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">GHRP-6 5MG</h5>
@@ -1227,7 +1240,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-gonadorelin.jpg" class="card-img-top" alt="GONADORELIN 2MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">GONADORELIN 2MG</h5>
@@ -1239,7 +1252,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-hexarelin.jpg" class="card-img-top" alt="HEXARELIN 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">HEXARELIN 5MG</h5>
@@ -1251,7 +1264,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+<div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-hgh-fragment.jpg" class="card-img-top" alt="HGH-FRAGMENT 10MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">HGH-FRAGMENT 10MG</h5>
@@ -1263,7 +1276,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-igf-1-des.jpg" class="card-img-top" alt="IGF-1 DES 1MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">IGF-1 DES 1MG</h5>
@@ -1275,7 +1288,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-igf1-lr3-01.jpg" class="card-img-top" alt="IGF-1 LR-3 0.1MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">IGF-1 LR-3 0.1MG</h5>
@@ -1287,7 +1300,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-ipamorelin.jpg" class="card-img-top" alt="IPAMORELIN 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">IPAMORELIN 5MG</h5>
@@ -1299,7 +1312,7 @@
             </div>
 
                   <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-mazdutide-10.jpg" class="card-img-top" alt="MAZDUTIDE 10MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">MAZDUTIDE 10MG</h5>
@@ -1311,7 +1324,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-mgf.jpg" class="card-img-top" alt="MGF 2MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">MGF 2MG</h5>
@@ -1323,7 +1336,7 @@
             </div>
 
                     <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-peg-mgf.jpg" class="card-img-top" alt="PEG-MGF 2MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">PEG-MGF 2MG</h5>
@@ -1335,7 +1348,7 @@
             </div>
 
                  <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-pt-141.jpg" class="card-img-top" alt="PT-141 10MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">PT-141 10MG</h5>
@@ -1347,7 +1360,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-retatrutide.jpg" class="card-img-top" alt="RETATRUTIDE 10MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">RETATRUTIDE 10MG</h5>
@@ -1359,7 +1372,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-semaglutide.jpg" class="card-img-top" alt="SEMAGLUTIDE 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">SEMAGLUTIDE 5MG</h5>
@@ -1371,7 +1384,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-sermorelin.jpg" class="card-img-top" alt="SERMORELIN 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">SERMORELIN 5MG</h5>
@@ -1383,7 +1396,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-survodutide-10.jpg" class="card-img-top" alt="SURVODUTIDE 10MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">SURVODUTIDE 10MG</h5>
@@ -1395,7 +1408,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-tb500.jpg" class="card-img-top" alt="TB-500 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TB-500 5MG</h5>
@@ -1407,7 +1420,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+<div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-tesamorelin-5.jpg" class="card-img-top" alt="TESAMORELIN 5MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TESAMORELIN 5MG</h5>
@@ -1419,7 +1432,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
                     <img src="images/sixpex-tirzepatide-10.jpg" class="card-img-top" alt="TIRZEPATIDE 10MG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">TIRZEPATIDE 10MG</h5>
@@ -1433,7 +1446,7 @@
              <!-- XENO -->
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-testosterone-propionate.jpg" class="card-img-top" alt="Testosterone Enanthate" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Enanthate</h5>
@@ -1445,7 +1458,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-testosterone-cypionate.jpg" class="card-img-top" alt="Testosterone Cypionate" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Cypionate</h5>
@@ -1457,7 +1470,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-testosterone-propionate.jpg" class="card-img-top" alt="Testosterone Propionate" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Testosterone Propionate</h5>
@@ -1469,7 +1482,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-supertest.jpg" class="card-img-top" alt="SuperTest" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">SuperTest</h5>
@@ -1481,7 +1494,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-megatest.jpg" class="card-img-top" alt="MegaTest" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">MegaTest</h5>
@@ -1493,7 +1506,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-nandrolone-phenylpropionate.jpg" class="card-img-top" alt="Nandrolone Phenylpropionate" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Nandrolone Phenylpropionate</h5>
@@ -1505,7 +1518,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-nandrolone-decanoate.jpg" class="card-img-top" alt="Nandrolone Decanoate" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Nandrolone Decanoate</h5>
@@ -1517,7 +1530,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-equipoise300.jpg" class="card-img-top" alt="Equipoise" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Equipoise</h5>
@@ -1529,7 +1542,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-masteron-depot.jpg" class="card-img-top" alt="Masteron Depot" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Masteron Depot</h5>
@@ -1541,7 +1554,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-mastp100mg.jpg" class="card-img-top" alt="Masteron" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Masteron</h5>
@@ -1553,7 +1566,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-parabolan.jpg" class="card-img-top" alt="Parabolan" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Parabolan</h5>
@@ -1565,7 +1578,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-trenbolone-acetate.jpg" class="card-img-top" alt="Trenbolone Acetate" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Trenbolone Acetate</h5>
@@ -1577,7 +1590,7 @@
             </div>
 
                 <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-trenbolone-enanthate.jpg" class="card-img-top" alt="Trenbolone Enanthate" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Trenbolone Enanthate</h5>
@@ -1589,7 +1602,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-dhb.jpg" class="card-img-top" alt="DHB" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">DHB</h5>
@@ -1601,7 +1614,7 @@
             </div>
 
                     <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-primobolan.jpg" class="card-img-top" alt="Primobolan" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Primobolan</h5>
@@ -1613,7 +1626,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-solaris.jpg" class="card-img-top" alt="Solaris" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Solaris</h5>
@@ -1625,7 +1638,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-omnicut.jpg" class="card-img-top" alt="Omnicut" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Omnicut</h5>
@@ -1637,7 +1650,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
                     <img src="images/xeno-omnimass.jpg" class="card-img-top" alt="OmniMass" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">OmniMass</h5>
@@ -1649,7 +1662,7 @@
             </div>
 
                  <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-arimidex.jpg" class="card-img-top" alt="Arimidex" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Arimidex</h5>
@@ -1661,7 +1674,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-t3.jpg" class="card-img-top" alt="T3" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">T3</h5>
@@ -1673,7 +1686,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-t4.jpg" class="card-img-top" alt="T4" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">T4</h5>
@@ -1685,7 +1698,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-dbol-20.jpg" class="card-img-top" alt="Dbol 20" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Dbol 20</h5>
@@ -1697,7 +1710,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-winstrol-20.jpg" class="card-img-top" alt="Winstrol 20" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Winstrol 20</h5>
@@ -1709,7 +1722,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-anavar-20.jpg" class="card-img-top" alt="Anavar 20" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Anavar 20</h5>
@@ -1721,7 +1734,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-finasteride.jpg" class="card-img-top" alt="Finasteride" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Finasteride</h5>
@@ -1733,7 +1746,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-accutan.jpg" class="card-img-top" alt="Accutan" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Accutan</h5>
@@ -1745,7 +1758,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-proviron.jpg" class="card-img-top" alt="Proviron" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Proviron</h5>
@@ -1757,7 +1770,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-femara.jpg" class="card-img-top" alt="Femara" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Femara</h5>
@@ -1769,7 +1782,7 @@
             </div>
 
                   <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-primo-s.jpg" class="card-img-top" alt="Primo S" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Primo S</h5>
@@ -1781,7 +1794,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-superdrol.jpg" class="card-img-top" alt="Superdrol" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Superdrol</h5>
@@ -1793,7 +1806,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-turinabol.jpg" class="card-img-top" alt="Turinabol" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Turinabol</h5>
@@ -1805,7 +1818,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-tamox.jpg" class="card-img-top" alt="Tamox" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Tamox</h5>
@@ -1817,7 +1830,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-clomiphene.jpg" class="card-img-top" alt="Clomiphene" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Clomiphene</h5>
@@ -1829,7 +1842,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
                     <img src="images/xeno-clenbuterol.jpg" class="card-img-top" alt="Clenbuterol" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Clenbuterol</h5>
@@ -1841,7 +1854,7 @@
             </div>
 
               <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+<div class="card h-100" data-brand="Xeno" data-type="Injectible">
                     <img src="images/xeno-semaglutide.jpg" class="card-img-top" alt="Semaglutide" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Semaglutide</h5>
@@ -1853,7 +1866,7 @@
             </div>
 
              <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectible">
                     <img src="images/xeno-tirzepatide.jpg" class="card-img-top" alt="Tirzepatide" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Tirzepatide</h5>
@@ -1865,7 +1878,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectible">
                     <img src="images/xeno-epitalon.jpg" class="card-img-top" alt="Epitalon" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Epitalon</h5>
@@ -1877,7 +1890,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
                     <img src="images/xeno-bpc-15710mg.jpg" class="card-img-top" alt="BPC-157" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">BPC-157</h5>
@@ -1889,7 +1902,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
                     <img src="images/xeno-semax.jpg" class="card-img-top" alt="Semax" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Semax</h5>
@@ -1901,19 +1914,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
-                    <img src="images/xeno-selank.jpg" class="card-img-top" alt="Selank" style="height: 200px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title">Selank</h5>
-                        <p class="card-text">Active ingredients: Selank, 5mg </p>
-                        <p class="fw-bold">$99.99</p>
-                        <button class="btn btn-primary add-to-cart" data-name="Selank" data-id="xeno-selank" data-price="99.99" data-image="images/xeno-selank.jpg">Add to Cart</button>
-                         </div>
-                </div>
-            </div>
-
-             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
                     <img src="images/xeno-selank.jpg" class="card-img-top" alt="Selank" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">Selank</h5>
@@ -1925,7 +1926,7 @@
             </div>
 
             <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
                     <img src="images/xeno-ghrp-2.jpg" class="card-img-top" alt="GHRP-2" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">GHRP-2</h5>
@@ -1937,7 +1938,7 @@
             </div>
 
                         <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
                     <img src="images/xeno-hcg.jpg" class="card-img-top" alt="HCG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">HCG</h5>
@@ -1949,7 +1950,7 @@
             </div>
 
                <div class="col-6 col-md-4 mb-4">
-  <div class="card h-100">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
                     <img src="images/xeno-hmg.jpg" class="card-img-top" alt="HMG" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">HMG</h5>
@@ -2051,7 +2052,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
-
 
 
 
