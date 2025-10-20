@@ -653,12 +653,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const matchesType = !typeValue || type === typeValue;
 
       if (matchesSearch && matchesBrand && matchesType) {
+        // ✅ Show matching products
         col.style.display = "";
         card.classList.remove("show");
         card.classList.add("product-fade");
         setTimeout(() => card.classList.add("show"), 50);
       } else {
-        col.style.display = "";
+        // ❌ Hide non-matching products
+        col.style.display = "none";
         card.classList.remove("show");
       }
     });
@@ -680,17 +682,22 @@ document.addEventListener("DOMContentLoaded", function () {
       // Show all products again with fade-in
       productCards.forEach(card => {
         const col = card.parentElement;
-        col.style.display = "";
+        col.style.display = ""; // ✅ Reset to default layout
         card.classList.remove("show");
         card.classList.add("product-fade");
         setTimeout(() => card.classList.add("show"), 50);
       });
+
+      // Optional: scroll back to top when clearing filters
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
 
   // === Initial load ===
   filterProducts();
 });
+
+
 
 
 
