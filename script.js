@@ -638,34 +638,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // === Filter products ===
   function filterProducts() {
-  const searchTerm = searchInput.value.toLowerCase();
-  const brandValue = brandFilter.value;
-  const typeValue = typeFilter.value;
+    const searchTerm = searchInput.value.toLowerCase();
+    const brandValue = brandFilter.value;
+    const typeValue = typeFilter.value;
 
-  productCards.forEach(card => {
-    const name = card.querySelector(".card-title").textContent.toLowerCase();
-    const brand = card.getAttribute("data-brand");
-    const type = card.getAttribute("data-type");
-    const col = card.parentElement;
+    productCards.forEach(card => {
+      const name = card.querySelector(".card-title").textContent.toLowerCase();
+      const brand = card.getAttribute("data-brand");
+      const type = card.getAttribute("data-type");
+      const col = card.parentElement;
 
-    const matchesSearch = name.includes(searchTerm);
-    const matchesBrand = !brandValue || brand === brandValue;
-    const matchesType = !typeValue || type === typeValue;
+      const matchesSearch = name.includes(searchTerm);
+      const matchesBrand = !brandValue || brand === brandValue;
+      const matchesType = !typeValue || type === typeValue;
 
-    if (matchesSearch && matchesBrand && matchesType) {
-      // ✅ Show product smoothly
-      col.classList.remove("d-none");
-      card.classList.remove("show");
-      card.classList.add("product-fade");
-      setTimeout(() => card.classList.add("show"), 50);
-    } else {
-      // ❌ Hide non-matching product using Bootstrap class
-      col.classList.add("d-none");
-      card.classList.remove("show");
-    }
-  });
-}
-
+      if (matchesSearch && matchesBrand && matchesType) {
+        // ✅ Show product smoothly
+        col.classList.remove("d-none");
+        card.classList.remove("show");
+        card.classList.add("product-fade");
+        setTimeout(() => card.classList.add("show"), 50);
+      } else {
+        // ❌ Hide non-matching product
+        col.classList.add("d-none");
+        card.classList.remove("show");
+      }
+    });
+  }
 
   // === Filter triggers ===
   if (searchInput) searchInput.addEventListener("input", filterProducts);
@@ -673,35 +672,38 @@ document.addEventListener("DOMContentLoaded", function () {
   if (typeFilter) typeFilter.addEventListener("change", filterProducts);
 
   // === Clear Filters Button ===
-if (clearBtn) {
-  clearBtn.addEventListener("click", () => {
-    // Reset all filters
-    searchInput.value = "";
-    brandFilter.value = "";
-    typeFilter.value = "";
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      // Reset all filter fields
+      searchInput.value = "";
+      brandFilter.value = "";
+      typeFilter.value = "";
 
-    // ✅ Re-run the main filter logic
-    filterProducts();
+      // ✅ Remove all 'd-none' first (force all visible)
+      productCards.forEach(card => {
+        const col = card.parentElement;
+        col.classList.remove("d-none");
+      });
 
-    // ✅ Add fade-in for everything again
-    productCards.forEach(card => {
-      const col = card.parentElement;
-      col.classList.remove("d-none");
-      card.classList.remove("show");
-      card.classList.add("product-fade");
-      setTimeout(() => card.classList.add("show"), 50);
+      // ✅ Then re-run filter to refresh the grid layout
+      filterProducts();
+
+      // ✅ Apply fade-in for all
+      productCards.forEach(card => {
+        card.classList.remove("show");
+        card.classList.add("product-fade");
+        setTimeout(() => card.classList.add("show"), 50);
+      });
+
+      // Optional smooth scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
-
-    // Optional: scroll back to top
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-}
-
-
+  }
 
   // === Initial load ===
   filterProducts();
 });
+
 
 
 
