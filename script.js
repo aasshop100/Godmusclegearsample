@@ -671,32 +671,26 @@ document.addEventListener("DOMContentLoaded", function () {
   if (typeFilter) typeFilter.addEventListener("change", filterProducts);
 
   // === Clear Filters Button ===
-  if (clearBtn) {
-    clearBtn.addEventListener("click", () => {
-      if (searchInput) searchInput.value = "";
-      if (brandFilter) brandFilter.value = "";
-      if (typeFilter) typeFilter.value = "";
+if (clearBtn) {
+  clearBtn.addEventListener("click", () => {
+    if (searchInput) searchInput.value = "";
+    if (brandFilter) brandFilter.value = "";
+    if (typeFilter) typeFilter.value = "";
 
-      // ✅ Force show all products again
-      productCards.forEach(card => {
-        const col = card.closest(".col-6, .col-md-4");
-        if (col) col.classList.remove("d-none");
-        card.classList.add("product-fade");
-        setTimeout(() => card.classList.add("show"), 50);
-      });
-
-      // ✅ Reset filtering logic after re-showing
-      setTimeout(() => {
-        productCards.forEach(card => {
-          const col = card.closest(".col-6, .col-md-4");
-          if (col) col.classList.remove("d-none");
-        });
-      }, 100);
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    // ✅ Remove *both* Bootstrap class and inline styles
+    productCards.forEach(card => {
+      const col = card.closest(".col-6, .col-md-4");
+      if (col) {
+        col.classList.remove("d-none");
+        col.style.display = ""; // <— fixes search hiding issue
+      }
+      card.style.display = "";
+      card.classList.add("product-fade");
+      setTimeout(() => card.classList.add("show"), 50);
     });
-  }
 
-  // === Initial load ===
-  filterProducts();
-});
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+
