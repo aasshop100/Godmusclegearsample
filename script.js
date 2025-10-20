@@ -680,7 +680,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Show all products again with fade-in
       productCards.forEach(card => {
         const col = card.parentElement;
-        col.style.display = "block";
+        col.style.display = "";
         card.classList.remove("show");
         card.classList.add("product-fade");
         setTimeout(() => card.classList.add("show"), 50);
@@ -691,6 +691,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Initial load ===
   filterProducts();
 });
+
 
 
 
