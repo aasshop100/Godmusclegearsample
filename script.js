@@ -663,5 +663,22 @@ document.addEventListener("DOMContentLoaded", function() {
   if (typeFilter) typeFilter.addEventListener("change", filterProducts);
 });
 
+// ========== CLEAR FILTER BUTTON ==========
+const clearBtn = document.getElementById("clear-filters");
+if (clearBtn) {
+  clearBtn.addEventListener("click", () => {
+    // Reset all filters
+    document.getElementById("product-search").value = "";
+    document.getElementById("brand-filter").value = "";
+    document.getElementById("type-filter").value = "";
+
+    // Re-run the filter function to show all products again
+    const productCards = document.querySelectorAll("#product-list .card.h-100");
+    productCards.forEach(card => {
+      card.parentElement.style.display = "block";
+    });
+  });
+}
+
 
 
