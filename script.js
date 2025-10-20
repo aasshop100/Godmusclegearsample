@@ -658,7 +658,7 @@ document.addEventListener("DOMContentLoaded", function () {
         card.classList.add("product-fade");
         setTimeout(() => card.classList.add("show"), 50);
       } else {
-        col.style.display = "none";
+        col.style.display = "";
         card.classList.remove("show");
       }
     });
@@ -691,6 +691,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Initial load ===
   filterProducts();
 });
+
 
 
 
