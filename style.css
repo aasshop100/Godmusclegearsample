@@ -696,3 +696,15 @@ if (featuredSection) {
   box-shadow: 0 0 5px #ff4500;
 }
 
+#clear-filters {
+  border-color: #ff4500;
+  color: #ff4500;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+#clear-filters:hover {
+  background-color: #ff4500;
+  color: #fff;
+}
+
