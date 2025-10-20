@@ -670,27 +670,32 @@ document.addEventListener("DOMContentLoaded", function () {
   if (brandFilter) brandFilter.addEventListener("change", filterProducts);
   if (typeFilter) typeFilter.addEventListener("change", filterProducts);
 
-  // === Clear Filters Button ===
+ // === Clear Filters Button ===
 if (clearBtn) {
   clearBtn.addEventListener("click", () => {
     if (searchInput) searchInput.value = "";
     if (brandFilter) brandFilter.value = "";
     if (typeFilter) typeFilter.value = "";
 
-    // ✅ Remove *both* Bootstrap class and inline styles
+    // Remove any inline styles and d-none from columns/cards
     productCards.forEach(card => {
       const col = card.closest(".col-6, .col-md-4");
       if (col) {
         col.classList.remove("d-none");
-        col.style.display = ""; // <— fixes search hiding issue
+        col.style.display = ""; // reset inline style if present
       }
-      card.style.display = "";
+      card.style.display = ""; // reset inline style if present
+      card.classList.remove("show");
       card.classList.add("product-fade");
       setTimeout(() => card.classList.add("show"), 50);
     });
 
+    // Re-run the filter logic once to be consistent (should show all)
+    setTimeout(filterProducts, 80);
+
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
+
 
 
