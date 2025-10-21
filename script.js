@@ -713,27 +713,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch(sheetURL);
     const data = await response.json();
 
-    // Loop through each product in the sheet
-    data.forEach(item => {
-      const productId = item.ID?.trim();
-      const stock = parseInt(item.Stock);
+    console.log("📦 Fetched Inventory Data:", data);
 
-      // Find button with matching data-id
+    data.forEach(item => {
+      const productId = item.ID?.trim()?.toLowerCase();
+      const stock = parseInt(item.Stock);
       const button = document.querySelector(`.add-to-cart[data-id="${productId}"]`);
 
-      if (button) {
-        if (isNaN(stock)) return; // Skip if stock not a number
+      if (!button) {
+        console.warn(`⚠️ No product found for ID: ${productId}`);
+        return;
+      }
 
-        if (stock <= 0) {
-          button.textContent = "Out of Stock";
-          button.disabled = true;
-          button.classList.add("btn-secondary");
-          button.classList.remove("btn-primary");
-        } else if (stock < 20) {
-          button.textContent = "Low Stock";
-          button.classList.add("btn-warning");
-          button.classList.remove("btn-primary");
-        }
+      // Make sure the button’s ID comparison ignores case
+      const normalizedButtonId = button.dataset.id?.toLowerCase();
+      if (normalizedButtonId !== productId) return;
+
+      // === Update button states ===
+      if (stock <= 0) {
+        button.textContent = "Out of Stock";
+        button.disabled = true;
+        button.classList.remove("btn-primary", "btn-warning");
+        button.classList.add("btn-secondary");
+      } else if (stock < 20) {
+        button.textContent = "Low Stock";
+        button.disabled = false;
+        button.classList.remove("btn-primary", "btn-secondary");
+        button.classList.add("btn-warning");
+      } else {
+        button.textContent = "Add to Cart";
+        button.disabled = false;
+        button.classList.remove("btn-warning", "btn-secondary");
+        button.classList.add("btn-primary");
       }
     });
 
@@ -742,6 +753,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error fetching inventory:", error);
   }
 });
+
+
 
 
 
