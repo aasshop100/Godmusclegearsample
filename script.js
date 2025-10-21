@@ -705,21 +705,13 @@ document.addEventListener("DOMContentLoaded", function () {
 }); // ✅ This closing brace and parenthesis are essential!
 
 
-// === LIVE INVENTORY CHECK FROM GOOGLE SHEETS ===
+// === LIVE INVENTORY CHECK FROM GOOGLE SHEETS + AUTO SORT BY BRAND & STOCK ===
 document.addEventListener("DOMContentLoaded", () => {
-  const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec"; // your Google Apps Script URL
-  const allButtons = document.querySelectorAll('.add-to-cart');
+  const sheetURL =
+    "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec";
 
-  // 🚫 Stop script if no products on this page
-  if (allButtons.length === 0) return;
-
-  // 🌀 Show spinner on load
-  allButtons.forEach(btn => {
-    btn.disabled = true;
-    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Checking stock...`;
-    btn.classList.remove("btn-primary", "btn-warning", "btn-secondary");
-    btn.classList.add("btn-secondary");
-  });
+  const productList = document.getElementById("product-list");
+  if (!productList) return; // ✅ Skip pages without products
 
   async function updateInventory() {
     try {
@@ -728,20 +720,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("📦 Fetched Inventory Data:", data);
 
+      const allCards = Array.from(productList.querySelectorAll(".card.h-100"));
+      const inventoryMap = {};
+
+      // Create inventory map for faster lookup
       data.forEach(item => {
-        const productId = item.ID?.trim();
-        const stock = parseInt(item.Stock);
+        if (!item.ID) return;
+        inventoryMap[item.ID.trim().toLowerCase()] = parseInt(item.Stock);
+      });
 
-        const button = Array.from(allButtons).find(
-          btn => btn.dataset.id?.trim().toLowerCase() === productId?.toLowerCase()
-        );
+      // === Update buttons & assign stock level ===
+      allCards.forEach(card => {
+        const button = card.querySelector(".add-to-cart");
+        const productId = button?.dataset.id?.trim().toLowerCase();
+        const stock = inventoryMap[productId];
 
-        if (!button) {
-          console.warn(`⚠️ No product found for ID: ${productId}`);
-          return;
-        }
+        if (stock == null || isNaN(stock)) return; // Skip if no match
+        card.dataset.stockLevel = stock; // Store for sorting
+        const brand = card.dataset.brand || "";
 
-        // === Update button states ===
         if (stock <= 0 || stock < 20) {
           button.textContent = "Out of Stock";
           button.disabled = true;
@@ -760,21 +757,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      console.log("✅ Inventory sync complete");
+      // === Sort cards silently ===
+      const sortedCards = allCards.sort((a, b) => {
+        const brandA = (a.dataset.brand || "").toLowerCase();
+        const brandB = (b.dataset.brand || "").toLowerCase();
+        if (brandA !== brandB) return brandA.localeCompare(brandB);
+
+        const stockA = parseInt(a.dataset.stockLevel || 0);
+        const stockB = parseInt(b.dataset.stockLevel || 0);
+
+        // Sort order: in-stock (>30) → low (20–30) → out (<20)
+        const getRank = stock => (stock > 30 ? 1 : stock >= 20 ? 2 : 3);
+        return getRank(stockA) - getRank(stockB);
+      });
+
+      // Reinsert cards into grid in the new order
+      sortedCards.forEach(card => productList.appendChild(card.closest(".col-6")));
+
+      console.log("✅ Inventory sync & sorting complete");
     } catch (error) {
       console.error("❌ Error fetching inventory:", error);
     }
   }
 
-  // 🔹 Run once on page load
+  // 🕒 Run once
   updateInventory();
 
-  // 🔁 Auto-refresh every 5 minutes (300,000 ms)
+  // 🔁 Auto-refresh every 5 minutes
   setInterval(() => {
     console.log("🔄 Auto inventory refresh triggered...");
     updateInventory();
   }, 300000);
 });
+
+
 
 
 
