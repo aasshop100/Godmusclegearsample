@@ -706,53 +706,68 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // === LIVE INVENTORY CHECK FROM GOOGLE SHEETS ===
-document.addEventListener("DOMContentLoaded", async () => {
-  const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec"; // Replace with your Google Apps Script URL
+document.addEventListener("DOMContentLoaded", () => {
+  const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec"; // your Google Apps Script URL
 
-  try {
-    const response = await fetch(sheetURL);
-    const data = await response.json();
+  async function updateInventory() {
+    try {
+      const response = await fetch(sheetURL);
+      const data = await response.json();
 
-    console.log("📦 Fetched Inventory Data:", data);
+      console.log("📦 Fetched Inventory Data:", data);
 
-    data.forEach(item => {
-      const productId = item.ID?.trim()?.toLowerCase();
-      const stock = parseInt(item.Stock);
-      const button = document.querySelector(`.add-to-cart[data-id="${productId}"]`);
+      data.forEach(item => {
+        const productId = item.ID?.trim()?.toLowerCase();
+        const stock = parseInt(item.Stock);
+        const button = document.querySelector(`.add-to-cart[data-id="${productId}"]`);
 
-      if (!button) {
-        console.warn(`⚠️ No product found for ID: ${productId}`);
-        return;
-      }
+        if (!button) {
+          console.warn(`⚠️ No product found for ID: ${productId}`);
+          return;
+        }
 
-      // Make sure the button’s ID comparison ignores case
-      const normalizedButtonId = button.dataset.id?.toLowerCase();
-      if (normalizedButtonId !== productId) return;
+        const normalizedButtonId = button.dataset.id?.toLowerCase();
+        if (normalizedButtonId !== productId) return;
 
-      // === Update button states ===
-      if (stock <= 0) {
-        button.textContent = "Out of Stock";
-        button.disabled = true;
-        button.classList.remove("btn-primary", "btn-warning");
-        button.classList.add("btn-secondary");
-      } else if (stock < 20) {
-        button.textContent = "Low Stock";
-        button.disabled = false;
-        button.classList.remove("btn-primary", "btn-secondary");
-        button.classList.add("btn-warning");
-      } else {
-        button.textContent = "Add to Cart";
-        button.disabled = false;
-        button.classList.remove("btn-warning", "btn-secondary");
-        button.classList.add("btn-primary");
-      }
-    });
+        // === Update button states ===
+        if (stock <= 0 || stock < 20) {
+          // Out of stock if 0–19
+          button.textContent = "Out of Stock";
+          button.disabled = true;
+          button.classList.remove("btn-primary", "btn-warning");
+          button.classList.add("btn-secondary");
+        } else if (stock >= 20 && stock <= 30) {
+          // Low stock if 20–30
+          button.textContent = "Low Stock";
+          button.disabled = false;
+          button.classList.remove("btn-primary", "btn-secondary");
+          button.classList.add("btn-warning");
+        } else {
+          // In stock if >30
+          button.textContent = "Add to Cart";
+          button.disabled = false;
+          button.classList.remove("btn-warning", "btn-secondary");
+          button.classList.add("btn-primary");
+        }
+      });
 
-    console.log("✅ Inventory sync complete");
-  } catch (error) {
-    console.error("❌ Error fetching inventory:", error);
+      console.log("✅ Inventory sync complete");
+    } catch (error) {
+      console.error("❌ Error fetching inventory:", error);
+    }
   }
+
+  // 🔹 Run once on page load
+  updateInventory();
+
+  // 🔁 Auto-refresh every 5 minutes (300,000 ms)
+  setInterval(() => {
+    console.log("🔄 Auto inventory refresh triggered...");
+    updateInventory();
+  }, 300000);
 });
+
+
 
 
 
