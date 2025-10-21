@@ -705,6 +705,44 @@ document.addEventListener("DOMContentLoaded", function () {
 }); // ✅ This closing brace and parenthesis are essential!
 
 
+// === LIVE INVENTORY CHECK FROM GOOGLE SHEETS ===
+document.addEventListener("DOMContentLoaded", async () => {
+  const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec"; // Replace with your Google Apps Script URL
+
+  try {
+    const response = await fetch(sheetURL);
+    const data = await response.json();
+
+    // Loop through each product in the sheet
+    data.forEach(item => {
+      const productId = item.ID?.trim();
+      const stock = parseInt(item.Stock);
+
+      // Find button with matching data-id
+      const button = document.querySelector(`.add-to-cart[data-id="${productId}"]`);
+
+      if (button) {
+        if (isNaN(stock)) return; // Skip if stock not a number
+
+        if (stock <= 0) {
+          button.textContent = "Out of Stock";
+          button.disabled = true;
+          button.classList.add("btn-secondary");
+          button.classList.remove("btn-primary");
+        } else if (stock < 20) {
+          button.textContent = "Low Stock";
+          button.classList.add("btn-warning");
+          button.classList.remove("btn-primary");
+        }
+      }
+    });
+
+    console.log("✅ Inventory sync complete");
+  } catch (error) {
+    console.error("❌ Error fetching inventory:", error);
+  }
+});
+
 
 
 
