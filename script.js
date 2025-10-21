@@ -707,8 +707,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // === LIVE INVENTORY CHECK FROM GOOGLE SHEETS ===
 document.addEventListener("DOMContentLoaded", async () => {
-  const buttons = document.querySelectorAll(".add-to-cart");
-  if (buttons.length === 0) return; // Run only if there are buttons on the page
+  const productCards = document.querySelectorAll(".add-to-cart");
+  if (productCards.length === 0) return; // ⛔ Skip if no products on this page
 
   const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec";
 
@@ -716,20 +716,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch(sheetURL);
     const data = await response.json();
 
-    console.log("📦 Inventory fetched:", data);
+    console.log("📦 Fetched Inventory Data:", data);
 
-    // Loop over each row in the sheet
     data.forEach(item => {
-      const productId = item.id?.trim().toLowerCase(); // from your sheet header
-      const stock = parseInt(item.stocks); // from your sheet header
-      const button = document.querySelector(`.add-to-cart[data-id="${productId}"], .add-to-cart[data-id="${item.id?.trim()}"]`);
+      const productId = item.ID?.trim(); // Keep case sensitivity intact
+      const stock = parseInt(item.stocks); // Must match your sheet header name!
+      const button = document.querySelector(`.add-to-cart[data-id="${productId}"]`);
 
-      if (!button) {
-        console.warn(`⚠️ No match found for ID: ${item.id}`);
-        return;
-      }
+      if (!button) return; // silently skip if product not found
 
-      // Determine stock status
+      if (isNaN(stock)) return;
+
+      // === Apply states ===
       if (stock <= 0) {
         button.textContent = "Out of Stock";
         button.disabled = true;
@@ -738,9 +736,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else if (stock < 20) {
         button.textContent = "Out of Stock";
         button.disabled = true;
-        button.classList.remove("btn-primary", "btn-secondary");
-        button.classList.add("btn-warning");
-      } else if (stock <= 30) {
+        button.classList.remove("btn-primary", "btn-warning");
+        button.classList.add("btn-secondary");
+      } else if (stock < 31) {
         button.textContent = "Low Stock";
         button.disabled = false;
         button.classList.remove("btn-primary", "btn-secondary");
@@ -758,6 +756,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error fetching inventory:", error);
   }
 });
+
 
 
 
