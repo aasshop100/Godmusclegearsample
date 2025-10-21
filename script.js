@@ -717,9 +717,11 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("📦 Fetched Inventory Data:", data);
 
       data.forEach(item => {
-        const productId = item.ID?.trim()?.toLowerCase();
+        const productId = item.ID?.trim();
         const stock = parseInt(item.Stock);
-        const button = document.querySelector(`.add-to-cart[data-id="${productId}"]`);
+        const allButtons = document.querySelectorAll('.add-to-cart');
+        const button = Array.from(allButtons).find(btn => btn.dataset.id?.trim().toLowerCase() === productId?.toLowerCase());
+
 
         if (!button) {
           console.warn(`⚠️ No product found for ID: ${productId}`);
@@ -766,6 +768,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateInventory();
   }, 300000);
 });
+
 
 
 
