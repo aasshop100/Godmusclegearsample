@@ -706,56 +706,73 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // === LIVE INVENTORY CHECK FROM GOOGLE SHEETS ===
-document.addEventListener("DOMContentLoaded", async () => {
-  const productCards = document.querySelectorAll(".add-to-cart");
-  if (productCards.length === 0) return; // ⛔ Skip if no products on this page
+document.addEventListener("DOMContentLoaded", () => {
+  // ✅ Run only if there are products on this page
+  const allButtons = document.querySelectorAll(".add-to-cart");
+  if (allButtons.length === 0) return; // stop silently if no products
 
-  const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec";
+  const sheetURL =
+    "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec"; // your Google Apps Script URL
 
-  try {
-    const response = await fetch(sheetURL);
-    const data = await response.json();
+  async function updateInventory() {
+    try {
+      const response = await fetch(sheetURL);
+      const data = await response.json();
 
-    console.log("📦 Fetched Inventory Data:", data);
+      console.log("📦 Fetched Inventory Data:", data);
 
-    data.forEach(item => {
-      const productId = item.ID?.trim(); // Keep case sensitivity intact
-      const stock = parseInt(item.stocks); // Must match your sheet header name!
-      const button = document.querySelector(`.add-to-cart[data-id="${productId}"]`);
+      data.forEach((item) => {
+        const productId = item.ID?.trim();
+        const stock = parseInt(item.Stock);
 
-      if (!button) return; // silently skip if product not found
+        // find matching button (case-insensitive)
+        const button = Array.from(allButtons).find(
+          (btn) =>
+            btn.dataset.id?.trim().toLowerCase() ===
+            productId?.toLowerCase()
+        );
 
-      if (isNaN(stock)) return;
+        if (!button) return; // skip silently
 
-      // === Apply states ===
-      if (stock <= 0) {
-        button.textContent = "Out of Stock";
-        button.disabled = true;
-        button.classList.remove("btn-primary", "btn-warning");
-        button.classList.add("btn-secondary");
-      } else if (stock < 20) {
-        button.textContent = "Out of Stock";
-        button.disabled = true;
-        button.classList.remove("btn-primary", "btn-warning");
-        button.classList.add("btn-secondary");
-      } else if (stock < 31) {
-        button.textContent = "Low Stock";
-        button.disabled = false;
-        button.classList.remove("btn-primary", "btn-secondary");
-        button.classList.add("btn-warning");
-      } else {
-        button.textContent = "Add to Cart";
-        button.disabled = false;
-        button.classList.remove("btn-warning", "btn-secondary");
-        button.classList.add("btn-primary");
-      }
-    });
+        // === Update button states ===
+        if (stock <= 0 || stock < 20) {
+          // Out of stock if 0–19
+          button.textContent = "Out of Stock";
+          button.disabled = true;
+          button.classList.remove("btn-primary", "btn-warning");
+          button.classList.add("btn-secondary");
+        } else if (stock >= 20 && stock <= 30) {
+          // Low stock if 20–30
+          button.textContent = "Low Stock";
+          button.disabled = false;
+          button.classList.remove("btn-primary", "btn-secondary");
+          button.classList.add("btn-warning");
+        } else {
+          // In stock if >30
+          button.textContent = "Add to Cart";
+          button.disabled = false;
+          button.classList.remove("btn-warning", "btn-secondary");
+          button.classList.add("btn-primary");
+        }
+      });
 
-    console.log("✅ Inventory sync complete");
-  } catch (error) {
-    console.error("❌ Error fetching inventory:", error);
+      console.log("✅ Inventory sync complete");
+    } catch (error) {
+      console.error("❌ Error fetching inventory:", error);
+    }
   }
+
+  // 🔹 Run once on page load
+  updateInventory();
+
+  // 🔁 Auto-refresh every 5 minutes (300,000 ms)
+  setInterval(() => {
+    console.log("🔄 Auto inventory refresh triggered...");
+    updateInventory();
+  }, 300000);
 });
+
+
 
 
 
