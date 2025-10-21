@@ -707,12 +707,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // === LIVE INVENTORY CHECK FROM GOOGLE SHEETS ===
 document.addEventListener("DOMContentLoaded", () => {
-  // ✅ Run only if there are products on this page
-  const allButtons = document.querySelectorAll(".add-to-cart");
-  if (allButtons.length === 0) return; // stop silently if no products
+  const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec";
 
-  const sheetURL =
-    "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec"; // your Google Apps Script URL
+  const allButtons = document.querySelectorAll(".add-to-cart");
+  if (allButtons.length === 0) return; // 🛑 Skip if no products on page
+
+  // 🕒 Temporary "Checking stock..."
+  allButtons.forEach(btn => {
+    btn.textContent = "Checking stock...";
+    btn.disabled = true;
+    btn.classList.remove("btn-primary", "btn-warning", "btn-secondary");
+    btn.classList.add("btn-secondary");
+  });
 
   async function updateInventory() {
     try {
@@ -721,34 +727,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("📦 Fetched Inventory Data:", data);
 
-      data.forEach((item) => {
+      data.forEach(item => {
         const productId = item.ID?.trim();
         const stock = parseInt(item.Stock);
-
-        // find matching button (case-insensitive)
         const button = Array.from(allButtons).find(
-          (btn) =>
-            btn.dataset.id?.trim().toLowerCase() ===
-            productId?.toLowerCase()
+          btn => btn.dataset.id?.trim().toLowerCase() === productId?.toLowerCase()
         );
 
-        if (!button) return; // skip silently
+        if (!button) {
+          console.warn(`⚠️ No product found for ID: ${productId}`);
+          return;
+        }
 
         // === Update button states ===
         if (stock <= 0 || stock < 20) {
-          // Out of stock if 0–19
           button.textContent = "Out of Stock";
           button.disabled = true;
           button.classList.remove("btn-primary", "btn-warning");
           button.classList.add("btn-secondary");
         } else if (stock >= 20 && stock <= 30) {
-          // Low stock if 20–30
           button.textContent = "Low Stock";
           button.disabled = false;
           button.classList.remove("btn-primary", "btn-secondary");
           button.classList.add("btn-warning");
         } else {
-          // In stock if >30
           button.textContent = "Add to Cart";
           button.disabled = false;
           button.classList.remove("btn-warning", "btn-secondary");
@@ -765,12 +767,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔹 Run once on page load
   updateInventory();
 
-  // 🔁 Auto-refresh every 5 minutes (300,000 ms)
+  // 🔁 Auto-refresh every 5 minutes
   setInterval(() => {
     console.log("🔄 Auto inventory refresh triggered...");
     updateInventory();
   }, 300000);
 });
+
 
 
 
