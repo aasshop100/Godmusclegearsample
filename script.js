@@ -707,15 +707,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // === LIVE INVENTORY CHECK FROM GOOGLE SHEETS ===
 document.addEventListener("DOMContentLoaded", () => {
-  const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec";
+  const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec"; // your Google Apps Script URL
+  const allButtons = document.querySelectorAll('.add-to-cart');
 
-  const allButtons = document.querySelectorAll(".add-to-cart");
-  if (allButtons.length === 0) return; // 🛑 Skip if no products on page
+  // 🚫 Stop script if no products on this page
+  if (allButtons.length === 0) return;
 
-  // 🕒 Temporary "Checking stock..."
+  // 🌀 Show spinner on load
   allButtons.forEach(btn => {
-    btn.textContent = "Checking stock...";
     btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Checking stock...`;
     btn.classList.remove("btn-primary", "btn-warning", "btn-secondary");
     btn.classList.add("btn-secondary");
   });
@@ -730,6 +731,7 @@ document.addEventListener("DOMContentLoaded", () => {
       data.forEach(item => {
         const productId = item.ID?.trim();
         const stock = parseInt(item.Stock);
+
         const button = Array.from(allButtons).find(
           btn => btn.dataset.id?.trim().toLowerCase() === productId?.toLowerCase()
         );
@@ -767,12 +769,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔹 Run once on page load
   updateInventory();
 
-  // 🔁 Auto-refresh every 5 minutes
+  // 🔁 Auto-refresh every 5 minutes (300,000 ms)
   setInterval(() => {
     console.log("🔄 Auto inventory refresh triggered...");
     updateInventory();
   }, 300000);
 });
+
 
 
 
