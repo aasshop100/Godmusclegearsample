@@ -707,9 +707,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // === LIVE INVENTORY CHECK FROM GOOGLE SHEETS ===
 document.addEventListener("DOMContentLoaded", async () => {
-  // Run only if there are product buttons on the page
-  const productButtons = document.querySelectorAll(".add-to-cart");
-  if (productButtons.length === 0) return;
+  const buttons = document.querySelectorAll(".add-to-cart");
+  if (buttons.length === 0) return; // Run only if there are buttons on the page
 
   const sheetURL = "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec";
 
@@ -717,18 +716,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch(sheetURL);
     const data = await response.json();
 
-    console.log("📦 Fetched Inventory Data:", data);
+    console.log("📦 Inventory fetched:", data);
 
+    // Loop over each row in the sheet
     data.forEach(item => {
-      const productId = item.ID?.trim();
-      const stock = parseInt(item.stock);
-      const button = document.querySelector(`.add-to-cart[data-id="${productId}"]`);
+      const productId = item.id?.trim().toLowerCase(); // from your sheet header
+      const stock = parseInt(item.stocks); // from your sheet header
+      const button = document.querySelector(`.add-to-cart[data-id="${productId}"], .add-to-cart[data-id="${item.id?.trim()}"]`);
 
       if (!button) {
-        console.warn(`⚠️ No product found for ID: ${productId}`);
+        console.warn(`⚠️ No match found for ID: ${item.id}`);
         return;
       }
 
+      // Determine stock status
       if (stock <= 0) {
         button.textContent = "Out of Stock";
         button.disabled = true;
@@ -757,6 +758,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ Error fetching inventory:", error);
   }
 });
+
 
 
 
