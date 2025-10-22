@@ -57,6 +57,18 @@
                         <span>Shipping Fee:</span>
                         <span id="shipping-fee">$20.00</span> <!-- Added ID for dynamic JS updates -->
                     </div>
+
+                    <!-- === Promo Code Section === -->
+<div class="promo-section mt-4 p-3 border rounded">
+  <h5 class="mb-3">Have a Promo Code?</h5>
+  <div class="input-group">
+    <input type="text" id="promo-code-input" class="form-control" placeholder="Enter promo code">
+    <button class="btn btn-primary" id="apply-promo-btn">Apply</button>
+  </div>
+  <p id="promo-message" class="mt-2 fw-semibold"></p>
+</div>
+
+
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
                         <strong>Grand Total:</strong>
@@ -123,6 +135,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
