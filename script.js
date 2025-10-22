@@ -705,28 +705,29 @@ document.addEventListener("DOMContentLoaded", function () {
 }); // ✅ This closing brace and parenthesis are essential!
 
 
-// === LIVE INVENTORY CHECK FROM GOOGLE SHEETS + AUTO SORT + SPINNER FIX ===
+// === LIVE INVENTORY CHECK FROM GOOGLE SHEETS + AUTO SORT + SMART SPINNER ===
 document.addEventListener("DOMContentLoaded", () => {
   const sheetURL =
     "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec";
 
-  // Select all product cards (works for both products.html & index.html)
   const allButtons = document.querySelectorAll(".add-to-cart");
   if (!allButtons.length) return; // ✅ Skip pages without products
 
-  const productList = document.getElementById("product-list");
+  const productList = document.getElementById("product-list"); // Exists only on product page
+  const isProductPage = !!productList;
 
   async function updateInventory() {
     try {
-      // 🌀 Step 1: show spinner while fetching
-      allButtons.forEach((btn) => {
-        btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Checking stock...`;
-        btn.disabled = true;
-      });
+      // 🌀 Step 1: Only show spinner on the product page
+      if (isProductPage) {
+        allButtons.forEach((btn) => {
+          btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Checking stock...`;
+          btn.disabled = true;
+        });
+      }
 
       const response = await fetch(sheetURL);
       const data = await response.json();
-
       console.log("📦 Fetched Inventory Data:", data);
 
       const inventoryMap = {};
@@ -735,7 +736,6 @@ document.addEventListener("DOMContentLoaded", () => {
         inventoryMap[item.ID.trim().toLowerCase()] = parseInt(item.Stock);
       });
 
-      // === Step 2: Update each button ===
       const allCards = Array.from(document.querySelectorAll(".card.h-100"));
 
       allCards.forEach((card) => {
@@ -755,19 +755,16 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.stockLevel = stock;
 
         if (stock < 20) {
-          // Out of stock (0–19)
           button.textContent = "Out of Stock";
           button.disabled = true;
           button.classList.remove("btn-primary", "btn-warning");
           button.classList.add("btn-secondary");
         } else if (stock >= 20 && stock <= 30) {
-          // Low stock (20–30)
           button.textContent = "Low Stock";
           button.disabled = false;
           button.classList.remove("btn-primary", "btn-secondary");
           button.classList.add("btn-warning");
         } else {
-          // In stock (>30)
           button.textContent = "Add to Cart";
           button.disabled = false;
           button.classList.remove("btn-warning", "btn-secondary");
@@ -775,8 +772,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // === Step 3: Sort (only on product page) ===
-      if (productList) {
+      // === Step 3: Sorting (product page only) ===
+      if (isProductPage) {
         const sortedCards = Array.from(productList.querySelectorAll(".card.h-100")).sort(
           (a, b) => {
             const brandA = (a.dataset.brand || "").toLowerCase();
@@ -785,7 +782,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const stockA = parseInt(a.dataset.stockLevel || 0);
             const stockB = parseInt(b.dataset.stockLevel || 0);
-
             const getRank = (stock) => (stock > 30 ? 1 : stock >= 20 ? 2 : 3);
             return getRank(stockA) - getRank(stockB);
           }
