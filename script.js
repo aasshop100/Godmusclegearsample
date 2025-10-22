@@ -327,12 +327,13 @@ function handleCheckoutSubmit(event) {
     .then(res => res.ok ? console.log("📨 Owner email sent") : console.error("❌ Owner email failed", res))
     .catch(err => console.error("❌ Owner email error", err));
 
- // ✅ Show success message, clear cart, and redirect safely
+// ✅ Show success message, clear cart, and redirect safely
 alert("✅ Thank you! Your order has been submitted. Check your email for confirmation.");
 
-// Clear cart data
+// Clear all cart data
 localStorage.removeItem('cart');
-localStorage.removeItem('appliedPromoCode'); // also reset promo for next order
+localStorage.removeItem('appliedPromoCode'); // reset promo for next order
+cart = []; // ✅ clear in-memory cart array too
 updateCartCount();
 
 // Redirect after short delay to ensure everything clears
@@ -911,6 +912,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
