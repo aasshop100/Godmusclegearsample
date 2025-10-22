@@ -808,7 +808,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 300000);
 });
 
-// === PROMO CODE VALIDATION + UNIVERSAL FREE ITEM ===
+// === PROMO CODE VALIDATION + UNIVERSAL FREE ITEM (With Fade-Out) ===
 document.addEventListener("DOMContentLoaded", () => {
   const promoSection = document.getElementById("promo-section");
   if (!promoSection) return; // Exit if not on cart page
@@ -819,7 +819,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <input type="text" id="promo-code-input" class="form-control" placeholder="Enter promo code">
       <button id="apply-promo-btn" class="btn btn-outline-primary">Apply</button>
     </div>
-    <p id="promo-message" class="mt-2 text-center small"></p>
+    <p id="promo-message" class="mt-2 text-center small" style="transition: opacity 0.6s ease;"></p>
   `;
 
   const applyBtn = document.getElementById("apply-promo-btn");
@@ -846,20 +846,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const getCart = () => JSON.parse(localStorage.getItem("cart")) || [];
   const saveCart = (cart) => localStorage.setItem("cart", JSON.stringify(cart));
 
+  // 🌟 Fade message utility
+  function showMessage(text, type) {
+    promoMsg.textContent = text;
+    promoMsg.classList.remove("text-success", "text-danger");
+    promoMsg.classList.add(type);
+    promoMsg.style.opacity = 1; // show message
+
+    // Fade out after 5 seconds
+    setTimeout(() => {
+      promoMsg.style.opacity = 0;
+    }, 5000);
+  }
+
   // 🔁 Refresh Promo Display
   function refreshPromoMessage() {
     const savedPromo = localStorage.getItem("appliedPromoCode");
     const cart = getCart();
     const hasFreeItem = cart.some(item => item.id === freeItem.id);
 
-    promoMsg.classList.remove("text-success", "text-danger");
-
     if (savedPromo && validPromoCodes.includes(savedPromo) && hasFreeItem) {
       promoMsg.textContent = `✅ Promo code "${savedPromo}" applied — free Testosterone Cypionate, 200mg (1 vial) added!`;
       promoMsg.classList.add("text-success");
+      promoMsg.style.opacity = 1;
     } else {
-      // Remove invalid promo info if no free item is present
       promoMsg.textContent = "";
+      promoMsg.style.opacity = 0;
       localStorage.removeItem("appliedPromoCode");
     }
   }
@@ -867,18 +879,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🎯 Apply Promo Button
   applyBtn.addEventListener("click", () => {
     const enteredCode = promoInput.value.trim().toUpperCase();
-    promoMsg.classList.remove("text-success", "text-danger");
 
     if (!enteredCode) {
-      promoMsg.textContent = "❌ Please enter a promo code.";
-      promoMsg.classList.add("text-danger");
+      showMessage("❌ Please enter a promo code.", "text-danger");
       return;
     }
 
-    // ✅ Check if the code is valid
     if (validPromoCodes.includes(enteredCode)) {
-      promoMsg.textContent = `✅ Promo code "${enteredCode}" applied! You received a free Testosterone Cypionate, 200mg (1 vial).`;
-      promoMsg.classList.add("text-success");
+      showMessage(`✅ Promo code "${enteredCode}" applied! You received a free Testosterone Cypionate, 200mg (1 vial).`, "text-success");
 
       let cart = getCart();
       const alreadyAdded = cart.some(item => item.id === freeItem.id);
@@ -892,8 +900,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("appliedPromoCode", enteredCode);
       if (typeof updateCartDisplay === "function") updateCartDisplay();
     } else {
-      promoMsg.textContent = "❌ Invalid promo code. Please try again.";
-      promoMsg.classList.add("text-danger");
+      showMessage("❌ Invalid promo code. Please try again.", "text-danger");
 
       localStorage.removeItem("appliedPromoCode");
 
@@ -906,9 +913,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🪄 Check promo on reload (only if valid and free item exists)
   refreshPromoMessage();
 
-  // Also refresh message automatically after cart changes (every 2s)
+  // Automatically refresh message after cart changes
   setInterval(refreshPromoMessage, 2000);
 });
+
 
 
 
