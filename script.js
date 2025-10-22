@@ -869,7 +869,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (validPromoCodes.includes(enteredCode)) {
-      showMessage(`✅ Promo code "${enteredCode}" applied! You received a free item.`, "text-success");
+      showMessage(`✅ Promo code "${enteredCode}" applied! You received a free Testosterone Cypionate, 200mg (1 vial).`, "text-success");
 
       let cart = getCart();
       const alreadyAdded = cart.some(item => item.id === freeItem.id);
@@ -902,12 +902,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const hasFreeItem = cart.some(item => item.id === freeItem.id);
 
     if (hasFreeItem) {
-      showMessage(`✅ Promo code "${savedPromo}" applied — free item added!`, "text-success", false);
+      showMessage(`✅ Promo code "${savedPromo}" applied — free Testosterone Cypionate, 200mg (1 vial) added!`, "text-success", false);
     } else {
       localStorage.removeItem("appliedPromoCode");
     }
   }
 });
+
 
 
 
