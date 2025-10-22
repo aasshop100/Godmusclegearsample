@@ -238,109 +238,107 @@ function renderCheckoutSummary() {
 
 // Handle checkout submission + EmailJS via fetch
 function handleCheckoutSubmit(event) {
-    event.preventDefault();
-    const form = document.getElementById('checkout-form');
-    if (!form.checkValidity()) {
-        alert('Please fill all required fields!');
-        return;
-    }
+  event.preventDefault();
+  const form = document.getElementById('checkout-form');
+  if (!form.checkValidity()) {
+    alert('Please fill all required fields!');
+    return;
+  }
 
-    const formData = new FormData(form);
-    const fullName = formData.get('full-name');
-    const customerEmail = formData.get('email');
-    const street = formData.get('street-address');
-    const city = formData.get('city');
-    const state = formData.get('state');
-    const zip = formData.get('zip-code');
-    const country = formData.get('country');
-    const paymentMethod = formData.get('payment-method');
-    const proofFile = formData.get('proof-upload');
+  const formData = new FormData(form);
+  const fullName = formData.get('full-name');
+  const customerEmail = formData.get('email');
+  const street = formData.get('street-address');
+  const city = formData.get('city');
+  const state = formData.get('state');
+  const zip = formData.get('zip-code');
+  const country = formData.get('country');
+  const paymentMethod = formData.get('payment-method');
+  const proofFile = formData.get('proof-upload');
 
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
-    const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-    const grandTotal = subtotal + shipping;
+  const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+  const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
+  const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+  const grandTotal = subtotal + shipping;
 
-    const orderId = 'ORDER-' + Date.now();
-    const itemsSummary = storedCart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
-    const cartDetails = JSON.stringify(storedCart, null, 2);
-    const promoCode = localStorage.getItem("appliedPromoCode") || "None";
+  const orderId = 'ORDER-' + Date.now();
+  const itemsSummary = storedCart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
+  const cartDetails = JSON.stringify(storedCart, null, 2);
+  const promoCode = localStorage.getItem("appliedPromoCode") || "None";
 
-    // Common payload info
-    const serviceID = "service_uerk41r";
-    const userID = "8tIW2RqhekSLKVqLT";
+  // Common payload info
+  const serviceID = "service_uerk41r";
+  const userID = "8tIW2RqhekSLKVqLT";
 
-    // Customer email payload
- const customerPayload = {
+  // Customer email payload
+  const customerPayload = {
     service_id: serviceID,
     template_id: "template_0ry9w0v",
     user_id: userID,
     template_params: {
-        order_id: orderId,
-        customer_name: fullName,
-        total: grandTotal.toFixed(2),
-        payment_method: paymentMethod,
-        full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
-        items_summary: itemsSummary,
-        customer_email: customerEmail,   // keep this
-        to_email: customerEmail,
-        promo_code: promoCode,
-// ✅ add this
+      order_id: orderId,
+      customer_name: fullName,
+      total: grandTotal.toFixed(2),
+      payment_method: paymentMethod,
+      full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
+      items_summary: itemsSummary,
+      customer_email: customerEmail,
+      to_email: customerEmail,
+      promo_code: promoCode, // ✅ include promo code
     }
-};
+  };
 
+  // Owner email payload
+  const ownerPayload = {
+    service_id: serviceID,
+    template_id: "template_8x2z86l",
+    user_id: userID,
+    template_params: {
+      order_id: orderId,
+      total: grandTotal.toFixed(2),
+      customer_name: fullName,
+      customer_email: customerEmail,
+      full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
+      payment_method: paymentMethod,
+      proof_filename: proofFile ? proofFile.name : "N/A",
+      items_summary: itemsSummary,
+      cart_details: cartDetails,
+      promo_code: promoCode, // ✅ include promo code
+      to_email: "aasshop100@gmail.com"
+    }
+  };
 
-    // Owner email payload
-    const ownerPayload = {
-        service_id: serviceID,
-        template_id: "template_8x2z86l",
-        user_id: userID,
-        template_params: {
-            order_id: orderId,
-            total: grandTotal.toFixed(2),
-            customer_name: fullName,
-            customer_email: customerEmail,
-            full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
-            payment_method: paymentMethod,
-            proof_filename: proofFile ? proofFile.name : "N/A",
-            items_summary: itemsSummary,
-            cart_details: cartDetails,
-            promo_code: promoCode,
-            to_email: "aasshop100@gmail.com"
-        }
-    };
+  // Send to customer
+  fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(customerPayload)
+  })
+    .then(res => res.ok ? console.log("📧 Customer email sent") : console.error("❌ Customer email failed", res))
+    .catch(err => console.error("❌ Customer email error", err));
 
-    // Send to customer
-    fetch("https://api.emailjs.com/api/v1.0/email/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(customerPayload)
-    })
-    .then(res => res.ok ? console.log("Customer email sent") : console.error("Customer email failed", res))
-    .catch(err => console.error("Customer email error", err));
+  // Send to owner
+  fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ownerPayload)
+  })
+    .then(res => res.ok ? console.log("📨 Owner email sent") : console.error("❌ Owner email failed", res))
+    .catch(err => console.error("❌ Owner email error", err));
 
-    // Send to owner
-    fetch("https://api.emailjs.com/api/v1.0/email/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(ownerPayload)
-    })
-    .then(res => res.ok ? console.log("Owner email sent") : console.error("Owner email failed", res))
-    .catch(err => console.error("Owner email error", err));
+  // ✅ Success message and cleanup
+  alert("✅ Thank you! Your order has been submitted. Check your email for confirmation.");
 
-    // ✅ Show success message and clear cart
-alert("✅ Thank you! Your order has been submitted. Check your email for confirmation.");
-localStorage.removeItem('cart');
-window.location.href = "index.html";
+  // Clear promo and cart data
+  localStorage.removeItem('cart');
+  localStorage.removeItem('appliedPromoCode');
+  updateCartCount();
 
-
-    // Clear cart and redirect
-    localStorage.setItem('cart', JSON.stringify([]));
-    cart = [];
-    updateCartCount();
-    window.location.href = 'index.html';
+  // Redirect to homepage
+  window.location.href = "index.html";
 }
+
 
 // ✅ Enable or disable checkout button based on cart content
 function updateCheckoutButton() {
@@ -912,6 +910,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
