@@ -339,7 +339,7 @@ updateCartCount();
 setTimeout(() => {
   window.location.href = "index.html";
 }, 800);
-
+}
 
 // ✅ Enable or disable checkout button based on cart content
 function updateCheckoutButton() {
@@ -911,6 +911,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
