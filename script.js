@@ -808,7 +808,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 300000);
 });
 
-// === PROMO CODE VALIDATION ===
+// === PROMO CODE VALIDATION + FREE ITEM ADDITION ===
 document.addEventListener("DOMContentLoaded", () => {
   const applyBtn = document.getElementById("apply-promo-btn");
   const promoInput = document.getElementById("promo-code-input");
@@ -816,36 +816,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!applyBtn || !promoInput || !promoMsg) return; // Exit if not on cart page
 
-  // 🎟️ Your list of valid promo codes (customize these)
+  // 🎟️ Your valid promo codes
   const validPromoCodes = {
-    "BELIGAS101": "Free Beligas item included!",
-    "SIXPEX202": "Free Sixpex product on checkout!",
-    "XENO303": "Free Xeno peptide gift pack!",
+    "BELIGAS101": "Free Beligas Testosterone Cypionate 200mg (1 vial)",
+    "SIXPEX202": "Free Sixpex product gift",
+    "XENO303": "Free Xeno peptide pack",
   };
+
+  // 🎁 Free item details
+  const freeItem = {
+    id: "free-testc200mg",
+    name: "Testosterone Cypionate, 200mg (1 vial)",
+    price: 0.00,
+    image: "images/testc200mg.png",
+    quantity: 1
+  };
+
+  // Helper: load and save cart from localStorage
+  const getCart = () => JSON.parse(localStorage.getItem("cart")) || [];
+  const saveCart = (cart) => localStorage.setItem("cart", JSON.stringify(cart));
 
   applyBtn.addEventListener("click", () => {
     const enteredCode = promoInput.value.trim().toUpperCase();
-
-    // Clear any old message styles
     promoMsg.classList.remove("text-success", "text-danger");
 
     if (enteredCode in validPromoCodes) {
-      // ✅ Valid promo
       promoMsg.textContent = `✅ ${validPromoCodes[enteredCode]}`;
       promoMsg.classList.add("text-success");
 
-      // Optional: mark promo as applied
+      // ✅ Add free item to cart if not already added
+      let cart = getCart();
+      const alreadyAdded = cart.some(item => item.id === freeItem.id);
+
+      if (!alreadyAdded) {
+        cart.push(freeItem);
+        saveCart(cart);
+        console.log("🎁 Free item added to cart:", freeItem.name);
+      } else {
+        console.log("ℹ️ Free item already in cart, skipping re-add.");
+      }
+
+      // Mark promo as applied
       localStorage.setItem("appliedPromoCode", enteredCode);
+
+      // Optional: reload cart display instantly (if you have a function for it)
+      if (typeof updateCartDisplay === "function") updateCartDisplay();
+
     } else {
-      // ❌ Invalid promo
       promoMsg.textContent = "❌ Invalid promo code. Please try again.";
       promoMsg.classList.add("text-danger");
 
-      // Remove stored promo
+      // ❌ Remove stored promo and free item
       localStorage.removeItem("appliedPromoCode");
+
+      let cart = getCart().filter(item => item.id !== freeItem.id);
+      saveCart(cart);
+      if (typeof updateCartDisplay === "function") updateCartDisplay();
     }
   });
 });
+
+
 
 
 
