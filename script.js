@@ -860,7 +860,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ✅ Check if the code is valid
     if (validPromoCodes.includes(enteredCode)) {
-      promoMsg.textContent = `✅ Promo code "${enteredCode}" applied! You received a free item.`;
+      promoMsg.textContent = `✅ Promo code "${enteredCode}" applied! You received a free Testosterone Cypionate, 200mg (1 vial).`;
       promoMsg.classList.add("text-success");
 
       let cart = getCart();
@@ -893,6 +893,7 @@ document.addEventListener("DOMContentLoaded", () => {
     promoMsg.classList.add("text-success");
   }
 });
+
 
 
 
