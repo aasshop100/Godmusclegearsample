@@ -327,17 +327,18 @@ function handleCheckoutSubmit(event) {
     .then(res => res.ok ? console.log("📨 Owner email sent") : console.error("❌ Owner email failed", res))
     .catch(err => console.error("❌ Owner email error", err));
 
-  // ✅ Success message and cleanup
-  alert("✅ Thank you! Your order has been submitted. Check your email for confirmation.");
+ // ✅ Show success message, clear cart, and redirect safely
+alert("✅ Thank you! Your order has been submitted. Check your email for confirmation.");
 
-  // Clear promo and cart data
-  localStorage.removeItem('cart');
-  localStorage.removeItem('appliedPromoCode');
-  updateCartCount();
+// Clear cart data
+localStorage.removeItem('cart');
+localStorage.removeItem('appliedPromoCode'); // also reset promo for next order
+updateCartCount();
 
-  // Redirect to homepage
+// Redirect after short delay to ensure everything clears
+setTimeout(() => {
   window.location.href = "index.html";
-}
+}, 800);
 
 
 // ✅ Enable or disable checkout button based on cart content
@@ -910,6 +911,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
