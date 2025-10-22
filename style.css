@@ -715,8 +715,20 @@ if (featuredSection) {
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
+
+/* === promo code === */
 .product-fade.show {
   opacity: 1;
   transform: scale(1);
+}
+
+.promo-section {
+  background: #f8f9fa;
+}
+#promo-message.valid {
+  color: green;
+}
+#promo-message.invalid {
+  color: red;
 }
 
