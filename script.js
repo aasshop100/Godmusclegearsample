@@ -808,22 +808,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 300000);
 });
 
-// === PROMO CODE VALIDATION + FREE ITEM ADDITION ===
+// === PROMO CODE VALIDATION + UNIVERSAL FREE ITEM ===
 document.addEventListener("DOMContentLoaded", () => {
+  const promoSection = document.getElementById("promo-section");
+  if (!promoSection) return; // Exit if not on cart page
+
+  // 🧾 Insert promo UI dynamically
+  promoSection.innerHTML = `
+    <div class="input-group mb-3">
+      <input type="text" id="promo-code-input" class="form-control" placeholder="Enter promo code">
+      <button id="apply-promo-btn" class="btn btn-outline-primary">Apply</button>
+    </div>
+    <p id="promo-message" class="mt-2 text-center small"></p>
+  `;
+
   const applyBtn = document.getElementById("apply-promo-btn");
   const promoInput = document.getElementById("promo-code-input");
   const promoMsg = document.getElementById("promo-message");
 
-  if (!applyBtn || !promoInput || !promoMsg) return; // Exit if not on cart page
+  // 🎟️ VALID PROMO CODES
+  // 👇 This is where you’ll add or edit promo codes in the future
+  const validPromoCodes = [
+    "BELIGAS101",
+    "SIXPEX202",
+    "XENO303"
+  ];
 
-  // 🎟️ Your valid promo codes
-  const validPromoCodes = {
-    "BELIGAS101": "Free Beligas Testosterone Cypionate 200mg (1 vial)",
-    "SIXPEX202": "Free Sixpex product gift",
-    "XENO303": "Free Xeno peptide pack",
-  };
-
-  // 🎁 Free item details
+  // 🎁 Universal Free Item details
   const freeItem = {
     id: "free-testc200mg",
     name: "Testosterone Cypionate, 200mg (1 vial)",
@@ -832,41 +843,41 @@ document.addEventListener("DOMContentLoaded", () => {
     quantity: 1
   };
 
-  // Helper: load and save cart from localStorage
+  // 🛒 Cart helpers
   const getCart = () => JSON.parse(localStorage.getItem("cart")) || [];
   const saveCart = (cart) => localStorage.setItem("cart", JSON.stringify(cart));
 
+  // 🎯 Apply Promo Button
   applyBtn.addEventListener("click", () => {
     const enteredCode = promoInput.value.trim().toUpperCase();
     promoMsg.classList.remove("text-success", "text-danger");
 
-    if (enteredCode in validPromoCodes) {
-      promoMsg.textContent = `✅ ${validPromoCodes[enteredCode]}`;
+    if (!enteredCode) {
+      promoMsg.textContent = "❌ Please enter a promo code.";
+      promoMsg.classList.add("text-danger");
+      return;
+    }
+
+    // ✅ Check if the code is valid
+    if (validPromoCodes.includes(enteredCode)) {
+      promoMsg.textContent = `✅ Promo code "${enteredCode}" applied! You received a free item.`;
       promoMsg.classList.add("text-success");
 
-      // ✅ Add free item to cart if not already added
       let cart = getCart();
       const alreadyAdded = cart.some(item => item.id === freeItem.id);
 
       if (!alreadyAdded) {
         cart.push(freeItem);
         saveCart(cart);
-        console.log("🎁 Free item added to cart:", freeItem.name);
-      } else {
-        console.log("ℹ️ Free item already in cart, skipping re-add.");
+        console.log("🎁 Free item added:", freeItem.name);
       }
 
-      // Mark promo as applied
       localStorage.setItem("appliedPromoCode", enteredCode);
-
-      // Optional: reload cart display instantly (if you have a function for it)
       if (typeof updateCartDisplay === "function") updateCartDisplay();
-
     } else {
       promoMsg.textContent = "❌ Invalid promo code. Please try again.";
       promoMsg.classList.add("text-danger");
 
-      // ❌ Remove stored promo and free item
       localStorage.removeItem("appliedPromoCode");
 
       let cart = getCart().filter(item => item.id !== freeItem.id);
@@ -874,7 +885,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (typeof updateCartDisplay === "function") updateCartDisplay();
     }
   });
+
+  // 🪄 Restore promo on reload
+  const savedPromo = localStorage.getItem("appliedPromoCode");
+  if (savedPromo && validPromoCodes.includes(savedPromo)) {
+    promoMsg.textContent = `✅ Promo code "${savedPromo}" applied — free item added!`;
+    promoMsg.classList.add("text-success");
+  }
 });
+
 
 
 
