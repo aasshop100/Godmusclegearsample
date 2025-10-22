@@ -810,37 +810,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // === PROMO CODE VALIDATION ===
 document.addEventListener("DOMContentLoaded", () => {
-  const validPromoCodes = ["BELIGAS101", "SIXPEX202", "AURUM303"]; // ✅ your promo codes here
-  const promoInput = document.getElementById("promo-code-input");
   const applyBtn = document.getElementById("apply-promo-btn");
-  const message = document.getElementById("promo-message");
+  const promoInput = document.getElementById("promo-code-input");
+  const promoMsg = document.getElementById("promo-message");
 
-  if (applyBtn) {
-    applyBtn.addEventListener("click", () => {
-      const enteredCode = promoInput.value.trim().toUpperCase();
-      message.textContent = "";
-      message.classList.remove("valid", "invalid");
+  if (!applyBtn || !promoInput || !promoMsg) return; // Exit if not on cart page
 
-      if (!enteredCode) {
-        message.textContent = "Please enter a promo code.";
-        message.classList.add("invalid");
-        return;
-      }
+  // 🎟️ Your list of valid promo codes (customize these)
+  const validPromoCodes = {
+    "BELIGAS101": "Free Beligas item included!",
+    "SIXPEX202": "Free Sixpex product on checkout!",
+    "XENO303": "Free Xeno peptide gift pack!",
+  };
 
-      if (validPromoCodes.includes(enteredCode)) {
-        message.textContent = `✅ Promo code "${enteredCode}" applied! You’ll receive a free item with your order.`;
-        message.classList.add("valid");
+  applyBtn.addEventListener("click", () => {
+    const enteredCode = promoInput.value.trim().toUpperCase();
 
-        // Optional: store the promo in localStorage for checkout
-        localStorage.setItem("appliedPromo", enteredCode);
-      } else {
-        message.textContent = "❌ Invalid promo code. Please try again.";
-        message.classList.add("invalid");
-        localStorage.removeItem("appliedPromo");
-      }
-    });
-  }
+    // Clear any old message styles
+    promoMsg.classList.remove("text-success", "text-danger");
+
+    if (enteredCode in validPromoCodes) {
+      // ✅ Valid promo
+      promoMsg.textContent = `✅ ${validPromoCodes[enteredCode]}`;
+      promoMsg.classList.add("text-success");
+
+      // Optional: mark promo as applied
+      localStorage.setItem("appliedPromoCode", enteredCode);
+    } else {
+      // ❌ Invalid promo
+      promoMsg.textContent = "❌ Invalid promo code. Please try again.";
+      promoMsg.classList.add("text-danger");
+
+      // Remove stored promo
+      localStorage.removeItem("appliedPromoCode");
+    }
+  });
 });
+
+
 
 
 
