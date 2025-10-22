@@ -808,6 +808,40 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 300000);
 });
 
+// === PROMO CODE VALIDATION ===
+document.addEventListener("DOMContentLoaded", () => {
+  const validPromoCodes = ["BELIGAS101", "SIXPEX202", "AURUM303"]; // ✅ your promo codes here
+  const promoInput = document.getElementById("promo-code-input");
+  const applyBtn = document.getElementById("apply-promo-btn");
+  const message = document.getElementById("promo-message");
+
+  if (applyBtn) {
+    applyBtn.addEventListener("click", () => {
+      const enteredCode = promoInput.value.trim().toUpperCase();
+      message.textContent = "";
+      message.classList.remove("valid", "invalid");
+
+      if (!enteredCode) {
+        message.textContent = "Please enter a promo code.";
+        message.classList.add("invalid");
+        return;
+      }
+
+      if (validPromoCodes.includes(enteredCode)) {
+        message.textContent = `✅ Promo code "${enteredCode}" applied! You’ll receive a free item with your order.`;
+        message.classList.add("valid");
+
+        // Optional: store the promo in localStorage for checkout
+        localStorage.setItem("appliedPromo", enteredCode);
+      } else {
+        message.textContent = "❌ Invalid promo code. Please try again.";
+        message.classList.add("invalid");
+        localStorage.removeItem("appliedPromo");
+      }
+    });
+  }
+});
+
 
 
 
