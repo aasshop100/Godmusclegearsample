@@ -827,7 +827,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const promoMsg = document.getElementById("promo-message");
 
   // 🎟️ VALID PROMO CODES
-  // 👇 This is where you’ll add or edit promo codes in the future
   const validPromoCodes = [
     "BELIGAS101",
     "SIXPEX202",
@@ -846,6 +845,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🛒 Cart helpers
   const getCart = () => JSON.parse(localStorage.getItem("cart")) || [];
   const saveCart = (cart) => localStorage.setItem("cart", JSON.stringify(cart));
+
+  // 🔁 Refresh Promo Display
+  function refreshPromoMessage() {
+    const savedPromo = localStorage.getItem("appliedPromoCode");
+    const cart = getCart();
+    const hasFreeItem = cart.some(item => item.id === freeItem.id);
+
+    promoMsg.classList.remove("text-success", "text-danger");
+
+    if (savedPromo && validPromoCodes.includes(savedPromo) && hasFreeItem) {
+      promoMsg.textContent = `✅ Promo code "${savedPromo}" applied — free Testosterone Cypionate, 200mg (1 vial) added!`;
+      promoMsg.classList.add("text-success");
+    } else {
+      // Remove invalid promo info if no free item is present
+      promoMsg.textContent = "";
+      localStorage.removeItem("appliedPromoCode");
+    }
+  }
 
   // 🎯 Apply Promo Button
   applyBtn.addEventListener("click", () => {
@@ -886,13 +903,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 🪄 Restore promo on reload
-  const savedPromo = localStorage.getItem("appliedPromoCode");
-  if (savedPromo && validPromoCodes.includes(savedPromo)) {
-    promoMsg.textContent = `✅ Promo code "${savedPromo}" applied — free item added!`;
-    promoMsg.classList.add("text-success");
-  }
+  // 🪄 Check promo on reload (only if valid and free item exists)
+  refreshPromoMessage();
+
+  // Also refresh message automatically after cart changes (every 2s)
+  setInterval(refreshPromoMessage, 2000);
 });
+
+
 
 
 
