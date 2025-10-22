@@ -265,6 +265,7 @@ function handleCheckoutSubmit(event) {
     const orderId = 'ORDER-' + Date.now();
     const itemsSummary = storedCart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
     const cartDetails = JSON.stringify(storedCart, null, 2);
+    const promoCode = localStorage.getItem("appliedPromoCode") || "None";
 
     // Common payload info
     const serviceID = "service_uerk41r";
@@ -283,7 +284,9 @@ function handleCheckoutSubmit(event) {
         full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
         items_summary: itemsSummary,
         customer_email: customerEmail,   // keep this
-        to_email: customerEmail          // ✅ add this
+        to_email: customerEmail,
+        promo_code: promoCode,
+// ✅ add this
     }
 };
 
@@ -303,6 +306,7 @@ function handleCheckoutSubmit(event) {
             proof_filename: proofFile ? proofFile.name : "N/A",
             items_summary: itemsSummary,
             cart_details: cartDetails,
+            promo_code: promoCode,
             to_email: "aasshop100@gmail.com"
         }
     };
@@ -908,6 +912,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
