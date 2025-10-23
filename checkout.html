@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="keywords" content="muscle supplements, bodybuilding, testosterone, fitness gear, protein, peptides">
@@ -7,12 +8,13 @@
   <meta property="og:description" content="Shop trusted fitness and supplement products.">
   <meta property="og:image" content="images/logo.png">
   <meta property="og:type" content="website">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkout - GOD MUSCLE GEARS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
     <div class="container">
@@ -26,8 +28,8 @@
           <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
           <li class="nav-item"><a class="nav-link" href="cart.html">Cart <span id="cart-count">0</span></a></li>
           <li class="nav-item">
-  <a class="nav-link" href="peptide-calculator.html">Peptide Calculator</a>
-</li>
+            <a class="nav-link" href="peptide-calculator.html">Peptide Calculator</a>
+          </li>
 
         </ul>
       </div>
@@ -93,50 +95,54 @@
           <div class="mb-4">
             <label class="form-label fw-bold">Select Payment Method</label>
 
-           <!-- Bitcoin -->
-<div class="d-flex align-items-center mb-2">
-  <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="bitcoin" value="Bitcoin"
-    onchange="showPaymentDetails('bitcoin-details')">
-  <label class="fw-semibold mb-0" for="bitcoin">Bitcoin</label>
-</div>
-<div id="bitcoin-details" class="payment-details" style="display: none; margin-left: 28px;">
-  <div class="input-group">
-    <input type="text" class="form-control" value="bc1qsamplebitcoinaddress123" id="btc-address" readonly>
-    <button type="button" class="btn btn-outline-dark" onclick="copyToClipboard('btc-address')">Copy</button>
-  </div>
-</div>
+            <!-- Bitcoin -->
+            <div class="d-flex align-items-center mb-2">
+              <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="bitcoin" value="Bitcoin"
+                onchange="showPaymentDetails('bitcoin-details')">
+              <label class="fw-semibold mb-0" for="bitcoin">Bitcoin</label>
+            </div>
+            <div id="bitcoin-details" class="payment-details" style="display: none; margin-left: 28px;">
+              <div class="input-group">
+                <input type="text" class="form-control" value="bc1qsamplebitcoinaddress123" id="btc-address" readonly>
+                <button type="button" class="btn btn-outline-dark"
+                  onclick="copyToClipboard('btc-address')">Copy</button>
+              </div>
+            </div>
 
-<!-- PayPal -->
-<div class="d-flex align-items-center mb-2 mt-3">
-  <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="paypal" value="PayPal"
-    onchange="showPaymentDetails('paypal-details')">
-  <label class="fw-semibold mb-0" for="paypal">PayPal</label>
-</div>
-<div id="paypal-details" class="payment-details" style="display: none; margin-left: 28px;">
-  <div class="input-group">
-    <input type="text" class="form-control" value="paypal-sample@domain.com" id="paypal-address" readonly>
-    <button type="button" class="btn btn-outline-dark" onclick="copyToClipboard('paypal-address')">Copy</button>
-  </div>
-</div>
+            <!-- PayPal -->
+            <div class="d-flex align-items-center mb-2 mt-3">
+              <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="paypal" value="PayPal"
+                onchange="showPaymentDetails('paypal-details')">
+              <label class="fw-semibold mb-0" for="paypal">PayPal</label>
+            </div>
+            <div id="paypal-details" class="payment-details" style="display: none; margin-left: 28px;">
+              <div class="input-group">
+                <input type="text" class="form-control" value="paypal-sample@domain.com" id="paypal-address" readonly>
+                <button type="button" class="btn btn-outline-dark"
+                  onclick="copyToClipboard('paypal-address')">Copy</button>
+              </div>
+            </div>
 
-<!-- Wise -->
-<div class="d-flex align-items-center mb-2 mt-3">
-  <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="wise" value="Wise"
-    onchange="showPaymentDetails('wise-details')">
-  <label class="fw-semibold mb-0" for="wise">Wise</label>
-</div>
-<div id="wise-details" class="payment-details" style="display: none; margin-left: 28px;">
-  <div class="input-group">
-    <input type="text" class="form-control" value="wise-sample@domain.com" id="wise-address" readonly>
-    <button type="button" class="btn btn-outline-dark" onclick="copyToClipboard('wise-address')">Copy</button>
-  </div>
-</div>
+            <!-- Wise -->
+            <div class="d-flex align-items-center mb-2 mt-3">
+              <input class="payment-radio me-2 ms-1" type="radio" name="payment-method" id="wise" value="Wise"
+                onchange="showPaymentDetails('wise-details')">
+              <label class="fw-semibold mb-0" for="wise">Wise</label>
+            </div>
+            <div id="wise-details" class="payment-details" style="display: none; margin-left: 28px;">
+              <div class="input-group">
+                <input type="text" class="form-control" value="wise-sample@domain.com" id="wise-address" readonly>
+                <button type="button" class="btn btn-outline-dark"
+                  onclick="copyToClipboard('wise-address')">Copy</button>
+              </div>
+            </div>
 
 
           </div>
 
           <div class="mb-4">
-            <label for="proof-upload" class="form-label" style="color: #ff4500;">Upload Proof of Payment (Screenshot)</label>
+            <label for="proof-upload" class="form-label" style="color: #ff4500;">Upload Proof of Payment
+              (Screenshot)</label>
             <input type="file" class="form-control" id="proof-upload" name="proof-upload" accept="image/*" required>
             <div class="form-text">Upload a screenshot of your payment confirmation.</div>
           </div>
@@ -163,27 +169,12 @@
     </div>
   </div>
 
- <footer class="bg-dark text-white text-center py-3">
-  <p>&copy; 2025 GOD MUSCLE GEARS. All rights reserved.</p>
-  <p class="small text-muted mt-2" style="font-size: 0.8rem;">
-    ⚠️ Disclaimer: All products are for research purposes only. 
-    Always consult a healthcare professional before using any supplement.
-  </p>
-</footer>
-
-     <!-- Floating Telegram Chat Button -->
-<a href="https://t.me/Godmusclegears" 
-   target="_blank" 
-   class="telegram-float" 
-   title="Chat with us on Telegram">
-  <img src="images/telegramlogo.png" alt="Telegram Chat" />
-</a>
-
+  <footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2025 GOD MUSCLE GEARS. All rights reserved.</p>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="script.js"></script>
 </body>
+
 </html>
-
-
-
