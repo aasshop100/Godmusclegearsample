@@ -1,139 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="keywords" content="muscle supplements, bodybuilding, testosterone, fitness gear, protein, peptides">
-  <meta property="og:title" content="GOD MUSCLE GEARS">
-  <meta property="og:description" content="Shop trusted fitness and supplement products.">
-  <meta property="og:image" content="images/logo.png">
-  <meta property="og:type" content="website">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cart - GOD MUSCLE GEARS</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="images/logo.png" />
+    <meta name="keywords" content="muscle supplements, bodybuilding, testosterone, fitness gear, protein, peptides">
+<meta property="og:title" content="GOD MUSCLE GEARS">
+<meta property="og:description" content="Shop trusted fitness and supplement products.">
+<meta property="og:image" content="images/logo.png">
+<meta property="og:type" content="website">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - GOD MUSCLE GEARS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/logo.png"/>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">GOD MUSCLE GEARS</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
-          <li class="nav-item"><a class="nav-link active" href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-          <li class="nav-item">
-            <a class="nav-link" href="peptide-calculator.html">Peptide Calculator</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">GOD MUSCLE GEARS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item">
+  <a class="nav-link" href="peptide-calculator.html">Peptide Calculator</a>
+</li>
 
-  <section class="container my-5">
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="container my-5">
     <h2>Shopping Cart</h2>
     <div id="cart-items">
-      <!-- Items will render here via JS -->
-      <p class="text-center text-muted py-4" id="empty-cart-message" style="display: none;">
-        Your cart is empty. <a href="products.html">Shop now</a>!
-      </p>
-    </div>
-
+        <!-- Items will render here via JS -->
+        <p class="text-center text-muted py-4" id="empty-cart-message" style="display: none;">
+            Your cart is empty. <a href="products.html">Shop now</a>!
+        </p>
+    </div> <!-- Items list here -->
     <div class="row mt-4 justify-content-end">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Order Summary</h5>
-            <div class="d-flex justify-content-between mb-2">
-              <span>Subtotal:</span>
-              <span id="cart-subtotal">$0.00</span>
-            </div>
-            <div class="d-flex justify-content-between mb-3">
-              <span>Shipping Fee:</span>
-              <span id="shipping-fee">$20.00</span>
-            </div>
-
-            <!-- === PROMO CODE SECTION === -->
-            <div class="row mt-4 justify-content-end">
-              <div class="col-md-6">
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <h5 class="card-title">Have a Promo Code?</h5>
-                    <div id="promo-section">
-                      <div class="input-group">
-                        <input type="text" id="promo-code-input" class="form-control" placeholder="Enter promo code">
-                        <button id="apply-promo-btn" class="btn btn-primary">Apply</button>
-                      </div>
-                      <small id="promo-message" class="d-block mt-2 text-muted"></small>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">$0.00</span>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Shipping Fee:</span>
+                        <span id="shipping-fee">$20.00</span> <!-- Added ID for dynamic JS updates -->
+                    </div>
 
-            <hr>
-            <div class="d-flex justify-content-between mb-3">
-              <strong>Grand Total:</strong>
-              <strong id="cart-grand-total">$20.00</strong>
-            </div>
-            <a href="checkout.html" class="btn btn-success w-100">Checkout</a>
-            <small class="text-muted d-block mt-2">Shipping: $20 per 10 items. Standard delivery in 4–10 business days.</small>
-            <small class="text-muted d-block mt-1">Consult a healthcare professional before starting any supplement regimen.</small>
+           <!-- === PROMO CODE SECTION === -->
+<div class="row mt-4 justify-content-end">
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Have a Promo Code?</h5>
+        <div id="promo-section">
+          <div class="input-group">
+            <input type="text" id="promo-code-input" class="form-control" placeholder="Enter promo code">
+            <button id="apply-promo-btn" class="btn btn-primary">Apply</button>
           </div>
+          <small id="promo-message" class="d-block mt-2 text-muted"></small>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <footer class="bg-dark text-white text-center py-3">
-    <p>&copy; 2022 GOD MUSCLE GEARS. All rights reserved.</p>
-  </footer>
 
-  <script>
-    // Prevent checkout if cart is empty
-    document.addEventListener("DOMContentLoaded", function() {
-      const checkoutBtn = document.querySelector('a.btn.btn-success.w-100');
-      const cartData = JSON.parse(localStorage.getItem('cart')) || [];
 
-      if (checkoutBtn) {
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Grand Total:</strong>
+                        <strong id="cart-grand-total">$20.00</strong>
+                    </div>
+                    <a href="checkout.html" class="btn btn-success w-100">Checkout</a>
+                    <small class="text-muted d-block mt-2">Shipping: $20 per 10 items. Standard delivery in 4-10 business days.</small>
+                    <small class="text-muted d-block mt-1">Consult a healthcare professional before starting any supplement regimen.</small> <!-- Supplement disclaimer -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2022 GOD MUSCLE GEARS. All rights reserved.</p>
+    </footer>
+
+    <script>
+// Prevent checkout if cart is empty
+document.addEventListener("DOMContentLoaded", function() {
+    const checkoutBtn = document.querySelector('a.btn.btn-success.w-100');
+    const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    if (checkoutBtn) {
         checkoutBtn.addEventListener("click", function(e) {
-          if (!cartData || cartData.length === 0) {
-            e.preventDefault();
-            alert("🛒 Your cart is empty. Please add items before checking out.");
-          }
+            if (!cartData || cartData.length === 0) {
+                e.preventDefault();
+                alert("🛒 Your cart is empty. Please add items before checking out.");
+            }
         });
-      }
-    });
-  </script>
+    }
+});
+</script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const checkoutBtn = document.querySelector('a.btn.btn-success.w-100');
-      const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const checkoutBtn = document.querySelector('a.btn.btn-success.w-100');
+    const cartData = JSON.parse(localStorage.getItem('cart')) || [];
 
-      if (checkoutBtn) {
+    // If the button exists (on the cart page)
+    if (checkoutBtn) {
+        // If cart is empty, disable the button visually and functionally
         if (!cartData || cartData.length === 0) {
-          checkoutBtn.classList.add("disabled");
-          checkoutBtn.style.pointerEvents = "none";
-          checkoutBtn.style.opacity = "0.6";
-          checkoutBtn.textContent = "Cart is Empty";
+            checkoutBtn.classList.add("disabled");
+            checkoutBtn.style.pointerEvents = "none"; // prevent clicking
+            checkoutBtn.style.opacity = "0.6"; // look dimmed
+            checkoutBtn.textContent = "Cart is Empty";
         }
 
+        // Add safety check when clicking
         checkoutBtn.addEventListener("click", function(e) {
-          if (!cartData || cartData.length === 0) {
-            e.preventDefault();
-            alert("🛒 Your cart is empty. Please add items before checking out.");
-          }
+            if (!cartData || cartData.length === 0) {
+                e.preventDefault();
+                alert("🛒 Your cart is empty. Please add items before checking out.");
+            }
         });
-      }
-    });
-  </script>
+    }
+});
+</script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
