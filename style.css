@@ -738,10 +738,10 @@ if (featuredSection) {
   color: red;
 }
 
-/* === Floating Telegram Chat Button === */
+/* === Floating Telegram Chat Button (Stacked above Cart) === */
 .telegram-float {
   position: fixed;
-  bottom: 25px;
+  bottom: 110px; /* 👈 Push it up above the floating cart */
   right: 25px;
   background-color: #0088cc;
   border-radius: 50%;
@@ -750,7 +750,7 @@ if (featuredSection) {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   z-index: 9999;
 }
@@ -761,8 +761,10 @@ if (featuredSection) {
   filter: brightness(0) invert(1);
 }
 
+/* Hover effect for Telegram */
 .telegram-float:hover {
   transform: scale(1.1);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
   background-color: #0099e6;
 }
+
