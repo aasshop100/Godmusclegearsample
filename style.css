@@ -522,8 +522,8 @@ if (featuredSection) {
   position: fixed;
   bottom: 30px;
   right: 25px;
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   background-color: #ff4500;
   color: white;
   border: none;
@@ -745,8 +745,8 @@ if (featuredSection) {
   right: 25px;
   background-color: #0088cc;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
