@@ -2,8 +2,7 @@
 body {
   font-family: 'Arial', sans-serif;
   background-color: #1a1a1a;
-  color: #ffffff;
-  /* keep white for dark background areas */
+  color: #ffffff; /* keep white for dark background areas */
   margin: 0;
   padding: 0;
 }
@@ -19,19 +18,17 @@ body {
 footer.bg-light,
 section.bg-light,
 section.light {
-  color: #212529 !important;
-  /* dark text */
+  color: #212529 !important; /* dark text */
   background-color: #ffffff;
 }
 
 /* Headings inside light sections */
-.light-section h2,
-.light-section h3,
+.light-section h2, 
+.light-section h3, 
 .light-section h5,
-.why-choose h2,
+.why-choose h2, 
 .why-choose h5 {
-  color: #ff4500 !important;
-  /* brand orange */
+  color: #ff4500 !important; /* brand orange */
 }
 
 /* === Navbar === */
@@ -58,11 +55,9 @@ section.light {
 /* === HERO SECTION WITH STRONGER BACKGROUND LOGO === */
 .hero {
   position: relative;
-  background: #000000;
-  /* solid black background */
+  background: #000000; /* solid black background */
   overflow: hidden;
-  min-height: 70vh;
-  /* slightly taller hero section */
+  min-height: 70vh; /* slightly taller hero section */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,8 +69,7 @@ section.light {
   position: absolute;
   inset: 0;
   background: url("images/logo.png") center/400px no-repeat;
-  opacity: 0.16;
-  /* slightly more visible logo */
+  opacity: 0.16; /* slightly more visible logo */
   transform: scale(1);
   animation: heroLogoZoom 15s ease-in-out infinite alternate;
 }
@@ -90,8 +84,7 @@ section.light {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.25);
-  /* darkens just slightly */
+  background: rgba(0, 0, 0, 0.25); /* darkens just slightly */
   z-index: 1;
 }
 
@@ -100,7 +93,6 @@ section.light {
     transform: scale(1);
     opacity: 0.16;
   }
-
   to {
     transform: scale(1.1);
     opacity: 0.2;
@@ -209,6 +201,12 @@ footer a:hover {
   text-decoration: underline;
 }
 
+footer p.small {
+  color: #ffcc00 !important;
+  font-size: 0.8rem;
+  margin-top: 8px;
+}
+
 /* === Telegram Popup (Final Fix) === */
 .telegram-popup {
   position: fixed;
@@ -285,15 +283,8 @@ footer a:hover {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* === Floating Add-to-Cart Notification (Centered) === */
@@ -343,11 +334,9 @@ footer a:hover {
   0% {
     box-shadow: 0 0 0 rgba(255, 69, 0, 0.5);
   }
-
   50% {
     box-shadow: 0 0 20px rgba(255, 69, 0, 0.7);
   }
-
   100% {
     box-shadow: 0 0 0 rgba(255, 69, 0, 0.5);
   }
@@ -355,14 +344,12 @@ footer a:hover {
 
 /* === Featured Products Section Fix === */
 #featured-products {
-  background-color: #111;
-  /* keep your dark section */
+  background-color: #111; /* keep your dark section */
   padding: 60px 0;
 }
 
 #featured-products h2 {
-  color: #ffffff !important;
-  /* bright white */
+  color: #ffffff !important; /* bright white */
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -382,14 +369,12 @@ footer a:hover {
 
 /* === Featured Products Section - Dark Background === */
 #featured-products {
-  background-color: #111 !important;
-  /* dark background */
+  background-color: #111 !important; /* dark background */
   padding: 60px 0;
 }
 
 #featured-products h2 {
-  color: #fff !important;
-  /* bright white title */
+  color: #fff !important; /* bright white title */
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -408,23 +393,18 @@ footer a:hover {
 }
 
 // === Fade-in for Featured Products Section ===
-const featuredSection=document.getElementById('featured-products');
-
+const featuredSection = document.getElementById('featured-products');
 if (featuredSection) {
-  const observer=new IntersectionObserver(entries=> {
-      entries.forEach(entry=> {
-          if (entry.isIntersecting) {
-            featuredSection.classList.add('visible');
-            observer.unobserve(featuredSection); // Animate once only
-          }
-        });
-    }
-
-    , {
-    threshold: 0.2
-  });
-
-observer.observe(featuredSection);
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        featuredSection.classList.add('visible');
+        observer.unobserve(featuredSection); // Animate once only
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  observer.observe(featuredSection);
 }
 
 #featured-products {
@@ -450,17 +430,9 @@ observer.observe(featuredSection);
   transform: translateY(0);
 }
 
-#featured-products.visible .product-card:nth-child(1) {
-  transition-delay: 0.15s;
-}
-
-#featured-products.visible .product-card:nth-child(2) {
-  transition-delay: 0.30s;
-}
-
-#featured-products.visible .product-card:nth-child(3) {
-  transition-delay: 0.45s;
-}
+#featured-products.visible .product-card:nth-child(1) { transition-delay: 0.15s; }
+#featured-products.visible .product-card:nth-child(2) { transition-delay: 0.30s; }
+#featured-products.visible .product-card:nth-child(3) { transition-delay: 0.45s; }
 
 /* === Fade-in Animation for Why Choose Us Section (Corrected for Your Structure) === */
 #why-choose {
@@ -490,17 +462,9 @@ observer.observe(featuredSection);
 }
 
 /* Add staggered delay for a smooth cascade */
-#why-choose.visible .col-md-4:nth-child(1) {
-  transition-delay: 0.15s;
-}
-
-#why-choose.visible .col-md-4:nth-child(2) {
-  transition-delay: 0.30s;
-}
-
-#why-choose.visible .col-md-4:nth-child(3) {
-  transition-delay: 0.45s;
-}
+#why-choose.visible .col-md-4:nth-child(1) { transition-delay: 0.15s; }
+#why-choose.visible .col-md-4:nth-child(2) { transition-delay: 0.30s; }
+#why-choose.visible .col-md-4:nth-child(3) { transition-delay: 0.45s; }
 
 /* === Hero Section Fade-in Animation === */
 .hero-content {
@@ -543,12 +507,10 @@ observer.observe(featuredSection);
     transform: translate(-50%, 0) rotate(-45deg);
     opacity: 0.8;
   }
-
   50% {
     transform: translate(-50%, 8px) rotate(-45deg);
     opacity: 0.3;
   }
-
   100% {
     transform: translate(-50%, 0) rotate(-45deg);
     opacity: 0.8;
@@ -560,8 +522,8 @@ observer.observe(featuredSection);
   position: fixed;
   bottom: 30px;
   right: 25px;
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   background-color: #ff4500;
   color: white;
   border: none;
@@ -588,11 +550,9 @@ observer.observe(featuredSection);
   0% {
     box-shadow: 0 0 8px rgba(255, 69, 0, 0.3);
   }
-
   50% {
     box-shadow: 0 0 20px rgba(255, 69, 0, 0.7);
   }
-
   100% {
     box-shadow: 0 0 8px rgba(255, 69, 0, 0.3);
   }
@@ -601,8 +561,7 @@ observer.observe(featuredSection);
 /* === Floating Cart Button === */
 .floating-cart {
   position: fixed;
-  bottom: 95px;
-  /* slightly above the back-to-top */
+  bottom: 95px; /* slightly above the back-to-top */
   right: 25px;
   background-color: #ff4500;
   color: white;
@@ -614,7 +573,7 @@ observer.observe(featuredSection);
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   transition: transform 0.3s ease, background-color 0.3s ease;
   z-index: 9999;
 }
@@ -639,7 +598,7 @@ observer.observe(featuredSection);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
 /* Pop animation for cart count */
@@ -648,22 +607,13 @@ observer.observe(featuredSection);
 }
 
 @keyframes popScale {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.3);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
 }
 
 /* === Mobile Product Card Enhancements === */
 @media (max-width: 768px) {
-
   /* Make Add to Cart button full-width on phones */
   .card .btn.add-to-cart {
     width: 100%;
@@ -686,8 +636,7 @@ observer.observe(featuredSection);
 /* === Fix Modal Text Color (Product Image Preview) === */
 .modal-content {
   background-color: #fff;
-  color: #212529 !important;
-  /* force readable dark text */
+  color: #212529 !important; /* force readable dark text */
 }
 
 .modal-content h5,
@@ -713,7 +662,6 @@ observer.observe(featuredSection);
     opacity: 0;
     transform: scale(0.95);
   }
-
   to {
     opacity: 1;
     transform: scale(1);
@@ -746,16 +694,11 @@ observer.observe(featuredSection);
   margin-top: 10px;
 }
 
-#product-search,
-#brand-filter,
-#type-filter {
+#product-search, #brand-filter, #type-filter {
   border: 2px solid #ff4500;
   border-radius: 6px;
 }
-
-#brand-filter:focus,
-#type-filter:focus,
-#product-search:focus {
+#brand-filter:focus, #type-filter:focus, #product-search:focus {
   box-shadow: 0 0 5px #ff4500;
 }
 
@@ -788,11 +731,39 @@ observer.observe(featuredSection);
 .promo-section {
   background: #f8f9fa;
 }
-
 #promo-message.valid {
   color: green;
 }
-
 #promo-message.invalid {
   color: red;
+}
+
+/* === Floating Telegram Chat Button (Stacked above Cart) === */
+.telegram-float {
+  position: fixed;
+  bottom: 160px; /* 👈 Push it up above the floating cart */
+  right: 25px;
+  background-color: #0088cc;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 9999;
+}
+
+.telegram-float img {
+  width: 35px;
+  height: 35px;
+  filter: none;
+}
+
+/* Hover effect for Telegram */
+.telegram-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  background-color: #0099e6;
 }
