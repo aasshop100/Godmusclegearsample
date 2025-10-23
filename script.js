@@ -1,919 +1,1800 @@
-// script.js - fixed version with cart + checkout + EmailJS via fetch()
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="keywords" content="muscle supplements, bodybuilding, testosterone, fitness gear, protein, peptides">
+<meta property="og:title" content="GOD MUSCLE GEARS">
+<meta property="og:description" content="Shop trusted fitness and supplement products.">
+<meta property="og:image" content="images/logo.png">
+<meta property="og:type" content="website">
 
-document.addEventListener('touchstart', function() {}, {passive: true});
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - GOD MUSCLE GEARS</title>
+    <meta name="description" content="Browse our full range of muscle supplements including protein, creatine, and more.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/logo.png"/>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">GOD MUSCLE GEARS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item">
+  <a class="nav-link" href="peptide-calculator.html">Peptide Calculator</a>
+</li>
 
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-const BASE_SHIPPING_PER_10 = 20.00;
-
-// ---------------- CART FUNCTIONS ----------------
-
-// Update navbar + floating cart count
-function updateCartCount() {
-    const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    const cartCountEl = document.getElementById('cart-count');
-    const floatingCartCount = document.getElementById('floating-cart-count');
-
-    // === Navbar Cart Count ===
-    if (cartCountEl) {
-        cartCountEl.textContent = totalQuantity;
-
-        // ✨ Trigger pop animation (navbar)
-        cartCountEl.classList.remove('pop');
-        void cartCountEl.offsetWidth; // reset animation
-        cartCountEl.classList.add('pop');
-    }
-
-    // === Floating Cart Count ===
-    if (floatingCartCount) {
-        floatingCartCount.textContent = totalQuantity;
-
-        // ✨ Trigger pop animation (floating)
-        floatingCartCount.classList.remove('pop');
-        void floatingCartCount.offsetWidth; // reset animation
-        floatingCartCount.classList.add('pop');
-    }
-
-    // Save cart data
-    localStorage.setItem('cart', JSON.stringify(cart));
-}
-
-// === Show Floating Notification ===
-function showCartNotification(message) {
-  // Remove any existing notification first
-  const existing = document.querySelector('.cart-notification');
-  if (existing) existing.remove();
-
-  // Create notification element
-  const notification = document.createElement('div');
-  notification.className = 'cart-notification';
-  notification.textContent = message;
-  document.body.appendChild(notification);
-
-  // Trigger fade-in
-  setTimeout(() => notification.classList.add('show'), 50);
-
-  // Auto-hide after 3 seconds
-  setTimeout(() => {
-    notification.classList.remove('show');
-    setTimeout(() => notification.remove(), 400);
-  }, 3000);
-}
-
-// Show "Added to Cart" popup message
-function showAddedToast(itemName) {
-    let toast = document.createElement('div');
-    toast.className = 'added-toast';
-    toast.textContent = `✅ ${itemName} added to cart!`;
-    document.body.appendChild(toast);
-
-    setTimeout(() => toast.classList.add('show'), 10); // small delay for animation
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400); // cleanup
-    }, 2000);
-}
-
-// Render cart page
-function updateCart() {
-    updateCartCount();
-
-    const cartItems = document.getElementById('cart-items');
-    const subtotalEl = document.getElementById('cart-subtotal');
-    const shippingEl = document.getElementById('shipping-fee');
-    const grandTotalEl = document.getElementById('cart-grand-total');
-    const emptyMsg = document.getElementById('empty-cart-message');
-
-    if (!cartItems) return;
-
-    let subtotal = 0;
-    let totalQuantity = 0;
-    cartItems.innerHTML = '';
-
-    if (cart.length === 0) {
-    if (emptyMsg) emptyMsg.style.display = 'block';
-    if (subtotalEl) subtotalEl.textContent = '$0.00';
-    if (shippingEl) shippingEl.textContent = '$0.00';
-    if (grandTotalEl) grandTotalEl.textContent = '$0.00';
-
-    // Ensure checkout button updates when cart becomes empty
-    if (typeof updateCheckoutButton === 'function') {
-        updateCheckoutButton();
-    }
-
-    return;
-}
-
-    if (emptyMsg) emptyMsg.style.display = 'none';
-
-    cart.forEach((item, index) => {
-        const itemPrice = Number(item.price) || 0;
-        const quantity = item.quantity || 1;
-        const lineTotal = itemPrice * quantity;
-        subtotal += lineTotal;
-        totalQuantity += quantity;
-
-        const imageSrc = item.image || 'images/default-supplement.png';
-        const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 60px; height: 60px; object-fit: cover;">`;
-
-       cartItems.innerHTML += `
-    <div class="card mb-3">
-        <div class="card-body d-flex align-items-center flex-wrap gap-3">
-            <img src="${imageSrc}" alt="${item.name}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-            
-            <div class="flex-grow-1">
-                <h6 class="mb-1">${item.name}</h6>
-                <p class="mb-1 text-muted">$${itemPrice.toFixed(2)} each</p>
-            </div>
-
-            <div class="d-flex align-items-center gap-2">
-                <input type="number" class="form-control" value="${quantity}" min="1" style="width: 70px;" onchange="updateQuantity(${index}, this.value)">
-                <strong>$${lineTotal.toFixed(2)}</strong>
-                <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
+                </ul>
             </div>
         </div>
-    </div>
-`;
+    </nav>
 
-    });
+    <section class="container my-5">
+        <h2 class="text-center mb-4">All Products</h2>
+      <div class="row mb-4 g-2 align-items-center">
+  <div class="col-md-4">
+      <input id="product-search" class="form-control" type="search" placeholder="Search products..." aria-label="Search">
+  </div>
 
-    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-    const grandTotal = subtotal + shipping;
+  <div class="col-md-4">
+      <select id="brand-filter" class="form-select">
+          <option value="">All Brands</option>
+          <option value="Beligas">Beligas</option>
+          <option value="Sixpex">Sixpex</option>
+          <option value="Xeno">Xeno</option>
+      </select>
+  </div>
 
-    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-    if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
-    if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
+  <div class="col-md-4">
+      <select id="type-filter" class="form-select">
+          <option value="">All Types</option>
+          <option value="Injectable">Injectable</option>
+          <option value="Oral">Oral</option>
+      </select>
+  </div>
+</div>
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+ <div class="text-center mb-4">
+  <button id="clear-filters" class="btn btn-outline-danger px-4">
+    Clear Filters
+  </button>
+</div>
+       
 
-     // ✅ Update checkout button state after updating cart
-    updateCheckoutButton();
-}
-
-// Add to cart
-function addToCart(button) {
-    const name = button.dataset.name || 'Unknown Item';
-    const price = Number(button.dataset.price) || 0;
-    const id = button.dataset.id || name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    const image = button.dataset.image || 'images/default-supplement.png';
-
-    let existingItem = cart.find(item => item.id === id);
-    if (existingItem) {
-        existingItem.quantity = (existingItem.quantity || 1) + 1;
-    } else {
-        cart.push({ id, name, price, quantity: 1, image });
-    }
-
-    updateCart();
-    showCartNotification(`✅ ${name} added to cart!`);
-}
-
-// Quantity change
-function updateQuantity(index, newQty) {
-    const qty = parseInt(newQty) || 1;
-    if (qty < 1) {
-        removeFromCart(index);
-        return;
-    }
-    cart[index].quantity = qty;
-    updateCart();
-}
-
-// Remove item
-function removeFromCart(index) {
-    // Remove item from the cart array
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-
-    // ✅ Re-render the cart so UI updates immediately
-    updateCart();
-    updateCartCount();
-}
-
-
-
-// ---------------- CHECKOUT FUNCTIONS ----------------
-
-// Render checkout summary
-function renderCheckoutSummary() {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    const checkoutItemsEl = document.getElementById('checkout-items');
-    const subtotalEl = document.getElementById('checkout-subtotal');
-    const shippingEl = document.getElementById('checkout-shipping');
-    const grandTotalEl = document.getElementById('checkout-grand-total');
-
-    if (!checkoutItemsEl) return;
-
-    let subtotal = 0;
-    let totalQuantity = 0;
-    checkoutItemsEl.innerHTML = '';
-
-    storedCart.forEach(item => {
-        const itemPrice = Number(item.price) || 0;
-        const quantity = item.quantity || 1;
-        const lineTotal = itemPrice * quantity;
-        subtotal += lineTotal;
-        totalQuantity += quantity;
-
-        const imageSrc = item.image || 'images/default-supplement.png';
-        checkoutItemsEl.innerHTML += `
-            <div class="d-flex align-items-center mb-2">
-                <img src="${imageSrc}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
-                <div class="ms-2">
-                    <h6 class="mb-0">${item.name}</h6>
-                    <small class="text-muted">Qty: ${quantity} | $${itemPrice.toFixed(2)} each</small>
+        
+        <div class="row" id="product-list">
+            <!-- Featured from Home + More -->
+            <div class="col-6 col-md-4 mb-4">
+                  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/sustanon400mg.jpg" class="card-img-top" alt="Testosterone Esters Blend, 400mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Esters Blend, 400mg (1 vial)</h5>
+                        <p class="card-text">Product Name: Supra® – Testosterone 400mg/mL.</p>
+                        <p class="fw-bold">$86.25</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Esters Blend, 400mg (1 vial)" data-id="sustanon400mg" data-price="86.25" data-image="images/sustanon400mg.jpg">Add to Cart</button>
+                    </div>
                 </div>
-                <div class="ms-auto"><strong>$${lineTotal.toFixed(2)}</strong></div>
             </div>
-            <hr class="my-1">
-        `;
-    });
-
-    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-    const grandTotal = subtotal + shipping;
-
-    if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
-    if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
-    if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
-}
-
-// Handle checkout submission + EmailJS via fetch
-function handleCheckoutSubmit(event) {
-  event.preventDefault();
-  const form = document.getElementById('checkout-form');
-  if (!form.checkValidity()) {
-    alert('Please fill all required fields!');
-    return;
-  }
-
-  const formData = new FormData(form);
-  const fullName = formData.get('full-name');
-  const customerEmail = formData.get('email');
-  const street = formData.get('street-address');
-  const city = formData.get('city');
-  const state = formData.get('state');
-  const zip = formData.get('zip-code');
-  const country = formData.get('country');
-  const paymentMethod = formData.get('payment-method');
-  const proofFile = formData.get('proof-upload');
-
-  const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-  const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
-  const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-  const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-  const grandTotal = subtotal + shipping;
-
-  const orderId = 'ORDER-' + Date.now();
-  const itemsSummary = storedCart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
-  const cartDetails = JSON.stringify(storedCart, null, 2);
-  const promoCode = localStorage.getItem("appliedPromoCode") || "None";
-
-  // Common payload info
-  const serviceID = "service_uerk41r";
-  const userID = "8tIW2RqhekSLKVqLT";
-
-  // Customer email payload
-  const customerPayload = {
-    service_id: serviceID,
-    template_id: "template_0ry9w0v",
-    user_id: userID,
-    template_params: {
-      order_id: orderId,
-      customer_name: fullName,
-      total: grandTotal.toFixed(2),
-      payment_method: paymentMethod,
-      full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
-      items_summary: itemsSummary,
-      customer_email: customerEmail,
-      to_email: customerEmail,
-      promo_code: promoCode, // ✅ include promo code
-    }
-  };
-
-  // Owner email payload
-  const ownerPayload = {
-    service_id: serviceID,
-    template_id: "template_8x2z86l",
-    user_id: userID,
-    template_params: {
-      order_id: orderId,
-      total: grandTotal.toFixed(2),
-      customer_name: fullName,
-      customer_email: customerEmail,
-      full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
-      payment_method: paymentMethod,
-      proof_filename: proofFile ? proofFile.name : "N/A",
-      items_summary: itemsSummary,
-      cart_details: cartDetails,
-      promo_code: promoCode, // ✅ include promo code
-      to_email: "aasshop100@gmail.com"
-    }
-  };
-
-  // Send to customer
-  fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(customerPayload)
-  })
-    .then(res => res.ok ? console.log("📧 Customer email sent") : console.error("❌ Customer email failed", res))
-    .catch(err => console.error("❌ Customer email error", err));
-
-  // Send to owner
-  fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(ownerPayload)
-  })
-    .then(res => res.ok ? console.log("📨 Owner email sent") : console.error("❌ Owner email failed", res))
-    .catch(err => console.error("❌ Owner email error", err));
-
-// ✅ Show success message, clear cart, and redirect safely
-alert("✅ Thank you! Your order has been submitted. Check your email for confirmation.");
-
-// Clear all cart data
-localStorage.removeItem('cart');
-localStorage.removeItem('appliedPromoCode'); // reset promo for next order
-cart = []; // ✅ clear in-memory cart array too
-updateCartCount();
-
-// Redirect after short delay to ensure everything clears
-setTimeout(() => {
-  window.location.href = "index.html";
-}, 800);
-}
-
-// ✅ Enable or disable checkout button based on cart content
-function updateCheckoutButton() {
-    const checkoutBtn = document.querySelector('a.btn.btn-success.w-100');
-    const cartData = JSON.parse(localStorage.getItem('cart')) || [];
-
-    if (!checkoutBtn) return; // if not on cart page, exit
-
-    if (cartData.length === 0) {
-        // Disable checkout
-        checkoutBtn.classList.add("disabled");
-        checkoutBtn.style.pointerEvents = "none";
-        checkoutBtn.style.opacity = "0.6";
-        checkoutBtn.textContent = "Cart is Empty";
-    } else {
-        // Enable checkout
-        checkoutBtn.classList.remove("disabled");
-        checkoutBtn.style.pointerEvents = "auto";
-        checkoutBtn.style.opacity = "1";
-        checkoutBtn.textContent = "Checkout";
-    }
-}
-
-
-// ---------------- INIT ----------------
-// Run functions when the page is ready
-document.addEventListener("DOMContentLoaded", function() {
-    updateCart();
-    updateCartCount();
-    updateCheckoutButton();
-
-    const addButtons = document.querySelectorAll('.add-to-cart');
-    addButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            addToCart(this);
-        });
-    });
-
-    if (document.getElementById('cart-items')) {
-        updateCart();
-    }
-
-    if (document.getElementById('checkout-items')) {
-        renderCheckoutSummary();
-        const checkoutForm = document.getElementById('checkout-form');
-        if (checkoutForm) {
-            checkoutForm.addEventListener('submit', handleCheckoutSubmit);
-        }
-    }
-});
-
-// Highlight current page in navbar
-document.querySelectorAll('.nav-link').forEach(link => {
-    if (link.href.includes(location.pathname.split("/").pop())) {
-        link.classList.add('active');
-    } else {
-        link.classList.remove('active');
-    }
-});
-
-function showPaymentDetails(id) {
-  document.querySelectorAll('.payment-details').forEach(el => {
-    el.style.display = 'none';
-  });
-  const details = document.getElementById(id);
-  if (details) {
-    details.style.display = 'block';
-  }
-}
-
-function copyToClipboard(elementId) {
-  const input = document.getElementById(elementId);
-  if (!input) return;
-
-  const button = input.parentElement.querySelector("button");
-
-  navigator.clipboard.writeText(input.value).then(() => {
-    const originalText = button.textContent;
-
-    // ✅ Change text and color
-    button.textContent = "✅ Copied!";
-    button.classList.add("copied");
-    button.disabled = true;
-
-    // Revert after 2 seconds
-    setTimeout(() => {
-      button.textContent = originalText;
-      button.classList.remove("copied");
-      button.disabled = false;
-    }, 2000);
-  });
-}
-
-// === Fade-in effect for Why Choose Us cards ===
-document.addEventListener("DOMContentLoaded", function() {
-  const cards = document.querySelectorAll(".why-choose .p-4");
-
-  const revealOnScroll = () => {
-    const triggerBottom = window.innerHeight * 0.9;
-
-    cards.forEach(card => {
-      const cardTop = card.getBoundingClientRect().top;
-      if (cardTop < triggerBottom) {
-        card.classList.add("visible");
-      }
-    });
-  };
-
-  window.addEventListener("scroll", revealOnScroll);
-  revealOnScroll(); // run once on load
-});
-
-
-// === Combined Page Initialization ===
-document.addEventListener("DOMContentLoaded", function() {
-  // === CART INITIALIZATION ===
-  updateCart();
-  updateCartCount();
-  updateCheckoutButton();
-
-  // ✅ Add-to-cart button event binding (safe single-binding version)
-const addButtons = document.querySelectorAll('.add-to-cart');
-addButtons.forEach(button => {
-  // Remove any existing listener before reattaching (prevents double-fire)
-  button.replaceWith(button.cloneNode(true));
-});
-
-const refreshedButtons = document.querySelectorAll('.add-to-cart');
-refreshedButtons.forEach(button => {
-  button.addEventListener('click', function() {
-    addToCart(this);
-  });
-});
-
-
-  // Update cart or checkout summary if on respective pages
-  if (document.getElementById('cart-items')) {
-    updateCart();
-  }
-  if (document.getElementById('checkout-items')) {
-    renderCheckoutSummary();
-    const checkoutForm = document.getElementById('checkout-form');
-    if (checkoutForm) {
-      checkoutForm.addEventListener('submit', handleCheckoutSubmit);
-    }
-  }
-
-  // Highlight current page in navbar
-  document.querySelectorAll('.nav-link').forEach(link => {
-    if (link.href.includes(location.pathname.split("/").pop())) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
-    }
-  });
-
-  // === TELEGRAM POPUP (once per day) ===
-  const popup = document.getElementById("telegram-popup");
-  if (popup) {
-    const closeBtn = popup.querySelector(".close-btn");
-    const popupKey = "telegramPopupClosedAt";
-
-    const lastClosed = localStorage.getItem(popupKey);
-    const now = Date.now();
-    const oneDay = 24 * 60 * 60 * 1000;
-    const shouldShow = !lastClosed || now - lastClosed > oneDay;
-
-    if (shouldShow) {
-      setTimeout(() => {
-        popup.classList.add("show");
-      }, 3000);
-    }
-
-    const closePopup = () => {
-      popup.classList.remove("show");
-      localStorage.setItem(popupKey, Date.now());
-    };
-
-    closeBtn.addEventListener("click", closePopup);
-    popup.addEventListener("click", e => {
-      if (e.target === popup) closePopup();
-    });
-  }
-
- // === Fade-in for Featured Products Section ===
-const featured = document.getElementById('featured-products');
-if (featured) {
-  const cards = featured.querySelectorAll('.product-card');
-
-  cards.forEach((card, i) => {
-    card.style.transitionDelay = `${0.15 * (i + 1)}s`;
-  });
-
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        featured.classList.add('visible');
-        obs.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2 });
-
-  observer.observe(featured);
-}
-
-// === Fade-in for Why Choose Us Section ===
-const whyChoose = document.getElementById('why-choose');
-if (whyChoose) {
-  const cols = whyChoose.querySelectorAll('.col-md-4');
-  cols.forEach((col, i) => {
-    col.style.transitionDelay = `${0.15 * (i + 1)}s`;
-  });
-
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        whyChoose.classList.add('visible');
-        obs.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2 });
-
-  observer.observe(whyChoose);
-}
-
-// === Fade-in Animation for Hero Section ===
-const heroContent = document.querySelector('.hero-content');
-if (heroContent) {
-  // Delay a bit so it feels natural when page loads
-  setTimeout(() => {
-    heroContent.classList.add('visible');
-  }, 400);
-}
-
- // Hide scroll hint when user scrolls down
-window.addEventListener('scroll', () => {
-  const scrollHint = document.querySelector('.scroll-hint');
-  if (scrollHint) {
-    if (window.scrollY > 100) {
-      scrollHint.style.opacity = '0';
-      scrollHint.style.pointerEvents = 'none';
-    } else {
-      scrollHint.style.opacity = '1';
-      scrollHint.style.pointerEvents = 'auto';
-    }
-  }
-}); // closes the scroll event listener
-
-}); // ✅ closes the big DOMContentLoaded block
-
-// === Back to Top Button ===
-const backToTopButton = document.getElementById("backToTop");
-
-if (backToTopButton) {
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 300) {
-      backToTopButton.style.display = "flex";
-    } else {
-      backToTopButton.style.display = "none";
-    }
-  });
-
-  backToTopButton.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-}
-
-// === Product Image Modal Preview (Safe for All Pages) ===
-document.addEventListener("DOMContentLoaded", () => {
-  const modalElement = document.getElementById('productModal');
-  if (!modalElement) return; // ✅ Skip if this page has no modal
-
-  const modal = new bootstrap.Modal(modalElement);
-  const modalImage = document.getElementById('modalProductImage');
-  const modalTitle = document.getElementById('modalProductTitle');
-  const modalDesc = document.getElementById('modalProductDescription');
-
-  document.querySelectorAll('.card-img-top').forEach(img => {
-    img.style.cursor = 'pointer';
-    img.addEventListener('click', () => {
-      const card = img.closest('.card');
-      const title = card.querySelector('.card-title')?.textContent || 'Product';
-      const desc = card.querySelector('.card-text')?.innerHTML || '';
-      const src = img.getAttribute('src');
-
-      modalImage.src = src;
-      modalTitle.textContent = title;
-      modalDesc.innerHTML = desc;
-      modal.show();
-    });
-  });
-});
-
-
-
-// ========== PRODUCT FILTERING + CLEAR FILTERS ==========
-document.addEventListener("DOMContentLoaded", function () {
-  const searchInput = document.getElementById("product-search");
-  const brandFilter = document.getElementById("brand-filter");
-  const typeFilter = document.getElementById("type-filter");
-  const clearBtn = document.getElementById("clear-filters");
-  const productCards = document.querySelectorAll("#product-list .card.h-100");
-
-  // === Filter products ===
-  function filterProducts() {
-    const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
-    const brandValue = brandFilter ? brandFilter.value : "";
-    const typeValue = typeFilter ? typeFilter.value : "";
-
-    productCards.forEach(card => {
-      const name = card.querySelector(".card-title")?.textContent.toLowerCase() || "";
-      const brand = card.getAttribute("data-brand") || "";
-      const type = card.getAttribute("data-type") || "";
-      const col = card.closest(".col-6, .col-md-4");
-
-      const matchesSearch = name.includes(searchTerm);
-      const matchesBrand = !brandValue || brand === brandValue;
-      const matchesType = !typeValue || type === typeValue;
-
-      if (matchesSearch && matchesBrand && matchesType) {
-        if (col) col.classList.remove("d-none");
-        card.style.display = ""; // ensure visible
-        card.classList.add("product-fade");
-        setTimeout(() => card.classList.add("show"), 50);
-      } else {
-        if (col) col.classList.add("d-none");
-      }
-    });
-  }
-
-  // === Filter triggers ===
-  if (searchInput) searchInput.addEventListener("input", filterProducts);
-  if (brandFilter) brandFilter.addEventListener("change", filterProducts);
-  if (typeFilter) typeFilter.addEventListener("change", filterProducts);
-
-  // === Clear Filters Button ===
-  if (clearBtn) {
-    clearBtn.addEventListener("click", () => {
-      if (searchInput) searchInput.value = "";
-      if (brandFilter) brandFilter.value = "";
-      if (typeFilter) typeFilter.value = "";
-
-      // Remove any inline styles and d-none from columns/cards
-      productCards.forEach(card => {
-        const col = card.closest(".col-6, .col-md-4");
-        if (col) {
-          col.classList.remove("d-none");
-          col.style.display = ""; // reset inline style if present
-        }
-        card.style.display = ""; // reset inline style if present
-        card.classList.remove("show");
-        card.classList.add("product-fade");
-        setTimeout(() => card.classList.add("show"), 50);
-      });
-
-      // Re-run the filter logic once to be consistent (should show all)
-      setTimeout(filterProducts, 100);
-
-      // Smooth scroll to top
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
-
-  // === Initial load ===
-  filterProducts();
-}); // ✅ This closing brace and parenthesis are essential!
-
-
-// === LIVE INVENTORY CHECK FROM GOOGLE SHEETS + AUTO SORT + SMART SPINNER ===
-document.addEventListener("DOMContentLoaded", () => {
-  const sheetURL =
-    "https://script.google.com/macros/s/AKfycbzXhvy8kLNCGle9Pw5cWVAZyfr6RaerLizVoe_CBXkBe622tzQrXWgbu_qDXHH8BxPfQw/exec";
-
-  const allButtons = document.querySelectorAll(".add-to-cart");
-  if (!allButtons.length) return; // ✅ Skip pages without products
-
-  const productList = document.getElementById("product-list"); // Exists only on product page
-  const isProductPage = !!productList;
-
-  async function updateInventory() {
-    try {
-      // 🌀 Step 1: Only show spinner on the product page
-      if (isProductPage) {
-        allButtons.forEach((btn) => {
-          btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Checking stock...`;
-          btn.disabled = true;
-        });
-      }
-
-      const response = await fetch(sheetURL);
-      const data = await response.json();
-      console.log("📦 Fetched Inventory Data:", data);
-
-      const inventoryMap = {};
-      data.forEach((item) => {
-        if (!item.ID) return;
-        inventoryMap[item.ID.trim().toLowerCase()] = parseInt(item.Stock);
-      });
-
-      const allCards = Array.from(document.querySelectorAll(".card.h-100"));
-
-      allCards.forEach((card) => {
-        const button = card.querySelector(".add-to-cart");
-        const productId = button?.dataset.id?.trim().toLowerCase();
-        const stock = inventoryMap[productId];
-
-        if (stock == null || isNaN(stock)) {
-          button.textContent = "Add to Cart";
-          button.disabled = false;
-          button.classList.remove("btn-warning", "btn-secondary");
-          button.classList.add("btn-primary");
-          return;
-        }
-
-        // Save stock level for sorting
-        card.dataset.stockLevel = stock;
-
-        if (stock < 20) {
-          button.textContent = "Out of Stock";
-          button.disabled = true;
-          button.classList.remove("btn-primary", "btn-warning");
-          button.classList.add("btn-secondary");
-        } else if (stock >= 20 && stock <= 30) {
-          button.textContent = "Low Stock";
-          button.disabled = false;
-          button.classList.remove("btn-primary", "btn-secondary");
-          button.classList.add("btn-warning");
-        } else {
-          button.textContent = "Add to Cart";
-          button.disabled = false;
-          button.classList.remove("btn-warning", "btn-secondary");
-          button.classList.add("btn-primary");
-        }
-      });
-
-      // === Step 3: Sorting (product page only) ===
-      if (isProductPage) {
-        const sortedCards = Array.from(productList.querySelectorAll(".card.h-100")).sort(
-          (a, b) => {
-            const brandA = (a.dataset.brand || "").toLowerCase();
-            const brandB = (b.dataset.brand || "").toLowerCase();
-            if (brandA !== brandB) return brandA.localeCompare(brandB);
-
-            const stockA = parseInt(a.dataset.stockLevel || 0);
-            const stockB = parseInt(b.dataset.stockLevel || 0);
-            const getRank = (stock) => (stock > 30 ? 1 : stock >= 20 ? 2 : 3);
-            return getRank(stockA) - getRank(stockB);
-          }
-        );
-
-        sortedCards.forEach((card) =>
-          productList.appendChild(card.closest(".col-6"))
-        );
-      }
-
-      console.log("✅ Inventory sync & sorting complete");
-    } catch (error) {
-      console.error("❌ Error fetching inventory:", error);
-    }
-  }
-
-  // 🕒 Run once
-  updateInventory();
-
-  // 🔁 Auto-refresh every 5 minutes
-  setInterval(() => {
-    console.log("🔄 Auto inventory refresh triggered...");
-    updateInventory();
-  }, 300000);
-});
-
-// === PROMO CODE VALIDATION + UNIVERSAL FREE ITEM (Clean Version) ===
-document.addEventListener("DOMContentLoaded", () => {
-  const promoSection = document.getElementById("promo-section");
-  if (!promoSection) return; // Exit if not on cart page
-
-  // 🧾 Insert promo UI dynamically
-  promoSection.innerHTML = `
-    <div class="input-group mb-3">
-      <input type="text" id="promo-code-input" class="form-control" placeholder="Enter promo code">
-      <button id="apply-promo-btn" class="btn btn-outline-primary">Apply</button>
+            
+            <div class="col-6 col-md-4 mb-4">
+                  <div class="card h-100" data-brand="Beligas" data-type="Injectable">    
+                    <img src="images/testc250mg.jpg" class="card-img-top" alt="Testosterone Cypionate, 250mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Cypionate, 250mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Cypionate.</p>
+                        <p class="fw-bold">$63.84</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Cypionate, 250mg (1 vial)" data-id="testc250mg" data-price="63.84" data-image="images/testc250mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-4 mb-4">
+              <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/teste450mg.jpg" class="card-img-top" alt="Testosterone Enanthate, 450mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Enanthate, 450mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Enanthate.</p>
+                        <p class="fw-bold">$75.90</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Enanthate, 450mg (1 vial)" data-id="teste450mg" data-price="75.90" data-image="images/teste450mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-4 mb-4">
+              <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/trena100mg.jpg" class="card-img-top" alt="Trenbolone Acetate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Trenbolone Acetate, 100mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Trenbolone acetate.</p>
+                        <p class="fw-bold">$86.25</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Trenbolone Acetate, 100mg (1 vial)" data-id="trena100mg" data-price="86.25" data-image="images/trena100mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">    
+                    <img src="images/trene200mg.jpg" class="card-img-top" alt="Trenbolone Enanthate, 200mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Trenbolone Enanthate, 200mg (1 vial)</h5>
+                        <p class="card-text">Supports immune function and recovery.</p>
+                        <p class="fw-bold">$103.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Trenbolone Enanthate, 200mg (1 vial)" data-id="trene200mg" data-price="103.50" data-image="images/trene200mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/tritestpro400mg.jpg" class="card-img-top" alt="TriTest Pro, 400mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TriTest Pro, 400mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Cypionate,Testosterone Decanoate, Testosterone Enanthate.</p>
+                        <p class="fw-bold">$89.70</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TriTest Pro, 400mg (1 vial)" data-id="tritestpro400mg" data-price="89.70" data-image="images/tritestpro400mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/quanteq300mg.jpg" class="card-img-top" alt="Quant Equipoise, 300mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Quant Equipoise, 300mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Boldenone Undecylenate.</p>
+                        <p class="fw-bold">$75.90</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Quant Equipoise, 300mg (1 vial)" data-id="quanteq300mg" data-price="75.90" data-image="images/quanteq300mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/quanteq500mg.jpg" class="card-img-top" alt="Quant Equipoise, 500mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Quant Equipoise, 500mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Boldenone Undecylenate.</p>
+                        <p class="fw-bold">$120.75</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Quant Equipoise, 500mg (1 vial)" data-id="quanteq500mg" data-price="120.75" data-image="images/quanteq500mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+<div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/helioclenyohimbine40mcg55mg.jpg" class="card-img-top" alt="Clenbuterol 40mcg Yohimbine 5.5mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Clenbuterol 40mcg Yohimbine 5.5mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Clenbuterol, Yohimbine.</p>
+                        <p class="fw-bold">$75.90</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Clenbuterol 40mcg Yohimbine 5.5mg (1 vial)" data-id="helioclenyohimbine40mcg55mg" data-price="75.90" data-image="images/helioclenyohimbine40mcg55mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/maste200mg.jpg" class="card-img-top" alt="Masteron Enanthate, 200mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Masteron Enanthate, 200mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients:Drostanolone Enanthate.</p>
+                        <p class="fw-bold">$96.60</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Masteron Enanthate, 200mg (1 vial)" data-id="maste200mg" data-price="96.60" data-image="images/maste200mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/dhb1TestC100mg.jpg" class="card-img-top" alt="Dihydroboldenone Cypionate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dihydroboldenone Cypionate, 100mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients:Dihydroboldenone Cypionate.</p>
+                        <p class="fw-bold">$69.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Dihydroboldenone Cypionate, 100mg (1 vial)" data-id="dhb1TestC100mg" data-price="69.00" data-image="images/dhb1TestC100mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/mastp100mg.jpg" class="card-img-top" alt="Masteron Propionate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Masteron Propionate, 100mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients:Drostanolone Propionate.</p>
+                        <p class="fw-bold">$82.80</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Masteron Propionate, 100mg (1 vial)" data-id="mastp100mg" data-price="82.80" data-image="images/mastp100mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/primoe100mg.jpg" class="card-img-top" alt=Primobolan Enanthate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Primobolan Enanthate, 100mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Methenolone enanthate.</p>
+                        <p class="fw-bold">$120.75</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Primobolan Enanthate, 100mg (1 vial)" data-id="primoe100mg" data-price="120.75" data-image="images/primoe100mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/primoe200mg.jpg" class="card-img-top" alt=Primobolan Enanthate, 200mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Primobolan Enanthate, 200mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Methenolone enanthate.</p>
+                        <p class="fw-bold">$189.75</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Primobolan Enanthate, 200mg (1 vial)" data-id="primoe200mg" data-price="189.75" data-image="images/primoe200mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/npp100mg.jpg" class="card-img-top" alt=Npp, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Npp, 100mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Nandrolone Phenylpropionate.</p>
+                        <p class="fw-bold">$58.65</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Npp, 100mg (1 vial)" data-id="npp100mg" data-price="58.65" data-image="images/npp100mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/npp150mg.jpg" class="card-img-top" alt=Npp, 150mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Npp, 150mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Nandrolone Phenylpropionate.</p>
+                        <p class="fw-bold">$75.90</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Npp, 150mg (1 vial)" data-id="npp150mg" data-price="75.90" data-image="images/npp150mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/hexotren100mg.jpg" class="card-img-top" alt="Hexo Trenbolone, 100mg" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Hexo Trenbolone, 100mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients:Trenbolone hexahydrobenzyl carbonate</p>
+                        <p class="fw-bold">$120.75</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Hexo Trenbolone, 100mg" data-id="hexotren100mg" data-price="120.75" data-image="images/hexotren100mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/testc200mg.png" class="card-img-top" alt="Testosterone Cypionate, 200mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Cypionate, 200mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Cypionate</p>
+                        <p class="fw-bold">$62.10</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Cypionate, 200mg (1 vial)" data-id="testc200mg" data-price="62.10" data-image="images/testc200mg.png">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/teste300mg.png" class="card-img-top" alt="Testosterone Enanthate, 300mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Enanthate, 300mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Enanthate</p>
+                        <p class="fw-bold">$65.55</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Enanthate, 300mg (1 vial)" data-id="teste300mg" data-price="65.55" data-image="images/teste300mg.png">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/testnpp1500mg.jpg" class="card-img-top" alt="Testosterone NPP Blend, 150mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone NPP Blend, 150mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Propionate, Nandrolone Phenylpropionate</p>
+                        <p class="fw-bold">$86.25</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone NPP Blend, 150mg (1 vial)" data-id="testnpp1500mg" data-price="86.25" data-image="images/testnpp1500mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/testp100mg.png" class="card-img-top" alt="Testosterone Propionate, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Propionate, 100mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Propionate</p>
+                        <p class="fw-bold">$48.30</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Propionate, 100mg (1 vial)" data-id="testp100mg" data-price="48.30" data-image="images/testp100mg.png">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/testsuspension100mg.jpg" class="card-img-top" alt="Testosterone Suspension, 100mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Suspension, 100mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Suspension</p>
+                        <p class="fw-bold">$51.75</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Suspension, 100mg (1 vial)" data-id="testsuspension100mg" data-price="51.75" data-image="images/testsuspension100mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/testtrenboldblend400mg.jpg" class="card-img-top" alt="Test Tren Bold Blend, 400mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Test Tren Bold Blend, 400mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Enanthate, Boldenone Undecylenate, Trenbolone Enanthate</p>
+                        <p class="fw-bold">$162.15</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Test Tren Bold Blend, 400mg (1 vial)" data-id="testtrenboldblend400mg" data-price="162.15" data-image="images/testtrenboldblend400mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/testtrenlong300mg.jpg" class="card-img-top" alt="Test Tren Long, 300mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Test Tren Long, 300mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Enanthate, Trenbolone Enanthate</p>
+                        <p class="fw-bold">$138.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Test Tren Long, 300mg (1 vial)" data-id="testtrenlong300mg" data-price="138.00" data-image="images/testtrenlong300mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/trentestmastlong300mg.jpg" class="card-img-top" alt="Tren Test Mast Long, 300mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Tren Test Mast Long, 300mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Trenbolone Enanthate, Testosterone Enanthate, Drostanolone Propionate</p>
+                        <p class="fw-bold">$155.25</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Tren Test Mast Long, 300mg (1 vial)" data-id="trentestmastlong300mg" data-price="155.25" data-image="images/trentestmastlong300mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/trentestmastshort150mg.jpg" class="card-img-top" alt="Tren Test Mast Short, 150mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Tren Test Mast Short, 150mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Trenbolone Acetate, Testosterone Propionate,</p>
+                        <p class="fw-bold">$120.75</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Tren Test Mast Long, 300mg (1 vial)" data-id="ttrentestmastshort150mg" data-price="120.75" data-image="images/trentestmastshort150mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/triren150mg.jpg" class="card-img-top" alt="Tri Trenbolone, 150mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Tri Trenbolone, 150mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Trenbolone Acetate, Trenbolone Enanthate, Trenbolone Hexahydrobenzlcarbonate</p>
+                        <p class="fw-bold">$155.25</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Tri Trenbolone, 150mg (1 vial)" data-id="triren150mg" data-price="155.25" data-image="images/triren150mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/tritestlite350mg.jpg" class="card-img-top" alt="Tri Testosterone Lite, 350mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Tri Testosterone Lite, 350mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Testosterone Enanthate, Testosterone Cypionate,Testosterone Propionate</p>
+                        <p class="fw-bold">$82.80</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Tri Testosterone Lite, 350mg (1 vial)" data-id="tritestlite350mg" data-price="82.80" data-image="images/tritestlite350mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Injectable">
+                    <img src="images/winstrolsuspension50mg.jpg" class="card-img-top" alt="Winstrol Suspension, 50mg (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Winstrol Suspension, 50mg (1 vial)</h5>
+                        <p class="card-text">Active ingredients: Stanzolol Suspension</p>
+                        <p class="fw-bold">$79.35</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Winstrol Suspension, 50mg (1 vial)" data-id="winstrolsuspension50mg" data-price="79.35" data-image="images/winstrolsuspension50mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+        <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/5amino1mq.jpg" class="card-img-top" alt="5-Amino 1MQ, 50mg (100 tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">5-Amino 1MQ, 50mg (100 tabs)</h5>
+                        <p class="card-text">Active ingredients: 5 Amino 1MQ</p>
+                        <p class="fw-bold">$217.35</p>
+                        <button class="btn btn-primary add-to-cart" data-name="5-Amino 1MQ, 50mg (100 tabs)" data-id="5amino1mq" data-price="217.35" data-image="images/5amino1mq.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        
+         <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/anadrol50mg100tabs.jpg" class="card-img-top" alt="Anadrol, 50mg (100 tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Anadrol, 50mg (100 tabs)</h5>
+                        <p class="card-text">Active ingredients: Oxymetholone</p>
+                        <p class="fw-bold">$144.90</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Anadrol, 50mg (100 tabs)" data-id="anadrol50mg100tabs" data-price="144.90" data-image="images/anadrol50mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/anavar10mg100tabs.jpg" class="card-img-top" alt="Anavar lite, 10mg (100 tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Anavar lite, 10mg (100 tabs)</h5>
+                        <p class="card-text">Active ingredients: Oxandrolone</p>
+                        <p class="fw-bold">$110.40</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Anavar lite, 10mg (100 tabs)" data-id="anavar10mg100tabs" data-price="110.40" data-image="images/anavar10mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/anavar50mg100tabs.jpg" class="card-img-top" alt="Anavar, 50mg (100 tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Anavar, 50mg (100 tabs)</h5>
+                        <p class="card-text">Active ingredients: Oxandrolone</p>
+                        <p class="fw-bold">$248.40</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Anavar, 50mg (100 tabs)" data-id="anavar50mg100tabs" data-price="248.40" data-image="images/anavar50mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+                <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/arimidex1mg.webp" class="card-img-top" alt="Arimidex, 1mg (50 tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Arimidex, 1mg (50 tabs)</h5>
+                        <p class="card-text">Active ingredients: Anatrozole</p>
+                        <p class="fw-bold">$65.55</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Arimidex, 1mg (50 tabs)" data-id="arimidex1mg" data-price="65.55" data-image="images/arimidex1mg.webp">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/bacwater30ml.webp" class="card-img-top" alt="Bacteriostatic Water, 30ml (1 vial)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Bacteriostatic Water, 30ml (1 vial)</h5>
+                        <p class="card-text">Brand Name: Beligas</p>
+                        <p class="fw-bold">$10.35</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Bacteriostatic Water, 30ml (1 vial)" data-id="bacwater30ml" data-price="10.35" data-image="images/bacwater30ml.webp">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/clen40mcg100tabs.jpg" class="card-img-top" alt="Clenbuterol, 40mcg (100 tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Clenbuterol, 40mcg (100 tabs)</h5>
+                        <p class="card-text">Active ingredients: Clenbuterol</p>
+                        <p class="fw-bold">$117.30</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Clenbuterol, 40mcg (100 tabs)" data-id="clen40mcg100tabs" data-price="117.30" data-image="images/clen40mcg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/dianabol20mg100tabs.jpg" class="card-img-top" alt="Dianabol, 20mg (100 tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dianabol, 20mg (100 tabs)</h5>
+                        <p class="card-text">Active ingredients: Methandienone</p>
+                        <p class="fw-bold">$138.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Dianabol, 20mg (100 tabs)" data-id="dianabol20mg100tabs" data-price="138.00" data-image="images/dianabol20mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/dianabol50mg100tabs.jpg" class="card-img-top" alt="Dianabol, 50mg (100 tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dianabol, 50mg (100 tabs)</h5>
+                        <p class="card-text">Active ingredients: Methandienone</p>
+                        <p class="fw-bold">$193.20</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Dianabol, 50mg (100 tabs)" data-id="dianabol50mg100tabs" data-price="193.20" data-image="images/dianabol50mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/prodostinex1mg.jpg" class="card-img-top" alt="Pro-Dostinex, 1mg (Bottle of 10 tablets)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Pro-Dostinex, 1mg (Bottle of 10 tablets)</h5>
+                        <p class="card-text">Active ingredients: Cabergoline</p>
+                        <p class="fw-bold">$117.30</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Pro-Dostinex, 1mg (Bottle of 10 tablets)" data-id="prodostinex1mg" data-price="117.30" data-image="images/prodostinex1mg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/primo25mg100tabs.jpg" class="card-img-top" alt="Primobolan, 25mg (100tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Primobolan, 25mg (100tabs)</h5>
+                        <p class="card-text">Active ingredients: Methenodone Acetate</p>
+                        <p class="fw-bold">$317.40</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Primobolan, 25mg (100tabs)" data-id="primo25mg100tabs" data-price="317.40" data-image="images/primo25mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/superdrol10mg100tabs.jpg" class="card-img-top" alt="Superdrol, 10mg (100tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Superdrol, 10mg (100tabs)</h5>
+                        <p class="card-text">Active ingredients: Methasterone</p>
+                        <p class="fw-bold">$93.15</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Superdrol, 10mg (100tabs)" data-id="superdrol10mg100tabs" data-price="93.15" data-image="images/superdrol10mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/winstrol20mg100tabs.jpg" class="card-img-top" alt="Winstrol, 20mg (100tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Winstrol, 20mg (100tabs)</h5>
+                        <p class="card-text">Active ingredients: Stanozolol</p>
+                        <p class="fw-bold">$120.75</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Winstrol, 20mg (100tabs)" data-id="winstrol20mg100tabs" data-price="120.75" data-image="images/winstrol20mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/winstrol50mg100tabs.jpg" class="card-img-top" alt="Winstrol, 50mg (100tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Winstrol, 50mg (100tabs)</h5>
+                        <p class="card-text">Active ingredients: Stanozolol</p>
+                        <p class="fw-bold">$193.20</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Winstrol, 50mg (100tabs)" data-id="winstrol50mg100tabs" data-price="193.20" data-image="images/winstrol50mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/cialis25mg50tabs.jpg" class="card-img-top" alt="Cialis, 25mg (50 Tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Cialis, 25mg (50 Tabs)</h5>
+                        <p class="card-text">Active ingredients:Tadalafil</p>
+                        <p class="fw-bold">$48.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Cialis, 25mg (50 Tabs)" data-id="cialis25mg50tabs" data-price="48.00" data-image="images/cialis25mg50tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/cialis5mg100tabs.jpg" class="card-img-top" alt="Cialis, 5mg (100 Tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Cialis, 5mg (100 Tabs)</h5>
+                        <p class="card-text">Active ingredients:Tadalafil</p>
+                        <p class="fw-bold">$59.34</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Cialis, 5mg (100 Tabs)" data-id="cialis5mg100tabs" data-price="59.34" data-image="images/cialis5mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/t4100mcg.jpg" class="card-img-top" alt="T4, 100mcg (100 Tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">T4, 100mcg (100 Tabs)</h5>
+                        <p class="card-text">Active Ingredient: Levothyroxine</p>
+                        <p class="fw-bold">$86.25</p>
+                        <button class="btn btn-primary add-to-cart" data-name="T4, 100mcg (100 Tabs)" data-id="t4100mcg" data-price="86.25" data-image="images/t4100mcg.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+   <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/turinabol10mg.webp" class="card-img-top" alt="Turinabol, 10mg (100 Tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Turinabol, 10mg (100 Tabs)</h5>
+                        <p class="card-text">Active ingredients: Chlorodehydromethyltestosterone</p>
+                        <p class="fw-bold">$89.70</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Turinabol, 10mg (100 Tabs)" data-id="turinabol10mg" data-price="89.70" data-image="images/turinabol10mg.webp">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+   <div class="card h-100" data-brand="Beligas" data-type="Oral">
+                    <img src="images/viagra50mg100tabs.jpg" class="card-img-top" alt="Viagra, 50mg (100 Tabs)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Viagra, 50mg (100 Tabs)</h5>
+                        <p class="card-text">Active ingredients: Sildenafil</p>
+                        <p class="fw-bold">$59.34</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Viagra, 50mg (100 Tabs)" data-id="viagra50mg100tabs" data-price="59.34" data-image="images/viagra50mg100tabs.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+                <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-bolde.jpg" class="card-img-top" alt="BOLDEPEX 200" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">BOLDEPEX 200</h5>
+                        <p class="card-text">Active ingredients: Boldenone Undecylenate</p>
+                        <p class="fw-bold">$94.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="BOLDEPEX 200" data-id="sixpex-bolde" data-price="94.50" data-image="images/sixpex-bolde.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-cutpex.jpg" class="card-img-top" alt="CUTPEX B320" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">CUTPEX B320</h5>
+                        <p class="card-text">Active ingredients: Drostanolone Propionate 100mg, Testosterone Acetate 120mg, Trenbolone Acetate 100mg</p>
+                        <p class="fw-bold">$189.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="CUTPEX B320" data-id="sixpex-cutpex" data-price="189.00" data-image="images/sixpex-cutpex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-decapex.jpg" class="card-img-top" alt="DECAPEX 200" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">DECAPEX 200</h5>
+                        <p class="card-text">Active ingredients: Nandrolone Decanoate</p>
+                        <p class="fw-bold">$81.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="DECAPEX 200" data-id="sixpex-decapex" data-price="81.00" data-image="images/sixpex-decapex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+                 <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-durapex.jpg" class="card-img-top" alt="DURAPEX 100" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">DURAPEX 100</h5>
+                        <p class="card-text">Active ingredients: Nandrolone Phenylpropionate</p>
+                        <p class="fw-bold">$81.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="DURAPEX 100" data-id="sixpex-durapex" data-price="81.00" data-image="images/sixpex-durapex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-mastepex-e200.jpg" class="card-img-top" alt="MASTEPEX E200" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">MASTEPEX E200</h5>
+                        <p class="card-text">Active ingredients: Drostanolone Enanthate</p>
+                        <p class="fw-bold">$121.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="MASTEPEX E200" data-id="sixpex-mastepex-e200" data-price="121.50" data-image="images/sixpex-mastepex-e200.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-mastepex-p100.jpg" class="card-img-top" alt="MASTEPEX P100" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">MASTEPEX P100</h5>
+                        <p class="card-text">Active ingredients: Drostanolone Propionate</p>
+                        <p class="fw-bold">$108.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="MASTEPEX P100" data-id="sixpex-mastepex-p100" data-price="108.00" data-image="images/sixpex-mastepex-p100.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+                <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-parabopex.jpg" class="card-img-top" alt="PARABOPEX 75" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">PARABOPEX 75</h5>
+                        <p class="card-text">Active ingredients: Drostanolone Propionate</p>
+                        <p class="fw-bold">$202.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="PARABOPEX 75" data-id="sixpex-parabopex" data-price="202.50" data-image="images/sixpex-parabopex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-primopex100.jpg" class="card-img-top" alt="PRIMOPEX 100" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">PRIMOPEX 100</h5>
+                        <p class="card-text">Active ingredients: Methanolon Enanthate</p>
+                        <p class="fw-bold">$270.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="PRIMOPEX 100" data-id="sixpex-primopex25" data-price="270.00" data-image="images/sixpex-primopex100.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-testopex-b300.jpg" class="card-img-top" alt="TESTOPEX B300" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TESTOPEX B300</h5>
+                        <p class="card-text">Active ingredients: Testosterone propionate 50mg, Testosterone phenylpropionate 75 mg, Testosterone isocaproate 75 mg, Testosterone decanoate 100 mg</p>
+                        <p class="fw-bold">$94.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TESTOPEX B300" data-id="sixpex-testopex-b300" data-price="94.50" data-image="images/sixpex-testopex-b300.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-testopex-b500.jpg" class="card-img-top" alt="TESTOPEX B500" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TESTOPEX B500</h5>
+                        <p class="card-text">Active ingredients:Testosterone Decanoate 90mg, Testosterone Cypionate 150mg, Testosterone Isocaproate 75mg, Testosterone Phenylpropionate 75mg, Testosterone Propionate 60mg, Testosterone Acetate 50mg</p>
+                        <p class="fw-bold">$162.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TESTOPEX B500" data-id="sixpex-testopex-b500" data-price="162.00" data-image="images/sixpex-testopex-b500.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+                   <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-testopex-c200.jpg" class="card-img-top" alt="TESTOPEX C200" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TESTOPEX C200</h5>
+                        <p class="card-text">Active ingredients:Testosterone Cypionate</p>
+                        <p class="fw-bold">$67.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TESTOPEX C200" data-id="sixpex-testopex-c200" data-price="67.50" data-image="images/sixpex-testopex-c200.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-testopex-e250.jpg" class="card-img-top" alt="TESTOPEX E250" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TESTOPEX E250</h5>
+                        <p class="card-text">Active ingredients:Testosterone Enanthate</p>
+                        <p class="fw-bold">$67.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TESTOPEX E250" data-id="sixpex-testopex-e250" data-price="67.50" data-image="images/sixpex-testopex-e250.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+                <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-testopex-p100.jpg" class="card-img-top" alt="TESTOPEX P100" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TESTOPEX P100</h5>
+                        <p class="card-text">Active ingredients:Testosterone Propionate</p>
+                        <p class="fw-bold">$59.40</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TESTOPEX P100" data-id="sixpex-testopex-p100" data-price="59.40" data-image="images/sixpex-testopex-p100.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-trenbopex-a100.jpg" class="card-img-top" alt="TRENBOPEX A100" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TRENBOPEX A100</h5>
+                        <p class="card-text">Active ingredients:Trenbolone Acetate</p>
+                        <p class="fw-bold">$108.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TRENBOPEX A100" data-id="sixpex-trenbopex-a100" data-price="108.00" data-image="images/sixpex-trenbopex-a100.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+                <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-trenbopex-e200.jpg" class="card-img-top" alt="TRENBOPEX E200" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TRENBOPEX E200</h5>
+                        <p class="card-text">Active ingredients:Trenbolone Enanthate</p>
+                        <p class="fw-bold">$121.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TRENBOPEX E200" data-id="sixpex-trenbopex-e200" data-price="121.50" data-image="images/sixpex-trenbopex-e200.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-cialipex.jpg" class="card-img-top" alt="CIALIPEX 20" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">CIALIPEX 20</h5>
+                        <p class="card-text">Active ingredients:Tadalafil - 20 Tablets x 20mg</p>
+                        <p class="fw-bold">$54.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="CIALIPEX 20" data-id="sixpex-cialipex" data-price="54.00" data-image="images/sixpex-cialipex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-clen40.jpg" class="card-img-top" alt="CLENPEX 40" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">CLENPEX 40</h5>
+                        <p class="card-text">Active ingredients:Clenbuterol HCL - 50 Tablets x 40 mcg</p>
+                        <p class="fw-bold">$94.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="CLENPEX 40" data-id="sixpex-clen40" data-price="94.50" data-image="images/sixpex-clen40.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-halopex.jpg" class="card-img-top" alt="HALOPEX 10" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">HALOPEX 10</h5>
+                        <p class="card-text">Active ingredients:Fluoxymesterone - 30 Tablets x 10mg</p>
+                        <p class="fw-bold">$94.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="HALOPEX 10" data-id="sixpex-halopex" data-price="94.50" data-image="images/sixpex-halopex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-methapex-20.jpg" class="card-img-top" alt="METHAPEX 20" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">METHAPEX 20</h5>
+                        <p class="card-text">Active ingredients:Methandienone - 20mg/tablet - 100 Tablets x 20mg </p>
+                        <p class="fw-bold">$86.40</p>
+                        <button class="btn btn-primary add-to-cart" data-name="METHAPEX 20" data-id="sixpex-methapex-20" data-price="86.40" data-image="images/sixpex-methapex-20.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-methapex50.jpg" class="card-img-top" alt="METHAPEX 50" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">METHAPEX 50</h5>
+                        <p class="card-text">Active ingredients:Methandienone - 50mg/tablet - 50 Tablets x 50mg </p>
+                        <p class="fw-bold">$108.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="METHAPEX 50" data-id="sixpex-methapex50" data-price="108.00" data-image="images/sixpex-methapex50.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-oxapex10.jpg" class="card-img-top" alt="OXAPEX 10" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">OXAPEX 10</h5>
+                        <p class="card-text">Active ingredients:Oxandrolone - 10mg/tablet - 100 Tablets x 10mg </p>
+                        <p class="fw-bold">$121.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="OXAPEX 10" data-id="sixpex-oxapex10" data-price="121.50" data-image="images/sixpex-oxapex10.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-oxapex25.jpg" class="card-img-top" alt="OXAPEX 25" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">OXAPEX 25</h5>
+                        <p class="card-text">Active ingredients:Oxandrolone - 25mg/tablet - 100 Tablets x 25mg </p>
+                        <p class="fw-bold">$162.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="OXAPEX 25" data-id="sixpex-oxapex25" data-price="162.00" data-image="images/sixpex-oxapex25.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+               <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-oxypex.jpg" class="card-img-top" alt="OXYPEX 50" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">OXYPEX 50</h5>
+                        <p class="card-text">Active ingredients:Oxymetholone - 50mg/tablet - 50 Tablets x 50mg </p>
+                        <p class="fw-bold">$67.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="OXYPEX 50" data-id="sixpex-oxypex" data-price="67.50" data-image="images/sixpex-oxypex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-primopex25.jpg" class="card-img-top" alt="PRIMOPEX 25" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">PRIMOPEX 25</h5>
+                        <p class="card-text">Active ingredients:Methenolone Acetate - 25mg/tablet - 50 Tablets x 25mg </p>
+                        <p class="fw-bold">$67.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="PRIMOPEX 25" data-id="sixpex-primopex25" data-price="67.50" data-image="images/sixpex-primopex25.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-provipex.jpg" class="card-img-top" alt="PROVIPEX 25" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">PROVIPEX 25</h5>
+                        <p class="card-text">Active ingredients:Mesterolone - 25mg/tablet - 100 Tablets x 25mg </p>
+                        <p class="fw-bold">$162.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="PROVIPEX 25" data-id="sixpex-provipex" data-price="162.00" data-image="images/sixpex-provipex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-sildepex-100.jpg" class="card-img-top" alt="SILDEPEX 100" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">SILDEPEX 100</h5>
+                        <p class="card-text">Active ingredients:Sildenafil - 100mg/tablet - 20 Tablets x 100mg </p>
+                        <p class="fw-bold">$48.60</p>
+                        <button class="btn btn-primary add-to-cart" data-name="SILDEPEX 100" data-id="sixpex-sildepex-100" data-price="48.60" data-image="images/sixpex-sildepex-100.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-stanopex10.jpg" class="card-img-top" alt="STANOPEX 10" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">STANOPEX 10</h5>
+                        <p class="card-text">Active ingredients:Stanozolol - 10mg/tablet - 100 Tablets x 10mg </p>
+                        <p class="fw-bold">$67.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="STANOPEX 10" data-id="sixpex-stanopex10" data-price="67.50" data-image="images/sixpex-stanopex10.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-stanopex50.jpg" class="card-img-top" alt="STANOPEX 50" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">STANOPEX 50</h5>
+                        <p class="card-text">Active ingredients:Stanozolol - 50mg/tablet - 50 Tablets x 50mg </p>
+                        <p class="fw-bold">$108.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="STANOPEX 50" data-id="sixpex-stanopex50" data-price="108.00" data-image="images/sixpex-stanopex50.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-turipex.jpg" class="card-img-top" alt="TURIPEX 10" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TURIPEX 10</h5>
+                        <p class="card-text">Active ingredients:4-Chlorodehydromethyteststerone - 10mg/tablet - 100 Tablets x 10mg </p>
+                        <p class="fw-bold">$108.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TURIPEX 10" data-id="sixpex-turipex" data-price="108.00" data-image="images/sixpex-turipex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-arimipex.jpg" class="card-img-top" alt="ARIMIPEX 1" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">ARIMIPEX 1</h5>
+                        <p class="card-text">Active ingredients:Anastrozole - 1mg/tablet - 30 Tablets x 1mg </p>
+                        <p class="fw-bold">$67.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="ARIMIPEX 1" data-id="sixpex-arimipex" data-price="67.50" data-image="images/sixpex-arimipex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-aromapex.jpg" class="card-img-top" alt="AROMAPEX 25" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">AROMAPEX 25</h5>
+                        <p class="card-text">Active ingredients:Exemestane - 25mg/tablet - 30 Tablets x 25mg </p>
+                        <p class="fw-bold">$81.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="AROMAPEX 25" data-id="sixpex-aromapex" data-price="81.00" data-image="images/sixpex-aromapex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-caberpex1.jpg" class="card-img-top" alt="CABERPEX 1" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">CABERPEX 1</h5>
+                        <p class="card-text">Active ingredients:Cabergoline - 1mg/tablet - 20 Tablets x 1mg </p>
+                        <p class="fw-bold">$94.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="CABERPEX 1" data-id="sixpex-caberpex1" data-price="94.50" data-image="images/sixpex-caberpex1.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-clomipex.jpg" class="card-img-top" alt="CLOMIPEX 50" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">CLOMIPEX 50</h5>
+                        <p class="card-text">Active ingredients:Clomiphene Citrate - 50mg/tablet - 30 Tablets x 50mg </p>
+                        <p class="fw-bold">$54.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="CLOMIPEX 50" data-id="sixpex-clomipex" data-price="54.00" data-image="images/sixpex-clomipex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-t3.jpg" class="card-img-top" alt="CYTOPEX T3" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">CYTOPEX T3</h5>
+                        <p class="card-text">Active ingredients:Liothyronine Sodium - 25mcg/tablet - 100 Tablets x 25mcg. </p>
+                        <p class="fw-bold">$40.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="CYTOPEX T3" data-id="sixpex-t3" data-price="40.50" data-image="images/sixpex-t3.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-finapex.jpg" class="card-img-top" alt="FINAPEX 1" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">FINAPEX 1</h5>
+                        <p class="card-text">Active ingredients:Finasteride - 1mg/tablet - 30 Tablets x 1mg. </p>
+                        <p class="fw-bold">$67.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="FINAPEX 1" data-id="sixpex-finapex" data-price="67.50" data-image="images/sixpex-finapex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-letropex.jpg" class="card-img-top" alt="LETROPEX 2.5" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">LETROPEX 2.5</h5>
+                        <p class="card-text">Active ingredients:Letrozole - 2.5mg/tablet - 30 Tablets x 2.5mg </p>
+                        <p class="fw-bold">$67.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="LETROPEX 2.5" data-id="sixpex-letropex" data-price="67.50" data-image="images/sixpex-letropex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+                 <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-nolvapex.jpg" class="card-img-top" alt="NOLVAPEX 20" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">NOLVAPEX 20</h5>
+                        <p class="card-text">Active ingredients:Tamoxifen Citrate - 20mg/tablet - 30 Tablets x 20mg </p>
+                        <p class="fw-bold">$54.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="NOLVAPEX 20" data-id="sixpex-nolvapex" data-price="54.00" data-image="images/sixpex-nolvapex.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Oral">
+                    <img src="images/sixpex-t4.jpg" class="card-img-top" alt="THYROPEX T4" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">THYROPEX T4</h5>
+                        <p class="card-text">Active ingredients:Levothyroxine - 100mcg/tablet - 100 Tablets x 100mcg </p>
+                        <p class="fw-bold">$40.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="THYROPEX T4" data-id="sixpex-t4" data-price="40.50" data-image="images/sixpex-t4.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-hcg5000.jpg" class="card-img-top" alt="GONADOPEX 5000 (HCG)" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">GONADOPEX 5000 (HCG)</h5>
+                        <p class="card-text">Active ingredients:Human Chorionic Gonadotropin - 5000iu/vial </p>
+                        <p class="fw-bold">$94.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="GONADOPEX 5000 (HCG)" data-id="sixpex-hcg5000" data-price="94.50" data-image="images/sixpex-hcg5000.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-hgh100.jpg" class="card-img-top" alt="SOMATROPEX 100" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">SOMATROPEX 100</h5>
+                        <p class="card-text">Active ingredients:Human Chorionic Gonadotropin - 5000iu/vial </p>
+                        <p class="fw-bold">$350.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="SOMATROPEX 100" data-id="sixpex-hgh100" data-price="350.00" data-image="images/sixpex-hgh100.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-bpc157.jpg" class="card-img-top" alt="BPC-157 5MG" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">BPC-157 5MG</h5>
+                        <p class="card-text">Active ingredients:Body Protection Compound 157 - 5mg/vial - 2ml vial </p>
+                        <p class="fw-bold">$48.60</p>
+                        <button class="btn btn-primary add-to-cart" data-name="BPC-157 5MG" data-id="sixpex-bpc157" data-price="48.60" data-image="images/sixpex-bpc157.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+               <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-igf1-lr3-01.jpg" class="card-img-top" alt="IGF-1 LR-3 0.1MG" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">IGF-1 LR-3 0.1MG</h5>
+                        <p class="card-text">Active ingredients: Insulin-like Growth Factor 1 - 0.1mg/vial - 2ml vial </p>
+                        <p class="fw-bold">$75.60</p>
+                        <button class="btn btn-primary add-to-cart" data-name="IGF-1 LR-3 0.1MG" data-id="sixpex-igf1-lr3-01" data-price="75.60" data-image="images/sixpex-igf1-lr3-01.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-ipamorelin.jpg" class="card-img-top" alt="IPAMORELIN 5MG" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">IPAMORELIN 5MG</h5>
+                        <p class="card-text">Active ingredients: Ipamorelin - 5mg/vial - 2ml vial </p>
+                        <p class="fw-bold">$48.60</p>
+                        <button class="btn btn-primary add-to-cart" data-name="IPAMORELIN 5MG" data-id="sixpex-ipamorelin" data-price="48.60" data-image="images/sixpex-ipamorelin.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-semaglutide.jpg" class="card-img-top" alt="SEMAGLUTIDE 5MG" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">SEMAGLUTIDE 5MG</h5>
+                        <p class="card-text">Active ingredients: Semaglutide - 5mg/vial - 2ml vial </p>
+                        <p class="fw-bold">$102.60</p>
+                        <button class="btn btn-primary add-to-cart" data-name="SEMAGLUTIDE 5MG" data-id="sixpex-semaglutide" data-price="102.60" data-image="images/sixpex-semaglutide.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-sermorelin.jpg" class="card-img-top" alt="SERMORELIN 5MG" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">SERMORELIN 5MG</h5>
+                        <p class="card-text">Active ingredients: Growth Hormone Releasing Hormone - 5mg/vial - 2ml vial </p>
+                        <p class="fw-bold">$94.50 </p>
+                        <button class="btn btn-primary add-to-cart" data-name="SERMORELIN 5MG" data-id="sixpex-sermorelin" data-price="94.50 " data-image="images/sixpex-sermorelin.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Sixpex" data-type="Injectable">
+                    <img src="images/sixpex-tb500.jpg" class="card-img-top" alt="TB-500 5MG" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">TB-500 5MG</h5>
+                        <p class="card-text">Active ingredients: Thymosin Beta-4 - 5mg/vial - 2ml vial </p>
+                        <p class="fw-bold">$67.50</p>
+                        <button class="btn btn-primary add-to-cart" data-name="TB-500 5MG" data-id="sixpex-tb500" data-price="67.50" data-image="images/sixpex-tb500.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <!-- XENO -->
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-testosterone-propionate.jpg" class="card-img-top" alt="Testosterone Enanthate" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Enanthate</h5>
+                        <p class="card-text">Active ingredients: Testosterone Enanthate, 250mg/ml </p>
+                        <p class="fw-bold">$63.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Enanthate" data-id="xeno-testosterone-enanthate" data-price="63.00" data-image="images/xeno-testosterone-propionate.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-testosterone-cypionate.jpg" class="card-img-top" alt="Testosterone Cypionate" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Cypionate</h5>
+                        <p class="card-text">Active ingredients: Testosterone Cypionate, 200mg </p>
+                        <p class="fw-bold">$63.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Cypionate" data-id="xeno-testosterone-cypionate" data-price="63.00" data-image="imagesxeno-testosterone-cypionate.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-testosterone-propionate.jpg" class="card-img-top" alt="Testosterone Propionate" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Testosterone Propionate</h5>
+                        <p class="card-text">Active ingredients: Testosterone Propionate, 100mg/ml </p>
+                        <p class="fw-bold">$38.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Testosterone Propionate" data-id="xeno-testosterone-propionate" data-price="38.00" data-image="images/xeno-testosterone-propionate.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-supertest.jpg" class="card-img-top" alt="SuperTest" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">SuperTest</h5>
+                        <p class="card-text">Active ingredients: Testosterone Blend, 375mg/ml </p>
+                        <p class="fw-bold">$100.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="SuperTest" data-id="xeno-supertest" data-price="100.00" data-image="images/xeno-supertest.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-megatest.jpg" class="card-img-top" alt="MegaTest" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">MegaTest</h5>
+                        <p class="card-text">Active ingredients: Testosterone Blend, 500mg/ml </p>
+                        <p class="fw-bold">$125.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="MegaTest" data-id="xeno-megatest" data-price="125.00" data-image="images/xeno-megatest.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-nandrolone-phenylpropionate.jpg" class="card-img-top" alt="Nandrolone Phenylpropionate" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Nandrolone Phenylpropionate</h5>
+                        <p class="card-text">Active ingredients: Nandrolone Phenylpropionate, 100mg/ml </p>
+                        <p class="fw-bold">$70.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Nandrolone Phenylpropionate" data-id="xeno-nandrolone-phenylpropionate" data-price="70.00" data-image="images/xeno-nandrolone-phenylpropionate.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-nandrolone-decanoate.jpg" class="card-img-top" alt="Nandrolone Decanoate" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Nandrolone Decanoate</h5>
+                        <p class="card-text">Active ingredients: Nandrolone Decanoate, 200mg/ml </p>
+                        <p class="fw-bold">$75.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Nandrolone Decanoate" data-id="xeno-nandrolone-decanoate" data-price="75.00" data-image="images/xeno-nandrolone-decanoate.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-equipoise300.jpg" class="card-img-top" alt="Equipoise" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Equipoise</h5>
+                        <p class="card-text">Active ingredients: Boldenone undecylenate, 300mg/ml </p>
+                        <p class="fw-bold">$105.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Equipoise" data-id="xeno-equipoise300" data-price="105.00" data-image="images/xeno-equipoise300.jpg">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-masteron-depot.jpg" class="card-img-top" alt="Masteron Depot" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Masteron Depot</h5>
+                        <p class="card-text">Active ingredients: Drostanolone Enanthate, 200mg/ml </p>
+                        <p class="fw-bold">$113.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Masteron Depot" data-id="xeno-masteron-depot" data-price="113.00" data-image="images/xeno-masteron-depot.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-mastp100mg.jpg" class="card-img-top" alt="Masteron" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Masteron</h5>
+                        <p class="card-text">Active ingredients: Drostanolone Propionate, 100mg/ml </p>
+                        <p class="fw-bold">$100.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Masteron" data-id="xeno-mastp100mg" data-price="100.00" data-image="images/xeno-mastp100mg.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-parabolan.jpg" class="card-img-top" alt="Parabolan" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Parabolan</h5>
+                        <p class="card-text">Active ingredients: Trenbolone Hexahydrabenzylcarbonate, 76mg/ml </p>
+                        <p class="fw-bold">$138.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Parabolan" data-id="xeno-parabolan" data-price="138.00" data-image="images/xeno-parabolan.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-trenbolone-acetate.jpg" class="card-img-top" alt="Trenbolone Acetate" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Trenbolone Acetate</h5>
+                        <p class="card-text">Active ingredients: Trenbolone Acetate, 100mg/ml </p>
+                        <p class="fw-bold">$100.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Trenbolone Acetate" data-id="xeno-trenbolone-acetate" data-price="100.00" data-image="images/xeno-trenbolone-acetate.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+                <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-trenbolone-enanthate.jpg" class="card-img-top" alt="Trenbolone Enanthate" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Trenbolone Enanthate</h5>
+                        <p class="card-text">Active ingredients: Trenbolone Enanthate, 200mg/ml </p>
+                        <p class="fw-bold">$113.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Trenbolone Enanthate" data-id="xeno-trenbolone-enanthate" data-price="113.00" data-image="images/xeno-trenbolone-enanthate.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-dhb.jpg" class="card-img-top" alt="DHB" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">DHB</h5>
+                        <p class="card-text">Active ingredients: 1-dihydrotestosterone, 100mg/ml </p>
+                        <p class="fw-bold">$125.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="DHB" data-id="xeno-dhb" data-price="125.00" data-image="images/xeno-dhb.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+                    <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-primobolan.jpg" class="card-img-top" alt="Primobolan" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Primobolan</h5>
+                        <p class="card-text">Active ingredients: Methenolone Enanthate, 100mg/ml </p>
+                        <p class="fw-bold">$138.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Primobolan" data-id="xeno-primobolan" data-price="138.00" data-image="images/xeno-primobolan.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-solaris.jpg" class="card-img-top" alt="Solaris" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Solaris</h5>
+                        <p class="card-text">Active ingredients: Multiple, 5.4mg/ml </p>
+                        <p class="fw-bold">$100.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Solaris" data-id="xeno-solaris" data-price="100.00" data-image="images/xeno-solaris.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-omnicut.jpg" class="card-img-top" alt="Omnicut" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Omnicut</h5>
+                        <p class="card-text">Active ingredients: Steroid Blend, 300mg/ml </p>
+                        <p class="fw-bold">$113.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Omnicut" data-id="xeno-omnicut" data-price="113.00" data-image="images/xeno-omnicut.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectable">
+                    <img src="images/xeno-omnimass.jpg" class="card-img-top" alt="OmniMass" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">OmniMass</h5>
+                        <p class="card-text">Active ingredients: Steroid Blend, 300mg/ml </p>
+                        <p class="fw-bold">$125.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="OmniMass" data-id="xeno-omnimass" data-price="125.00" data-image="images/xeno-omnimass.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+                 <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-arimidex.jpg" class="card-img-top" alt="Arimidex" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Arimidex</h5>
+                        <p class="card-text">Active ingredients:Anastrozol, 1mg/tablet - 30 tabs</p>
+                        <p class="fw-bold">$63.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Arimidex" data-id="xeno-arimidex" data-price="63.00" data-image="images/xeno-arimidex.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-t3.jpg" class="card-img-top" alt="T3" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">T3</h5>
+                        <p class="card-text">Active ingredients: Liothyronine Sodium, 25mcg - 100 tabs</p>
+                        <p class="fw-bold">$38.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="T3" data-id="xeno-t3" data-price="38.00" data-image="images/xeno-t3.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-t4.jpg" class="card-img-top" alt="T4" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">T4</h5>
+                        <p class="card-text">Active ingredients: Levothyroxine Sodium, 100mcg/tab - 100 tabs</p>
+                        <p class="fw-bold">$38.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="T4" data-id="xeno-t4" data-price="38.00" data-image="images/xeno-t4.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-dbol-20.jpg" class="card-img-top" alt="Dbol 20" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dbol 20</h5>
+                        <p class="card-text">Active ingredients: Metandienone, 20mg/tab - 50 tabs</p>
+                        <p class="fw-bold">$50.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Dbol 20" data-id="xeno-dbol-20" data-price="50.00" data-image="images/xeno-dbol-20.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-winstrol-20.jpg" class="card-img-top" alt="Winstrol 20" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Winstrol 20</h5>
+                        <p class="card-text">Active ingredients: Stanozolol, 20mg/tab - 50 tabs</p>
+                        <p class="fw-bold">$70.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Winstrol 20" data-id="xeno-winstrol-20" data-price="70.00" data-image="images/xeno-winstrol-20.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-anavar-20.jpg" class="card-img-top" alt="Anavar 20" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Anavar 20</h5>
+                        <p class="card-text">Active ingredients: Oxandrolone, 20mg/tab - 50 tabs</p>
+                        <p class="fw-bold">$113.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Anavar 20" data-id="xeno-anavar-20" data-price="113.00" data-image="images/xeno-anavar-20.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-finasteride.jpg" class="card-img-top" alt="Finasteride" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Finasteride</h5>
+                        <p class="card-text">Active ingredients: Finasteride, 1mg/tab - 50 tabs</p>
+                        <p class="fw-bold">$88.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Finasteride" data-id="xeno-finasteride" data-price="88.00" data-image="images/xeno-finasteride.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-accutan.jpg" class="card-img-top" alt="Accutan" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Accutan</h5>
+                        <p class="card-text">Active ingredients: Isotretinoin, 10mg/tab - 30 tabs</p>
+                        <p class="fw-bold">$50.00 </p>
+                        <button class="btn btn-primary add-to-cart" data-name="Accutan" data-id="xeno-accutan" data-price="50.00" data-image="images/xeno-accutan.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-proviron.jpg" class="card-img-top" alt="Proviron" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Proviron</h5>
+                        <p class="card-text">Active ingredients: Mesterolone, 25mg/tab - 100 tabs</p>
+                        <p class="fw-bold">$43.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Proviron" data-id="xeno-proviron" data-price="43.00" data-image="images/xeno-proviron.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-femara.jpg" class="card-img-top" alt="Femara" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Femara</h5>
+                        <p class="card-text">Active ingredients: Letrozol, 2.5mg/tab - 30 tabs</p>
+                        <p class="fw-bold">$30.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Femara" data-id="xeno-femara" data-price="30.00" data-image="images/xeno-femara.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+                  <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-primo-s.jpg" class="card-img-top" alt="Primo S" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Primo S</h5>
+                        <p class="card-text">Active ingredients: Methenolone Acetate, 10mg/tab - 50 tabs</p>
+                        <p class="fw-bold">$75.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Primo S" data-id="xeno-primo-s" data-price="75.00" data-image="images/xeno-primo-s.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-superdrol.jpg" class="card-img-top" alt="Superdrol" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Superdrol</h5>
+                        <p class="card-text">Active ingredients: Methyldrostanolone, 10mg/tab - 50 tabs</p>
+                        <p class="fw-bold">$55.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Superdrol" data-id="xeno-superdrol" data-price="55.00" data-image="images/xeno-superdrol.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-turinabol.jpg" class="card-img-top" alt="Turinabol" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Turinabol</h5>
+                        <p class="card-text">Active ingredients: 4-Chlordehydromethyltestosterone, 10mg/tab - 50 tabs</p>
+                        <p class="fw-bold">$68.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Turinabol" data-id="xeno-turinabol" data-price="68.00" data-image="images/xeno-turinabol.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-tamox.jpg" class="card-img-top" alt="Tamox" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Tamox</h5>
+                        <p class="card-text">Active ingredients: Tamoxifen Citrate, 20mg/tab - 50 tabs</p>
+                        <p class="fw-bold">$50.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Tamox" data-id="xeno-tamox" data-price="50.00" data-image="images/xeno-tamox.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+             <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-clomiphene.jpg" class="card-img-top" alt="Clomiphene" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Clomiphene</h5>
+                        <p class="card-text">Active ingredients: Clomiphene Citrate, 50mg/tab - 50 tabs</p>
+                        <p class="fw-bold">$80.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Clomiphene" data-id="xeno-clomiphene" data-price="80.00" data-image="images/xeno-clomiphene.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Oral">
+                    <img src="images/xeno-clenbuterol.jpg" class="card-img-top" alt="Clenbuterol" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Clenbuterol</h5>
+                        <p class="card-text">Active ingredients: Clenbuterol HCL, 40mcg/tab - 100 tabs</p>
+                        <p class="fw-bold">$138.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Clenbuterol" data-id="xeno-clenbuterol" data-price="138.00" data-image="images/xeno-clenbuterol.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+              <div class="col-6 col-md-4 mb-4">
+<div class="card h-100" data-brand="Xeno" data-type="Injectible">
+                    <img src="images/xeno-semaglutide.jpg" class="card-img-top" alt="Semaglutide" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Semaglutide</h5>
+                        <p class="card-text">Active ingredients:Semaglutide, 10mg </p>
+                        <p class="fw-bold">$150.00 </p>
+                        <button class="btn btn-primary add-to-cart" data-name="Semaglutide" data-id="xeno-semaglutide" data-price="150.00 " data-image="images/xeno-semaglutide.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+
+            <div class="col-6 col-md-4 mb-4">
+  <div class="card h-100" data-brand="Xeno" data-type="Injectible">
+                    <img src="images/xeno-epitalon.jpg" class="card-img-top" alt="Epitalon" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Epitalon</h5>
+                        <p class="card-text">Active ingredients: Epitalon, 10mg </p>
+                        <p class="fw-bold">$38.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Epitalon" data-id="xeno-epitalon" data-price="38.00" data-image="images/xeno-epitalon.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
+                    <img src="images/xeno-bpc-15710mg.jpg" class="card-img-top" alt="BPC-157" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">BPC-157</h5>
+                        <p class="card-text">Active ingredients: BPC-157, 10mg </p>
+                        <p class="fw-bold">$88.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="BPC-157" data-id="xeno-bpc-15710mg" data-price="88.00" data-image="images/xeno-bpc-15710mg.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
+                    <img src="images/xeno-semax.jpg" class="card-img-top" alt="Semax" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Semax</h5>
+                        <p class="card-text">Active ingredients: Semax, 5mg </p>
+                        <p class="fw-bold">$63.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="Semax" data-id="xeno-semax" data-price="63.00" data-image="images/xeno-semax.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+                        <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
+                    <img src="images/xeno-hcg.jpg" class="card-img-top" alt="HCG" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">HCG</h5>
+                        <p class="card-text">Active ingredients: Human chorionic gonadotropin, 5000 iu </p>
+                        <p class="fw-bold">$88.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="HCG" data-id="xeno-hcg" data-price="88.00" data-image="images/xeno-hcg.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+
+               <div class="col-6 col-md-4 mb-4">
+ <div class="card h-100" data-brand="Xeno" data-type="Injectible">
+                    <img src="images/xeno-hmg.jpg" class="card-img-top" alt="HMG" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">HMG</h5>
+                        <p class="card-text">Active ingredients: human menopausal gonadotropin, 75 iu </p>
+                        <p class="fw-bold">$100.00</p>
+                        <button class="btn btn-primary add-to-cart" data-name="HMG" data-id="xeno-hmg" data-price="100.00" data-image="images/xeno-hmg.jpg">Add to Cart</button>
+                         </div>
+                </div>
+            </div>
+            
+            <!-- Add more cards here as needed -->
+
+     </div> <!-- ✅ closes .row#product-list -->
+
+      
+    </section>
+
+    <footer class="bg-dark text-white text-center py-3">
+  <p>&copy; 2025 GOD MUSCLE GEARS. All rights reserved.</p>
+  <p class="small text-muted mt-2" style="font-size: 0.8rem;">
+    ⚠️ Disclaimer: All products are for research purposes only. 
+    Always consult a healthcare professional before using any supplement.
+  </p>
+</footer>
+
+    <!-- === Floating Cart Button === -->
+<a href="cart.html" class="floating-cart" title="View Cart">
+  🛒
+  <span id="floating-cart-count">0</span>
+</a>
+
+
+    <!-- === Back to Top Button === -->
+<button id="backToTop" class="back-to-top" title="Go to top">↑</button>
+
+
+    <!-- Product Image Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalProductTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="modalProductImage" src="" alt="Product Image" class="img-fluid rounded mb-3" style="max-height: 400px; object-fit: cover;">
+        <p id="modalProductDescription"></p>
+      </div>
     </div>
-    <p id="promo-message" class="mt-2 text-center small" style="transition: opacity 0.6s ease;"></p>
-  `;
+  </div>
+</div>
 
-  const applyBtn = document.getElementById("apply-promo-btn");
-  const promoInput = document.getElementById("promo-code-input");
-  const promoMsg = document.getElementById("promo-message");
+         <!-- Floating Telegram Chat Button -->
+<a href="https://t.me/Godmusclegears" 
+   target="_blank" 
+   class="telegram-float" 
+   title="Chat with us on Telegram">
+  <img src="images/telegramlogo.png" alt="Telegram Chat" />
+</a>
 
-  // 🎟️ VALID PROMO CODES
-  const validPromoCodes = [
-    "BELIGAS101",
-    "SIXPEX202",
-    "XENO303"
-  ];
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 
-  // 🎁 Universal Free Item details
-  const freeItem = {
-    id: "free-testc200mg",
-    name: "Testosterone Cypionate, 200mg (1 vial)",
-    price: 0.00,
-    image: "images/testc200mg.png",
-    quantity: 1
-  };
+    <script>
+<!-- removed duplicate search script -->
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('product-search');
+    const productCards = document.querySelectorAll('.card'); // Targets your product .card elements
 
-  // 🛒 Cart helpers
-  const getCart = () => JSON.parse(localStorage.getItem("cart")) || [];
-  const saveCart = (cart) => localStorage.setItem("cart", JSON.stringify(cart));
-
-  // 🌟 Fade message utility
-  function showMessage(text, type, fadeOut = true) {
-    promoMsg.textContent = text;
-    promoMsg.classList.remove("text-success", "text-danger");
-    promoMsg.classList.add(type);
-    promoMsg.style.opacity = 1;
-
-    if (fadeOut) {
-      setTimeout(() => (promoMsg.style.opacity = 0), 5000);
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            // Loop through each product card
+            productCards.forEach(card => {
+                const productName = card.querySelector('h5') || card.querySelector('.card-title') || card.querySelector('h6'); // Finds title
+                const nameText = productName ? productName.textContent.toLowerCase() : '';
+                const productDesc = card.querySelector('.card-text') ? card.querySelector('.card-text').textContent.toLowerCase() : '';
+                
+                if (searchTerm === '' || nameText.includes(searchTerm) || productDesc.includes(searchTerm)) {
+                    card.style.display = 'block'; // Show matching
+                    // Show parent column too
+                    const parentCol = card.closest('.col-md-4');
+                    if (parentCol) {
+                        parentCol.style.display = 'block';
+                    }
+                } else {
+                    card.style.display = 'none'; // Hide non-matching
+                    // Optional: Hide parent column if all cards in it are hidden
+                    const parentCol = card.closest('.col-md-4');
+                    if (parentCol) {
+                        const allCardsInCol = parentCol.querySelectorAll('.card');
+                        const hiddenCardsInCol = parentCol.querySelectorAll('.card[style*="none"]');
+                        if (hiddenCardsInCol.length === allCardsInCol.length) {
+                            parentCol.style.display = 'none';
+                        }
+                    }
+                }
+            });
+            
+            // Show "No results" message if needed (optional - outside the loop)
+            const noResults = document.getElementById('no-results');
+            if (noResults) {
+                const allHidden = Array.from(productCards).every(card => card.style.display === 'none');
+                noResults.style.display = (searchTerm !== '' && allHidden) ? 'block' : 'none';
+            }
+        });
     }
-  }
-
-  // 🎯 Apply Promo Button
-  applyBtn.addEventListener("click", () => {
-    const enteredCode = promoInput.value.trim().toUpperCase();
-    promoMsg.style.opacity = 1; // Ensure visible immediately
-
-    if (!enteredCode) {
-      showMessage("❌ Please enter a promo code.", "text-danger");
-      return;
-    }
-
-    if (validPromoCodes.includes(enteredCode)) {
-      showMessage(`✅ Promo code "${enteredCode}" applied! You received a free Testosterone Cypionate, 200mg (1 vial).`, "text-success");
-
-      let cart = getCart();
-      const alreadyAdded = cart.some(item => item.id === freeItem.id);
-
-      if (!alreadyAdded) {
-        cart.push(freeItem);
-        saveCart(cart);
-        console.log("🎁 Free item added:", freeItem.name);
-      }
-
-      localStorage.setItem("appliedPromoCode", enteredCode);
-      promoInput.value = ""; // 🧹 Clear input field after success
-
-      if (typeof updateCartDisplay === "function") updateCartDisplay();
-    } else {
-      showMessage("❌ Invalid promo code. Please try again.", "text-danger");
-
-      localStorage.removeItem("appliedPromoCode");
-
-      let cart = getCart().filter(item => item.id !== freeItem.id);
-      saveCart(cart);
-      if (typeof updateCartDisplay === "function") updateCartDisplay();
-    }
-  });
-
-  // 🪄 On page reload — show only if promo previously applied
-  const savedPromo = localStorage.getItem("appliedPromoCode");
-  if (savedPromo && validPromoCodes.includes(savedPromo)) {
-    const cart = getCart();
-    const hasFreeItem = cart.some(item => item.id === freeItem.id);
-
-    if (hasFreeItem) {
-      showMessage(`✅ Promo code "${savedPromo}" applied — free Testosterone Cypionate, 200mg (1 vial) added!`, "text-success", false);
-    } else {
-      localStorage.removeItem("appliedPromoCode");
-    }
-  }
 });
+</script>
 
+    
 
+</body>
+</html>
 
 
 
