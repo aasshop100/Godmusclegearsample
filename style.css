@@ -741,7 +741,7 @@ if (featuredSection) {
 /* === Floating Telegram Chat Button (Stacked above Cart) === */
 .telegram-float {
   position: fixed;
-  bottom: 140px; /* 👈 Push it up above the floating cart */
+  bottom: 160px; /* 👈 Push it up above the floating cart */
   right: 25px;
   background-color: #0088cc;
   border-radius: 50%;
