@@ -201,6 +201,12 @@ footer a:hover {
   text-decoration: underline;
 }
 
+footer p.small {
+  color: #ffcc00 !important;
+  font-size: 0.8rem;
+  margin-top: 8px;
+}
+
 /* === Telegram Popup (Final Fix) === */
 .telegram-popup {
   position: fixed;
