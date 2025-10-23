@@ -758,7 +758,7 @@ if (featuredSection) {
 .telegram-float img {
   width: 35px;
   height: 35px;
-  filter: brightness(0) invert(1);
+  filter: none;
 }
 
 /* Hover effect for Telegram */
