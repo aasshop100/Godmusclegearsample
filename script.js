@@ -265,7 +265,7 @@ placeOrderBtn.innerHTML =
 
   // Collect form data
   const fullName = document.getElementById('full-name').value.trim();
-  const email = document.getElementById('email').value.trim();
+  const customerEmail = formData.get('email');
   const phone = document.getElementById('phone').value.trim();
   const address = document.getElementById('address').value.trim();
   const city = document.getElementById('city').value.trim();
@@ -969,6 +969,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
