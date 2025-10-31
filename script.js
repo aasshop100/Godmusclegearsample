@@ -236,10 +236,17 @@ function renderCheckoutSummary() {
     if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
 }
 
-// ✅ Updated checkout submit (no payment method, no proof upload)
+// ✅ Final version — sends full order details to both customer & owner
 function handleCheckoutSubmit(event) {
   event.preventDefault();
 
+  const form = document.getElementById('checkout-form');
+  if (!form.checkValidity()) {
+    alert('⚠ Please fill all required fields!');
+    return;
+  }
+
+  // Collect form data
   const fullName = document.getElementById('full-name').value.trim();
   const email = document.getElementById('email').value.trim();
   const phone = document.getElementById('phone').value.trim();
@@ -249,57 +256,97 @@ function handleCheckoutSubmit(event) {
   const zip = document.getElementById('zip').value.trim();
   const country = document.getElementById('country').value.trim();
 
+  // Basic validation
   if (!fullName || !email || !phone || !address || !city || !state || !zip || !country) {
-    alert("⚠ Please fill out all required fields!");
+    alert("⚠ Please complete all required fields!");
     return;
   }
 
-  const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-  if (cartItems.length === 0) {
+  const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+  if (storedCart.length === 0) {
     alert("🛒 Your cart is empty!");
     return;
   }
 
-  // ✅ Format order summary
-  const orderDetails = cartItems
-    .map(item => `${item.name} (Qty: ${item.quantity})`)
-    .join("\n");
+  // Order calculations
+  const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
+  const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const BASE_SHIPPING_PER_10 = 10; // adjust if needed
+  const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+  const grandTotal = subtotal + shipping;
 
-  const message = `
-Order Details:
-${orderDetails}
+  // Create Order ID
+  const orderId = 'ORDER-' + Date.now();
+  const itemsSummary = storedCart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
+  const promoCode = localStorage.getItem("appliedPromoCode") || "None";
 
-Customer:
-Name: ${fullName}
-Email: ${email}
-Phone: ${phone}
+  // ✅ EmailJS info
+  const serviceID = "service_uerk41r";
+  const userID = "8tIW2RqhekSLKVqLT";
 
-Shipping:
-${address}, ${city}, ${state}, ${zip}, ${country}
-`;
+  // ✅ 1. Customer confirmation email
+  const customerPayload = {
+    service_id: serviceID,
+    template_id: "template_0ry9w0v",
+    user_id: userID,
+    template_params: {
+      order_id: orderId,
+      customer_name: fullName,
+      total: grandTotal.toFixed(2),
+      full_address: `${address}, ${city}, ${state} ${zip}, ${country}`,
+      items_summary: itemsSummary,
+      customer_email: email,
+      promo_code: promoCode
+    }
+  };
 
-  // ✅ Send email to you (Owner)
-  emailjs.send("service_uerk41r", "template_8x2z86l", {
-    full_name: fullName,
-    email: email,
-    order_details: message
-  }).then(() => {
+  // ✅ 2. Owner notification email
+  const ownerPayload = {
+    service_id: serviceID,
+    template_id: "template_8x2z86l",
+    user_id: userID,
+    template_params: {
+      order_id: orderId,
+      total: grandTotal.toFixed(2),
+      customer_name: fullName,
+      customer_email: email,
+      full_address: `${address}, ${city}, ${state} ${zip}, ${country}`,
+      phone: phone,
+      items_summary: itemsSummary,
+      promo_code: promoCode,
+      to_email: "aasshop100@gmail.com"
+    }
+  };
 
-    // ✅ Save first name for success page display
-    const firstName = fullName.split(" ")[0];
-    localStorage.setItem("customerFirstName", firstName);
+  // ✅ Send Customer Email
+  fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(customerPayload)
+  })
+  .then(res => res.ok ? console.log("📧 Customer email sent") : console.error("❌ Customer email failed", res))
+  .catch(err => console.error("❌ Customer email error", err));
 
-    // ✅ Clear cart
-    localStorage.removeItem("cart");
-    updateCartCount();
+  // ✅ Send Owner Email
+  fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ownerPayload)
+  })
+  .then(res => res.ok ? console.log("📨 Owner email sent") : console.error("❌ Owner email failed", res))
+  .catch(err => console.error("❌ Owner email error", err));
 
-    // ✅ Redirect to custom success page
-    window.location.href = "order-success.html";
+  // ✅ Personalized success experience
+  const firstName = fullName.split(" ")[0];
+  localStorage.setItem("customerFirstName", firstName);
 
-  }).catch(error => {
-    console.error("Email Error:", error);
-    alert("❌ Something went wrong submitting your order. Please try again.");
-  });
+  // ✅ Clear cart
+  localStorage.removeItem("cart");
+  localStorage.removeItem("appliedPromoCode");
+  updateCartCount();
+
+  // ✅ Redirect to success page
+  window.location.href = "order-success.html";
 }
 
 
@@ -873,6 +920,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
