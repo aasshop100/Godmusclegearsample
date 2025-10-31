@@ -263,10 +263,9 @@ placeOrderBtn.innerHTML =
     return;
   }
 
-  // ---- REPLACE your existing "Collect form data" block with this ----
 
-// Ensure we have the form element and formData
-const form = document.getElementById('checkout-form');
+// "Collect form data/Ensure we have the form element and formData
+
 const formData = new FormData(form);
 
 // Collect form data (use the 'name' attributes you used in the HTML)
@@ -976,6 +975,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
