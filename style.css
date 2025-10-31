@@ -767,3 +767,9 @@ if (featuredSection) {
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
   background-color: #0099e6;
 }
+
+
+/* Hide cart bubble on success page when empty */
+body.order-success #cart-count {
+  display: none;
+}
