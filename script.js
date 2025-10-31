@@ -294,46 +294,65 @@ placeOrderBtn.innerHTML =
 
   // Create Order ID
   const orderId = 'ORDER-' + Date.now();
-  const itemsSummary = storedCart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
+  // ✅ Generate HTML table rows for EmailJS invoice
+const itemsTableHTML = storedCart.map(item => {
+  const qty = item.quantity || 1;
+  const price = Number(item.price).toFixed(2);
+  const lineTotal = (Number(item.price) * qty).toFixed(2);
+
+  return `
+    <tr>
+      <td style="padding:8px; border:1px solid #ddd;">${item.name}</td>
+      <td style="padding:8px; border:1px solid #ddd;">${qty}</td>
+      <td style="padding:8px; border:1px solid #ddd;">$${price}</td>
+      <td style="padding:8px; border:1px solid #ddd;">$${lineTotal}</td>
+    </tr>`;
+}).join('');
+
   const promoCode = localStorage.getItem("appliedPromoCode") || "None";
 
   // ✅ EmailJS info
   const serviceID = "service_uerk41r";
   const userID = "8tIW2RqhekSLKVqLT";
 
-  // ✅ 1. Customer confirmation email
-  const customerPayload = {
-    service_id: serviceID,
-    template_id: "template_0ry9w0v",
-    user_id: userID,
-    template_params: {
-      order_id: orderId,
-      customer_name: fullName,
-      total: grandTotal.toFixed(2),
-      full_address: `${address}, ${city}, ${state} ${zip}, ${country}`,
-      items_summary: itemsSummary,
-      customer_email: email,
-      promo_code: promoCode
-    }
-  };
+// ✅ 1. Customer confirmation email (invoice)
+const customerPayload = {
+  service_id: serviceID,
+  template_id: "template_0ry9w0v",
+  user_id: userID,
+  template_params: {
+    order_id: orderId,
+    customer_name: fullName,
+    customer_email: customerEmail,
+    full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
+    items_table_html: itemsTableHTML,
+    subtotal: subtotal.toFixed(2),
+    shipping: shipping.toFixed(2),
+    total: grandTotal.toFixed(2),
+    promo_code: promoCode
+  }
+};
 
-  // ✅ 2. Owner notification email
-  const ownerPayload = {
-    service_id: serviceID,
-    template_id: "template_8x2z86l",
-    user_id: userID,
-    template_params: {
-      order_id: orderId,
-      total: grandTotal.toFixed(2),
-      customer_name: fullName,
-      customer_email: email,
-      full_address: `${address}, ${city}, ${state} ${zip}, ${country}`,
-      phone: phone,
-      items_summary: itemsSummary,
-      promo_code: promoCode,
-      to_email: "aasshop100@gmail.com"
-    }
-  };
+// ✅ 2. Owner notification email (admin copy)
+const ownerPayload = {
+  service_id: serviceID,
+  template_id: "template_8x2z86l",
+  user_id: userID,
+  template_params: {
+    order_id: orderId,
+    customer_name: fullName,
+    customer_email: customerEmail,
+    phone: phone,
+    full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
+    items_table_html: itemsTableHTML,
+    subtotal: subtotal.toFixed(2),
+    shipping: shipping.toFixed(2),
+    total: grandTotal.toFixed(2),
+    promo_code: promoCode,
+    to_email: "aasshop100@gmail.com"
+  }
+};
+
 
   // ✅ Send Customer Email
   fetch("https://api.emailjs.com/api/v1.0/email/send", {
@@ -950,6 +969,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
