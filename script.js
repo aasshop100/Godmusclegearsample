@@ -359,7 +359,7 @@ fetch("https://api.emailjs.com/api/v1.0/email/send", {
     // ✅ Short delay to ensure emails finish
     setTimeout(() => {
       window.location.href = "order-success.html";
-    }, 500);
+    }, 600);
 
   } else {
     console.error("❌ Owner email failed", res);
@@ -370,7 +370,7 @@ fetch("https://api.emailjs.com/api/v1.0/email/send", {
   console.error("❌ Owner email error", err);
   alert("⚠ Connection issue. Please try again.");
 });
-
+} // ✅ END of handleCheckoutSubmit()
 
 
 // ✅ Enable or disable checkout button based on cart content
@@ -943,6 +943,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
