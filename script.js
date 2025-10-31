@@ -248,7 +248,14 @@ function renderCheckoutSummary() {
 
 // ✅ Final version — sends full order details to both customer & owner
 function handleCheckoutSubmit(event) {
-  event.preventDefault();
+  event.preventDefault(); 
+
+    const placeOrderBtn = document.querySelector('.btn-primary');
+
+placeOrderBtn.disabled = true;
+placeOrderBtn.innerHTML =
+  `<span class="spinner-border spinner-border-sm me-2"></span>Processing Order...`;
+
 
   const form = document.getElementById('checkout-form');
   if (!form.checkValidity()) {
@@ -943,6 +950,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
