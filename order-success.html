@@ -60,5 +60,14 @@
     document.getElementById('customerName').textContent = name;
   </script>
 
+  <script>
+  // ✅ Clear any leftover cart data again on success page load
+  localStorage.removeItem('cart');
+  localStorage.removeItem('appliedPromoCode');
+  updateCartCount && updateCartCount();
+</script>
+
+
 </body>
 </html>
+
