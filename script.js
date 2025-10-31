@@ -263,15 +263,22 @@ placeOrderBtn.innerHTML =
     return;
   }
 
-  // Collect form data
-  const fullName = document.getElementById('full-name').value.trim();
-  const customerEmail = formData.get('email');
-  const phone = document.getElementById('phone').value.trim();
-  const address = document.getElementById('address').value.trim();
-  const city = document.getElementById('city').value.trim();
-  const state = document.getElementById('state').value.trim();
-  const zip = document.getElementById('zip').value.trim();
-  const country = document.getElementById('country').value.trim();
+  // ---- REPLACE your existing "Collect form data" block with this ----
+
+// Ensure we have the form element and formData
+const form = document.getElementById('checkout-form');
+const formData = new FormData(form);
+
+// Collect form data (use the 'name' attributes you used in the HTML)
+const fullName = (formData.get('full-name') || '').toString().trim();
+const customerEmail = (formData.get('email') || '').toString().trim();
+const phone = (formData.get('phone') || '').toString().trim();
+const address = (formData.get('street-address') || '').toString().trim();
+const city = (formData.get('city') || '').toString().trim();
+const state = (formData.get('state') || '').toString().trim();
+const zip = (formData.get('zip-code') || '').toString().trim();
+const country = (formData.get('country') || '').toString().trim();
+
 
   // Basic validation
   if (!fullName || !email || !phone || !address || !city || !state || !zip || !country) {
@@ -969,6 +976,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
