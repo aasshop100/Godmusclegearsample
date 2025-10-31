@@ -236,111 +236,72 @@ function renderCheckoutSummary() {
     if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
 }
 
-// Handle checkout submission + EmailJS via fetch
+// ✅ Updated checkout submit (no payment method, no proof upload)
 function handleCheckoutSubmit(event) {
   event.preventDefault();
-  const form = document.getElementById('checkout-form');
-  if (!form.checkValidity()) {
-    alert('Please fill all required fields!');
+
+  const fullName = document.getElementById('full-name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const city = document.getElementById('city').value.trim();
+  const state = document.getElementById('state').value.trim();
+  const zip = document.getElementById('zip').value.trim();
+  const country = document.getElementById('country').value.trim();
+
+  if (!fullName || !email || !phone || !address || !city || !state || !zip || !country) {
+    alert("⚠ Please fill out all required fields!");
     return;
   }
 
-  const formData = new FormData(form);
-  const fullName = formData.get('full-name');
-  const customerEmail = formData.get('email');
-  const street = formData.get('street-address');
-  const city = formData.get('city');
-  const state = formData.get('state');
-  const zip = formData.get('zip-code');
-  const country = formData.get('country');
-  const paymentMethod = formData.get('payment-method');
-  const proofFile = formData.get('proof-upload');
+  const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+  if (cartItems.length === 0) {
+    alert("🛒 Your cart is empty!");
+    return;
+  }
 
-  const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-  const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
-  const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-  const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-  const grandTotal = subtotal + shipping;
+  // ✅ Format order summary
+  const orderDetails = cartItems
+    .map(item => `${item.name} (Qty: ${item.quantity})`)
+    .join("\n");
 
-  const orderId = 'ORDER-' + Date.now();
-  const itemsSummary = storedCart.map(item => `${item.name} (Qty: ${item.quantity || 1})`).join(', ');
-  const cartDetails = JSON.stringify(storedCart, null, 2);
-  const promoCode = localStorage.getItem("appliedPromoCode") || "None";
+  const message = `
+Order Details:
+${orderDetails}
 
-  // Common payload info
-  const serviceID = "service_uerk41r";
-  const userID = "8tIW2RqhekSLKVqLT";
+Customer:
+Name: ${fullName}
+Email: ${email}
+Phone: ${phone}
 
-  // Customer email payload
-  const customerPayload = {
-    service_id: serviceID,
-    template_id: "template_0ry9w0v",
-    user_id: userID,
-    template_params: {
-      order_id: orderId,
-      customer_name: fullName,
-      total: grandTotal.toFixed(2),
-      payment_method: paymentMethod,
-      full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
-      items_summary: itemsSummary,
-      customer_email: customerEmail,
-      to_email: customerEmail,
-      promo_code: promoCode, // ✅ include promo code
-    }
-  };
+Shipping:
+${address}, ${city}, ${state}, ${zip}, ${country}
+`;
 
-  // Owner email payload
-  const ownerPayload = {
-    service_id: serviceID,
-    template_id: "template_8x2z86l",
-    user_id: userID,
-    template_params: {
-      order_id: orderId,
-      total: grandTotal.toFixed(2),
-      customer_name: fullName,
-      customer_email: customerEmail,
-      full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
-      payment_method: paymentMethod,
-      proof_filename: proofFile ? proofFile.name : "N/A",
-      items_summary: itemsSummary,
-      cart_details: cartDetails,
-      promo_code: promoCode, // ✅ include promo code
-      to_email: "aasshop100@gmail.com"
-    }
-  };
+  // ✅ Send email to you (Owner)
+  emailjs.send("service_uerk41r", "template_8x2z86l", {
+    full_name: fullName,
+    email: email,
+    order_details: message
+  }).then(() => {
 
-  // Send to customer
-  fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(customerPayload)
-  })
-    .then(res => res.ok ? console.log("📧 Customer email sent") : console.error("❌ Customer email failed", res))
-    .catch(err => console.error("❌ Customer email error", err));
+    // ✅ Save first name for success page display
+    const firstName = fullName.split(" ")[0];
+    localStorage.setItem("customerFirstName", firstName);
 
-  // Send to owner
-  fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(ownerPayload)
-  })
-    .then(res => res.ok ? console.log("📨 Owner email sent") : console.error("❌ Owner email failed", res))
-    .catch(err => console.error("❌ Owner email error", err));
+    // ✅ Clear cart
+    localStorage.removeItem("cart");
+    updateCartCount();
 
-// ✅ Show success message, clear cart, and redirect safely
-alert("✅ Thank you! Your order has been submitted. Check your email for confirmation.");
+    // ✅ Redirect to custom success page
+    window.location.href = "order-success.html";
 
-// Clear all cart data
-localStorage.removeItem('cart');
-localStorage.removeItem('appliedPromoCode'); // reset promo for next order
-cart = []; // ✅ clear in-memory cart array too
-updateCartCount();
-
-// Redirect after short delay to ensure everything clears
-setTimeout(() => {
-  window.location.href = "index.html";
-}, 800);
+  }).catch(error => {
+    console.error("Email Error:", error);
+    alert("❌ Something went wrong submitting your order. Please try again.");
+  });
 }
+
 
 // ✅ Enable or disable checkout button based on cart content
 function updateCheckoutButton() {
@@ -912,6 +873,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
