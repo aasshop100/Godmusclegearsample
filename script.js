@@ -13,6 +13,16 @@ function updateCartCount() {
     const cartCountEl = document.getElementById('cart-count');
     const floatingCartCount = document.getElementById('floating-cart-count');
 
+    // ✅ Ensure cart count updates correctly after checkout
+function updateCartCount() {
+  const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+  const total = cartData.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const cartCountElement = document.getElementById('cart-count');
+  if (cartCountElement) {
+    cartCountElement.textContent = total;
+  }
+}
+
     // === Navbar Cart Count ===
     if (cartCountEl) {
         cartCountEl.textContent = totalQuantity;
@@ -920,6 +930,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
