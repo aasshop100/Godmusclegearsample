@@ -324,7 +324,7 @@ const customerPayload = {
     order_id: orderId,
     customer_name: fullName,
     customer_email: customerEmail,
-    full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
+    full_address: `${address}, ${city}, ${state} ${zip}, ${country}`,
     items_table_html: itemsTableHTML,
     subtotal: subtotal.toFixed(2),
     shipping: shipping.toFixed(2),
@@ -343,7 +343,7 @@ const ownerPayload = {
     customer_name: fullName,
     customer_email: customerEmail,
     phone: phone,
-    full_address: `${street}, ${city}, ${state} ${zip}, ${country}`,
+    full_address: `${address}, ${city}, ${state} ${zip}, ${country}`,
     items_table_html: itemsTableHTML,
     subtotal: subtotal.toFixed(2),
     shipping: shipping.toFixed(2),
@@ -969,6 +969,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
