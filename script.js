@@ -337,27 +337,40 @@ function handleCheckoutSubmit(event) {
   .then(res => res.ok ? console.log("📧 Customer email sent") : console.error("❌ Customer email failed", res))
   .catch(err => console.error("❌ Customer email error", err));
 
-  // ✅ Send Owner Email
-  fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(ownerPayload)
-  })
-  .then(res => res.ok ? console.log("📨 Owner email sent") : console.error("❌ Owner email failed", res))
-  .catch(err => console.error("❌ Owner email error", err));
+// ✅ Send Owner Email (wait for response before redirect)
+fetch("https://api.emailjs.com/api/v1.0/email/send", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(ownerPayload)
+})
+.then(res => {
+  if (res.ok) {
+    console.log("📨 Owner email sent");
 
-  // ✅ Personalized success experience
-  const firstName = fullName.split(" ")[0];
-  localStorage.setItem("customerFirstName", firstName);
+    // ✅ Personalized success experience
+    const firstName = fullName.split(" ")[0];
+    localStorage.setItem("customerFirstName", firstName);
 
-  // ✅ Clear cart
-  localStorage.removeItem("cart");
-  localStorage.removeItem("appliedPromoCode");
-  updateCartCount();
+    // ✅ Clear cart
+    localStorage.removeItem("cart");
+    localStorage.removeItem("appliedPromoCode");
+    updateCartCount();
 
-  // ✅ Redirect to success page
-  window.location.href = "order-success.html";
-}
+    // ✅ Short delay to ensure emails finish
+    setTimeout(() => {
+      window.location.href = "order-success.html";
+    }, 500);
+
+  } else {
+    console.error("❌ Owner email failed", res);
+    alert("⚠ Your order email did not send correctly. Please try again.");
+  }
+})
+.catch(err => {
+  console.error("❌ Owner email error", err);
+  alert("⚠ Connection issue. Please try again.");
+});
+
 
 
 // ✅ Enable or disable checkout button based on cart content
@@ -930,6 +943,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
