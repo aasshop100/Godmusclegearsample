@@ -294,7 +294,7 @@ const country = (formData.get('country') || '').toString().trim();
   // Order calculations
   const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
   const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-  const BASE_SHIPPING_PER_10 = 10; // adjust if needed
+  const BASE_SHIPPING_PER_10 = 20; // adjust if needed
   const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
   const grandTotal = subtotal + shipping;
 
@@ -975,6 +975,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
