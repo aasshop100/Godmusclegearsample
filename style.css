@@ -773,3 +773,14 @@ if (featuredSection) {
 body.order-success #cart-count {
   display: none;
 }
+
+.order-summary {
+  margin-top: 20px;
+}
+
+@media (max-width: 991px) {
+  .order-summary {
+    margin-top: 40px;
+  }
+}
+
