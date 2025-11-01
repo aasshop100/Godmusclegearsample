@@ -784,3 +784,40 @@ body.order-success #cart-count {
   }
 }
 
+
+/* Product Card Improvements */
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.18);
+}
+
+/* Equal Image Height */
+.card-img-top {
+  height: 220px;
+  object-fit: cover;
+}
+
+/* Title shorter & stronger */
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-height: 42px;
+}
+
+/* Price highlight */
+.card .fw-bold {
+  font-size: 1rem;
+  color: #ff4500;
+}
+
+/* Better card spacing */
+.card-body {
+  padding: 14px;
+}
