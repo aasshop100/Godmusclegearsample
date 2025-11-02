@@ -1013,20 +1013,35 @@ if (freeShippingCodes.includes(enteredCode)) {
     if (typeof updateCartDisplay === "function") updateCartDisplay();
   });
 
-  // 🪄 On Reload: restore state
-  const savedPromo = localStorage.getItem("appliedPromoCode");
-  const isFreeShipping = localStorage.getItem("freeShipping") === "true";
+// 🪄 On page reload — show promo message only if cart has items
+const savedPromo = localStorage.getItem("appliedPromoCode");
+const savedFreeShip = localStorage.getItem("freeShipping");
+const cart = getCart();
 
-  if (savedPromo && freeItemCodes.includes(savedPromo)) {
-    const cart = getCart();
-    const hasFreeItem = cart.some(item => item.id === freeItem.id);
-    if (hasFreeItem) {
-      showMessage(`✅ Promo "${savedPromo}" active — free item in cart!`, "text-success", false);
-    }
+if (cart.length === 0) {
+  // 🧹 If cart empty, reset any promo data
+  localStorage.removeItem("appliedPromoCode");
+  localStorage.removeItem("freeShipping");
+  if (promoMsg) {
+    promoMsg.textContent = "";
+    promoMsg.style.opacity = 0;
+  }
+} else {
+  // ✅ Show message for free shipping promo
+  if (savedFreeShip === "true") {
+    showMessage(`✅ Promo "${savedPromo || 'FREESHIP2025'}" active — free shipping up to $20!`, "text-success", false);
   }
 
-  if (isFreeShipping && savedPromo && freeShippingCodes.includes(savedPromo)) {
-    showMessage(`✅ Promo "${savedPromo}" active — free shipping up to $20!`, "text-success", false);
+  // ✅ Show message for free item promo
+  if (savedPromo && validPromoCodes.includes(savedPromo)) {
+    const hasFreeItem = cart.some(item => item.id === freeItem.id);
+    if (hasFreeItem) {
+      showMessage(`✅ Promo code "${savedPromo}" applied — free Testosterone Cypionate, 200mg (1 vial) added!`, "text-success", false);
+    } else {
+      localStorage.removeItem("appliedPromoCode");
+    }
+  }
+}
 
    // 🧹 Automatically clear promo if cart becomes empty
   window.addEventListener("storage", () => {
@@ -1130,6 +1145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
