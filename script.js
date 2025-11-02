@@ -193,15 +193,28 @@ function updateQuantity(index, newQty) {
 
 // Remove item
 function removeFromCart(index) {
-    // Remove item from the cart array
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
+  // Remove item from the cart array
+  cart.splice(index, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
 
-    // ✅ Re-render the cart so UI updates immediately
-    updateCart();
-    updateCartCount();
+  // ✅ Re-render the cart so UI updates immediately
+  updateCart();
+  updateCartCount();
+
+  // 🧹 Instant promo clear if cart becomes empty
+  if (cart.length === 0) {
+    localStorage.removeItem("appliedPromoCode");
+    localStorage.removeItem("freeShipping");
+
+    const promoMsg = document.getElementById("promo-message");
+    if (promoMsg) {
+      promoMsg.textContent = "";
+      promoMsg.style.opacity = 0;
+    }
+
+    console.log("🧹 Promo reset instantly — cart is now empty.");
+  }
 }
-
 
 
 // ---------------- CHECKOUT FUNCTIONS ----------------
@@ -1156,6 +1169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
