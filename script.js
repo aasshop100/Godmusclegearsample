@@ -1017,43 +1017,6 @@ if (freeShippingCodes.includes(enteredCode)) {
 
 
 
-// === CHECKOUT TOTAL CALCULATION (with Free Shipping Promo Support) ===
-function updateCheckoutSummary() {
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  // Base shipping rule: $20 per 10 items (or part thereof)
-  const BASE_SHIPPING_PER_10 = 20.00;
-  let shipping = BASE_SHIPPING_PER_10 * Math.ceil(totalItems / 10);
-
-  // Apply free shipping promo (max $20 discount)
-  if (localStorage.getItem("freeShipping") === "true") {
-    const discount = Math.min(20, shipping); // Cap at $20
-    shipping = Math.max(0, shipping - discount);
-    console.log(`🚚 Free shipping promo active — $${discount} discount applied`);
-  }
-
-  const grandTotal = subtotal + shipping;
-
-  // Update checkout summary in the DOM
-  const subtotalEl = document.getElementById("checkout-subtotal");
-  const shippingEl = document.getElementById("checkout-shipping");
-  const grandTotalEl = document.getElementById("checkout-grand-total");
-  const itemCountEl = document.getElementById("checkout-items");
-
-  if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
-  if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
-  if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
-  if (itemCountEl) itemCountEl.textContent = totalItems;
-
-  // Optional: store totals for order emails or success page
-  localStorage.setItem("checkoutSubtotal", subtotal.toFixed(2));
-  localStorage.setItem("checkoutShipping", shipping.toFixed(2));
-  localStorage.setItem("checkoutGrandTotal", grandTotal.toFixed(2));
-}
-
-
 // === CHECKOUT TOTAL CALCULATION + ITEM LIST (with Free Shipping Promo Support) ===
 function updateCheckoutSummary() {
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -1112,6 +1075,27 @@ function updateCheckoutSummary() {
   localStorage.setItem("checkoutShipping", shipping.toFixed(2));
   localStorage.setItem("checkoutGrandTotal", grandTotal.toFixed(2));
 }
+
+
+// === FIX: refresh totals AFTER checkout items are rendered ===
+document.addEventListener("DOMContentLoaded", () => {
+  const isCheckout = document.getElementById("checkout-grand-total");
+  if (!isCheckout) return;
+
+  // Wait a short moment to let the order-summary render first
+  setTimeout(() => updateCheckoutSummary(), 300);
+
+  // Recalculate when freeShipping or cart changes
+  window.addEventListener("storage", (e) => {
+    if (["freeShipping", "cart"].includes(e.key)) {
+      setTimeout(() => {
+        if (typeof updateCheckoutSummary === "function") {
+          updateCheckoutSummary();
+        }
+      }, 300);
+    }
+  });
+});
 
 
 
