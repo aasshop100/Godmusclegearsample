@@ -1028,8 +1028,21 @@ if (freeShippingCodes.includes(enteredCode)) {
   if (isFreeShipping && savedPromo && freeShippingCodes.includes(savedPromo)) {
     showMessage(`✅ Promo "${savedPromo}" active — free shipping up to $20!`, "text-success", false);
 
-  }
-});
+   // 🧹 Automatically clear promo if cart becomes empty
+  window.addEventListener("storage", () => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length === 0) {
+      localStorage.removeItem("appliedPromoCode");
+      localStorage.removeItem("freeShipping");
+      const promoMsg = document.getElementById("promo-message");
+      if (promoMsg) {
+        promoMsg.textContent = "";
+        promoMsg.style.opacity = 0;
+      }
+      console.log("🧹 Promo reset — cart is empty.");
+    }
+  });
+
 
 
 
@@ -1116,6 +1129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
