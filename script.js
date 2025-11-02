@@ -294,12 +294,21 @@ const country = (formData.get('country') || '').toString().trim();
     return;
   }
 
-  // Order calculations
+   // ✅ Order calculations with Free Shipping promo support
   const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
   const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-  const BASE_SHIPPING_PER_10 = 20; // adjust if needed
-  const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+  const BASE_SHIPPING_PER_10 = 20; // $20 per 10 items (or part thereof)
+  let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+
+  // 🚚 Apply free shipping promo if active
+  if (localStorage.getItem("freeShipping") === "true") {
+    const discount = Math.min(20, shipping); // Cap discount at $20
+    shipping = Math.max(0, shipping - discount);
+    console.log(`✅ Free shipping promo applied — $${discount} deducted`);
+  }
+
   const grandTotal = subtotal + shipping;
+
 
   // Create Order ID
   const orderId = 'ORDER-' + Date.now();
@@ -1100,6 +1109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
