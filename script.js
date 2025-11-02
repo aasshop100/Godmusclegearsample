@@ -875,32 +875,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 300000);
 });
 
-// === PROMO CODE VALIDATION + UNIVERSAL FREE ITEM (Clean Version) ===
+// === PROMO CODE VALIDATION (Free Item + Free Shipping) ===
 document.addEventListener("DOMContentLoaded", () => {
   const promoSection = document.getElementById("promo-section");
-  if (!promoSection) return; // Exit if not on cart page
+  if (!promoSection) return;
 
-  // 🧾 Insert promo UI dynamically
   promoSection.innerHTML = `
     <div class="input-group mb-3">
       <input type="text" id="promo-code-input" class="form-control" placeholder="Enter promo code">
       <button id="apply-promo-btn" class="btn btn-outline-primary">Apply</button>
     </div>
-    <p id="promo-message" class="mt-2 text-center small" style="transition: opacity 0.6s ease;"></p>
+    <p id="promo-message" class="mt-2 text-center small" style="transition: opacity 0.6s;"></p>
   `;
 
   const applyBtn = document.getElementById("apply-promo-btn");
   const promoInput = document.getElementById("promo-code-input");
   const promoMsg = document.getElementById("promo-message");
 
-  // 🎟️ VALID PROMO CODES
-  const validPromoCodes = [
-    "BELIGAS101",
-    "SIXPEX202",
-    "XENO303"
-  ];
+  const validFreeItemCodes = ["BELIGAS101", "SIXPEX202", "XENO303"];
+  const validShippingCodes = ["FREESHIP20", "SHIP2025", "NOPOSTAGE"];
 
-  // 🎁 Universal Free Item details
   const freeItem = {
     id: "free-testc200mg",
     name: "Testosterone Cypionate, 200mg (1 vial)",
@@ -909,72 +903,66 @@ document.addEventListener("DOMContentLoaded", () => {
     quantity: 1
   };
 
-  // 🛒 Cart helpers
   const getCart = () => JSON.parse(localStorage.getItem("cart")) || [];
   const saveCart = (cart) => localStorage.setItem("cart", JSON.stringify(cart));
 
-  // 🌟 Fade message utility
-  function showMessage(text, type, fadeOut = true) {
+  function showMessage(text, type) {
     promoMsg.textContent = text;
-    promoMsg.classList.remove("text-success", "text-danger");
-    promoMsg.classList.add(type);
+    promoMsg.className = type;
     promoMsg.style.opacity = 1;
-
-    if (fadeOut) {
-      setTimeout(() => (promoMsg.style.opacity = 0), 5000);
-    }
+    setTimeout(() => (promoMsg.style.opacity = 0), 5000);
   }
 
-  // 🎯 Apply Promo Button
   applyBtn.addEventListener("click", () => {
     const enteredCode = promoInput.value.trim().toUpperCase();
-    promoMsg.style.opacity = 1; // Ensure visible immediately
+    const cart = getCart();
 
     if (!enteredCode) {
       showMessage("❌ Please enter a promo code.", "text-danger");
       return;
     }
 
-    if (validPromoCodes.includes(enteredCode)) {
-      showMessage(`✅ Promo code "${enteredCode}" applied! You received a free Testosterone Cypionate, 200mg (1 vial).`, "text-success");
+    // ✅ Free Item Promo
+    if (validFreeItemCodes.includes(enteredCode)) {
+      showMessage(`✅ Promo "${enteredCode}" applied — Free Test Cyp 200mg added!`, "text-success");
 
-      let cart = getCart();
-      const alreadyAdded = cart.some(item => item.id === freeItem.id);
-
-      if (!alreadyAdded) {
+      if (!cart.some(i => i.id === freeItem.id)) {
         cart.push(freeItem);
         saveCart(cart);
-        console.log("🎁 Free item added:", freeItem.name);
       }
 
       localStorage.setItem("appliedPromoCode", enteredCode);
-      promoInput.value = ""; // 🧹 Clear input field after success
+      localStorage.setItem("promoType", "free-item");
 
+      promoInput.value = "";
       if (typeof updateCartDisplay === "function") updateCartDisplay();
-    } else {
-      showMessage("❌ Invalid promo code. Please try again.", "text-danger");
-
-      localStorage.removeItem("appliedPromoCode");
-
-      let cart = getCart().filter(item => item.id !== freeItem.id);
-      saveCart(cart);
-      if (typeof updateCartDisplay === "function") updateCartDisplay();
+      return;
     }
+
+    // ✅ Free Shipping Promo
+    if (validShippingCodes.includes(enteredCode)) {
+      showMessage(`✅ Promo "${enteredCode}" applied — Free Shipping up to $20!`, "text-success");
+
+      localStorage.setItem("appliedPromoCode", enteredCode);
+      localStorage.setItem("promoType", "free-shipping");
+
+      promoInput.value = "";
+      if (typeof updateCartDisplay === "function") updateCartDisplay();
+      return;
+    }
+
+    // ❌ Invalid Code
+    showMessage("❌ Invalid promo code.", "text-danger");
+    localStorage.removeItem("appliedPromoCode");
+    localStorage.removeItem("promoType");
+
+    const updatedCart = cart.filter(i => i.id !== freeItem.id);
+    saveCart(updatedCart);
+    if (typeof updateCartDisplay === "function") updateCartDisplay();
   });
-
-  // 🪄 On page reload — show only if promo previously applied
-  const savedPromo = localStorage.getItem("appliedPromoCode");
-  if (savedPromo && validPromoCodes.includes(savedPromo)) {
-    const cart = getCart();
-    const hasFreeItem = cart.some(item => item.id === freeItem.id);
-
-    if (hasFreeItem) {
-      showMessage(`✅ Promo code "${savedPromo}" applied — free Testosterone Cypionate, 200mg (1 vial) added!`, "text-success", false);
-    } else {
-      localStorage.removeItem("appliedPromoCode");
-    }
-  }
 });
+
+
 
 
 
