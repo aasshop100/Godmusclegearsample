@@ -1026,7 +1026,7 @@ function updateCheckoutSummary() {
   const shippingEl = document.getElementById("checkout-shipping");
   const grandTotalEl = document.getElementById("checkout-grand-total");
 
-  // ✅ Rebuild the order summary item list (if container exists)
+    // ✅ Rebuild the order summary item list (with images)
   if (checkoutItemsContainer) {
     checkoutItemsContainer.innerHTML = ""; // Clear previous list
 
@@ -1035,18 +1035,22 @@ function updateCheckoutSummary() {
     } else {
       cart.forEach(item => {
         const itemDiv = document.createElement("div");
-        itemDiv.classList.add("checkout-item", "d-flex", "justify-content-between", "align-items-center", "mb-2");
+        itemDiv.classList.add("checkout-item", "d-flex", "align-items-center", "justify-content-between", "mb-3");
         itemDiv.innerHTML = `
-          <div>
-            <strong>${item.name}</strong>
-            <br><small>Qty: ${item.quantity}</small>
+          <div class="d-flex align-items-center">
+            <img src="${item.image}" alt="${item.name}" class="me-3" style="width:60px; height:60px; object-fit:cover; border-radius:8px;">
+            <div>
+              <strong>${item.name}</strong><br>
+              <small>Qty: ${item.quantity}</small>
+            </div>
           </div>
-          <div>$${(item.price * item.quantity).toFixed(2)}</div>
+          <div><strong>$${(item.price * item.quantity).toFixed(2)}</strong></div>
         `;
         checkoutItemsContainer.appendChild(itemDiv);
       });
     }
   }
+
 
   // 🧮 Totals
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -1096,6 +1100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
