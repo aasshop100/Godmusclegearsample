@@ -9,39 +9,29 @@ const BASE_SHIPPING_PER_10 = 20.00;
 
 // Update navbar + floating cart count
 function updateCartCount() {
-    const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    const cartCountEl = document.getElementById('cart-count');
-    const floatingCartCount = document.getElementById('floating-cart-count');
-
-    // ✅ Ensure cart count updates correctly after checkout
-function updateCartCount() {
   const cartData = JSON.parse(localStorage.getItem('cart')) || [];
   const total = cartData.reduce((sum, item) => sum + (item.quantity || 1), 0);
-  const cartCountElement = document.getElementById('cart-count');
-  if (cartCountElement) {
-    cartCountElement.textContent = total;
+
+  const cartCountEl = document.getElementById('cart-count');
+  const floatingCartCount = document.getElementById('floating-cart-count');
+
+  // === Navbar Cart Count ===
+  if (cartCountEl) {
+    cartCountEl.textContent = total;
+    cartCountEl.classList.remove('pop');
+    void cartCountEl.offsetWidth; // reset animation
+    cartCountEl.classList.add('pop');
+  }
+
+  // === Floating Cart Count ===
+  if (floatingCartCount) {
+    floatingCartCount.textContent = total;
+    floatingCartCount.classList.remove('pop');
+    void floatingCartCount.offsetWidth; // reset animation
+    floatingCartCount.classList.add('pop');
   }
 }
 
-    // === Navbar Cart Count ===
-    if (cartCountEl) {
-        cartCountEl.textContent = totalQuantity;
-
-        // ✨ Trigger pop animation (navbar)
-        cartCountEl.classList.remove('pop');
-        void cartCountEl.offsetWidth; // reset animation
-        cartCountEl.classList.add('pop');
-    }
-
-    // === Floating Cart Count ===
-    if (floatingCartCount) {
-        floatingCartCount.textContent = totalQuantity;
-
-        // ✨ Trigger pop animation (floating)
-        floatingCartCount.classList.remove('pop');
-        void floatingCartCount.offsetWidth; // reset animation
-        floatingCartCount.classList.add('pop');
-    }
 
     // Save cart data
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -975,6 +965,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
