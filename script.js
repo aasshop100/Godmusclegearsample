@@ -966,6 +966,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (typeof updateCartDisplay === "function") updateCartDisplay();
       return;
+      if (typeof updateCheckoutSummary === "function") updateCheckoutSummary();
+
     }
 
     // ❌ Invalid Code
@@ -993,6 +995,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (isFreeShipping && savedPromo && freeShippingCodes.includes(savedPromo)) {
     showMessage(`✅ Promo "${savedPromo}" active — free shipping up to $20!`, "text-success", false);
+
   }
 });
 
@@ -1033,6 +1036,7 @@ function updateCheckoutSummary() {
   localStorage.setItem("checkoutShipping", shipping.toFixed(2));
   localStorage.setItem("checkoutGrandTotal", grandTotal.toFixed(2));
 }
+
 
 
 
