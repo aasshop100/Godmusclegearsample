@@ -1057,22 +1057,22 @@ if (freeShippingCodes.includes(enteredCode)) {
 })();
 
 
- // 🧹 Automatically clear promo if cart becomes empty
-window.addEventListener("storage", () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  if (cart.length === 0) {
-    localStorage.removeItem("appliedPromoCode");
-    localStorage.removeItem("freeShipping");
-    const promoMsg = document.getElementById("promo-message");
-    if (promoMsg) {
-      promoMsg.textContent = "";
-      promoMsg.style.opacity = 0;
+  // 🧹 Automatically clear promo if cart becomes empty
+  window.addEventListener("storage", () => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length === 0) {
+      localStorage.removeItem("appliedPromoCode");
+      localStorage.removeItem("freeShipping");
+      const promoMsg = document.getElementById("promo-message");
+      if (promoMsg) {
+        promoMsg.textContent = "";
+        promoMsg.style.opacity = 0;
+      }
+      console.log("🧹 Promo reset — cart is empty.");
     }
-    console.log("🧹 Promo reset — cart is empty.");
-  }
-});
-
-
+  });
+}); // ✅ closes DOMContentLoaded
+}); // ✅ closes any outer listener (if one exists)
 
 
 // === CHECKOUT TOTAL CALCULATION + ITEM LIST (with Free Shipping Promo Support) ===
@@ -1158,6 +1158,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
