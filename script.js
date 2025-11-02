@@ -1072,8 +1072,6 @@ if (freeShippingCodes.includes(enteredCode)) {
     }
   });
 }); // ✅ closes DOMContentLoaded
-}); // ✅ closes any outer listener (if one exists)
-
 
 // === CHECKOUT TOTAL CALCULATION + ITEM LIST (with Free Shipping Promo Support) ===
 function updateCheckoutSummary() {
@@ -1158,6 +1156,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
