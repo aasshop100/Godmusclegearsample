@@ -157,6 +157,7 @@ function updateCart() {
 
      // ✅ Update checkout button state after updating cart
     updateCheckoutButton();
+}
 
 // Add to cart
 function addToCart(button) {
@@ -974,6 +975,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
