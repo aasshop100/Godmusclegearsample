@@ -2,9 +2,13 @@
 
 document.addEventListener('touchstart', function() {}, {passive: true});
 
-if (document.getElementById("checkout-grand-total")) {
-  updateCheckoutSummary();
-}
+// Run checkout total update after page loads
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("checkout-grand-total")) {
+    updateCheckoutSummary();
+  }
+});
+
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const BASE_SHIPPING_PER_10 = 20.00;
@@ -1029,6 +1033,7 @@ function updateCheckoutSummary() {
   localStorage.setItem("checkoutShipping", shipping.toFixed(2));
   localStorage.setItem("checkoutGrandTotal", grandTotal.toFixed(2));
 }
+
 
 
 
