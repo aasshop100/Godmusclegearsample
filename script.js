@@ -1054,23 +1054,27 @@ function updateCheckoutSummary() {
 }
 
 
-// === FIX: make totals refresh when freeShipping promo is active ===
+// === FIX: refresh totals AFTER checkout items are rendered ===
 document.addEventListener("DOMContentLoaded", () => {
   const isCheckout = document.getElementById("checkout-grand-total");
   if (!isCheckout) return;
 
-  // Observe localStorage changes (so totals update when promo applied)
+  // Wait a short moment to let the order-summary render first
+  setTimeout(() => updateCheckoutSummary(), 300);
+
+  // Recalculate when freeShipping or cart changes
   window.addEventListener("storage", (e) => {
-    if (e.key === "freeShipping" || e.key === "cart") {
-      if (typeof updateCheckoutSummary === "function") {
-        updateCheckoutSummary();
-      }
+    if (["freeShipping", "cart"].includes(e.key)) {
+      setTimeout(() => {
+        if (typeof updateCheckoutSummary === "function") {
+          updateCheckoutSummary();
+        }
+      }, 300);
     }
   });
-
-  // Also run once on first load
-  updateCheckoutSummary();
 });
+
+
 
 
 
