@@ -83,88 +83,77 @@ function showAddedToast(itemName) {
     }, 2000);
 }
 
-// Render cart page (upgraded: equal card layout + promo-aware shipping)
+// Render cart page
 function updateCart() {
-  updateCartCount();
+    updateCartCount();
 
-  const cartItems = document.getElementById('cart-items');
-  const subtotalEl = document.getElementById('cart-subtotal');
-  const shippingEl = document.getElementById('shipping-fee');
-  const grandTotalEl = document.getElementById('cart-grand-total');
-  const emptyMsg = document.getElementById('empty-cart-message');
+    const cartItems = document.getElementById('cart-items');
+    const subtotalEl = document.getElementById('cart-subtotal');
+    const shippingEl = document.getElementById('shipping-fee');
+    const grandTotalEl = document.getElementById('cart-grand-total');
+    const emptyMsg = document.getElementById('empty-cart-message');
 
-  if (!cartItems) return;
+    if (!cartItems) return;
 
-  let subtotal = 0;
-  let totalQuantity = 0;
-  cartItems.innerHTML = '';
+    let subtotal = 0;
+    let totalQuantity = 0;
+    cartItems.innerHTML = '';
 
-  // If cart is empty — show empty state and reset values
-  if (!cart || cart.length === 0) {
+    if (cart.length === 0) {
     if (emptyMsg) emptyMsg.style.display = 'block';
     if (subtotalEl) subtotalEl.textContent = '$0.00';
     if (shippingEl) shippingEl.textContent = '$0.00';
     if (grandTotalEl) grandTotalEl.textContent = '$0.00';
 
-    // Ensure checkout button updates when cart is empty
-    if (typeof updateCheckoutButton === 'function') updateCheckoutButton();
+    // Ensure checkout button updates when cart becomes empty
+    if (typeof updateCheckoutButton === 'function') {
+        updateCheckoutButton();
+    }
+
     return;
-  }
-
-  // Hide empty message when there are items
-  if (emptyMsg) emptyMsg.style.display = 'none';
-
-  // Render each cart item and compute totals
-  cart.forEach((item, index) => {
-    const itemPrice = Number(item.price) || 0;
-    const quantity = item.quantity || 1;
-    const lineTotal = itemPrice * quantity;
-    subtotal += lineTotal;
-    totalQuantity += quantity;
-
-    const imageSrc = item.image || 'images/default-supplement.png';
-
-    cartItems.innerHTML += `
-      <div class="card mb-3">
-        <div class="card-body d-flex align-items-center flex-wrap gap-3">
-          <img src="${imageSrc}" alt="${item.name}" class="img-thumbnail" style="width:80px; height:80px; object-fit:cover; border-radius:8px;">
-          
-          <div class="flex-grow-1">
-            <h6 class="mb-1">${item.name}</h6>
-            <p class="mb-1 text-muted">$${itemPrice.toFixed(2)} each</p>
-          </div>
-
-          <div class="d-flex align-items-center gap-2">
-            <input type="number" class="form-control" value="${quantity}" min="1" style="width:70px;" onchange="updateQuantity(${index}, this.value)">
-            <strong>$${lineTotal.toFixed(2)}</strong>
-            <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
-          </div>
-        </div>
-      </div>`;
-  });
-
-  // ===== SHIPPING LOGIC (promo-aware) =====
-  // Use your BASE_SHIPPING_PER_10 constant (make sure it's defined globally)
-  let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-  const promoType = localStorage.getItem("promoType");
-
-  // Free-shipping promo subtracts one tier (BASE_SHIPPING_PER_10) capped at 0
-  if (promoType === "free-shipping") {
-    shipping = Math.max(0, shipping - BASE_SHIPPING_PER_10);
-  }
-
-  const grandTotal = subtotal + shipping;
-
-  // Update UI (with $ sign)
-  if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-  if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
-  if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
-
-  // Persist and ensure checkout button state updates
-  localStorage.setItem('cart', JSON.stringify(cart));
-  if (typeof updateCheckoutButton === 'function') updateCheckoutButton();
 }
 
+    if (emptyMsg) emptyMsg.style.display = 'none';
+
+    cart.forEach((item, index) => {
+        const itemPrice = Number(item.price) || 0;
+        const quantity = item.quantity || 1;
+        const lineTotal = itemPrice * quantity;
+        subtotal += lineTotal;
+        totalQuantity += quantity;
+
+        const imageSrc = item.image || 'images/default-supplement.png';
+        const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 60px; height: 60px; object-fit: cover;">`;
+
+       cartItems.innerHTML += `
+    <div class="card mb-3">
+        <div class="card-body d-flex align-items-center flex-wrap gap-3">
+            <img src="${imageSrc}" alt="${item.name}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+            
+            <div class="flex-grow-1">
+                <h6 class="mb-1">${item.name}</h6>
+                <p class="mb-1 text-muted">$${itemPrice.toFixed(2)} each</p>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <input type="number" class="form-control" value="${quantity}" min="1" style="width: 70px;" onchange="updateQuantity(${index}, this.value)">
+                <strong>$${lineTotal.toFixed(2)}</strong>
+                <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
+            </div>
+        </div>
+    </div>
+`;
+
+    });
+
+    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+    const grandTotal = subtotal + shipping;
+
+    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+    if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
+    if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
+
+    localStorage.setItem('cart', JSON.stringify(cart));
 
      // ✅ Update checkout button state after updating cart
     updateCheckoutButton();
@@ -249,12 +238,13 @@ function renderCheckoutSummary() {
         `;
     });
 
- let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-const promoType = localStorage.getItem("promoType");
-if (promoType === "free-shipping") {
-  shipping = Math.max(0, shipping - BASE_SHIPPING_PER_10);
-}
+    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+    const grandTotal = subtotal + shipping;
 
+    if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
+    if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
+    if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
+}
 
 // ✅ Final version — sends full order details to both customer & owner
 function handleCheckoutSubmit(event) {
@@ -301,21 +291,12 @@ const country = (formData.get('country') || '').toString().trim();
     return;
   }
 
-// Order calculations
-const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
-const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-
-const BASE_SHIPPING_PER_10 = 20;
-let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-
-// ✅ Apply free-shipping promo (-$20 cap)
-const promoType = localStorage.getItem("promoType");
-if (promoType === "free-shipping") {
-  shipping = Math.max(0, shipping - BASE_SHIPPING_PER_10);
-}
-
-const grandTotal = subtotal + shipping;
-
+  // Order calculations
+  const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
+  const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const BASE_SHIPPING_PER_10 = 20; // adjust if needed
+  const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+  const grandTotal = subtotal + shipping;
 
   // Create Order ID
   const orderId = 'ORDER-' + Date.now();
@@ -894,26 +875,32 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 300000);
 });
 
-// === PROMO CODE VALIDATION (Free Item + Free Shipping) ===
+// === PROMO CODE VALIDATION + UNIVERSAL FREE ITEM (Clean Version) ===
 document.addEventListener("DOMContentLoaded", () => {
   const promoSection = document.getElementById("promo-section");
-  if (!promoSection) return;
+  if (!promoSection) return; // Exit if not on cart page
 
+  // 🧾 Insert promo UI dynamically
   promoSection.innerHTML = `
     <div class="input-group mb-3">
       <input type="text" id="promo-code-input" class="form-control" placeholder="Enter promo code">
       <button id="apply-promo-btn" class="btn btn-outline-primary">Apply</button>
     </div>
-    <p id="promo-message" class="mt-2 text-center small" style="transition: opacity 0.6s;"></p>
+    <p id="promo-message" class="mt-2 text-center small" style="transition: opacity 0.6s ease;"></p>
   `;
 
   const applyBtn = document.getElementById("apply-promo-btn");
   const promoInput = document.getElementById("promo-code-input");
   const promoMsg = document.getElementById("promo-message");
 
-  const validFreeItemCodes = ["BELIGAS101", "SIXPEX202", "XENO303"];
-  const validShippingCodes = ["FREESHIP20", "SHIP2025", "NOPOSTAGE"];
+  // 🎟️ VALID PROMO CODES
+  const validPromoCodes = [
+    "BELIGAS101",
+    "SIXPEX202",
+    "XENO303"
+  ];
 
+  // 🎁 Universal Free Item details
   const freeItem = {
     id: "free-testc200mg",
     name: "Testosterone Cypionate, 200mg (1 vial)",
@@ -922,68 +909,72 @@ document.addEventListener("DOMContentLoaded", () => {
     quantity: 1
   };
 
+  // 🛒 Cart helpers
   const getCart = () => JSON.parse(localStorage.getItem("cart")) || [];
   const saveCart = (cart) => localStorage.setItem("cart", JSON.stringify(cart));
 
-  function showMessage(text, type) {
+  // 🌟 Fade message utility
+  function showMessage(text, type, fadeOut = true) {
     promoMsg.textContent = text;
-    promoMsg.className = type;
+    promoMsg.classList.remove("text-success", "text-danger");
+    promoMsg.classList.add(type);
     promoMsg.style.opacity = 1;
-    setTimeout(() => (promoMsg.style.opacity = 0), 5000);
+
+    if (fadeOut) {
+      setTimeout(() => (promoMsg.style.opacity = 0), 5000);
+    }
   }
 
+  // 🎯 Apply Promo Button
   applyBtn.addEventListener("click", () => {
     const enteredCode = promoInput.value.trim().toUpperCase();
-    const cart = getCart();
+    promoMsg.style.opacity = 1; // Ensure visible immediately
 
     if (!enteredCode) {
       showMessage("❌ Please enter a promo code.", "text-danger");
       return;
     }
 
-    // ✅ Free Item Promo
-    if (validFreeItemCodes.includes(enteredCode)) {
-      showMessage(`✅ Promo "${enteredCode}" applied — Free Test Cyp 200mg added!`, "text-success");
+    if (validPromoCodes.includes(enteredCode)) {
+      showMessage(`✅ Promo code "${enteredCode}" applied! You received a free Testosterone Cypionate, 200mg (1 vial).`, "text-success");
 
-      if (!cart.some(i => i.id === freeItem.id)) {
+      let cart = getCart();
+      const alreadyAdded = cart.some(item => item.id === freeItem.id);
+
+      if (!alreadyAdded) {
         cart.push(freeItem);
         saveCart(cart);
+        console.log("🎁 Free item added:", freeItem.name);
       }
 
       localStorage.setItem("appliedPromoCode", enteredCode);
-      localStorage.setItem("promoType", "free-item");
+      promoInput.value = ""; // 🧹 Clear input field after success
 
-      promoInput.value = "";
       if (typeof updateCartDisplay === "function") updateCartDisplay();
-      return;
-    }
+    } else {
+      showMessage("❌ Invalid promo code. Please try again.", "text-danger");
 
-    // ✅ Free Shipping Promo
-    if (validShippingCodes.includes(enteredCode)) {
-      showMessage(`✅ Promo "${enteredCode}" applied — Free Shipping up to $20!`, "text-success");
+      localStorage.removeItem("appliedPromoCode");
 
-      localStorage.setItem("appliedPromoCode", enteredCode);
-      localStorage.setItem("promoType", "free-shipping");
-
-      promoInput.value = "";
+      let cart = getCart().filter(item => item.id !== freeItem.id);
+      saveCart(cart);
       if (typeof updateCartDisplay === "function") updateCartDisplay();
-      return;
     }
-
-    // ❌ Invalid Code
-    showMessage("❌ Invalid promo code.", "text-danger");
-    localStorage.removeItem("appliedPromoCode");
-    localStorage.removeItem("promoType");
-
-    const updatedCart = cart.filter(i => i.id !== freeItem.id);
-    saveCart(updatedCart);
-    if (typeof updateCartDisplay === "function") updateCartDisplay();
   });
+
+  // 🪄 On page reload — show only if promo previously applied
+  const savedPromo = localStorage.getItem("appliedPromoCode");
+  if (savedPromo && validPromoCodes.includes(savedPromo)) {
+    const cart = getCart();
+    const hasFreeItem = cart.some(item => item.id === freeItem.id);
+
+    if (hasFreeItem) {
+      showMessage(`✅ Promo code "${savedPromo}" applied — free Testosterone Cypionate, 200mg (1 vial) added!`, "text-success", false);
+    } else {
+      localStorage.removeItem("appliedPromoCode");
+    }
+  }
 });
-
-
-
-
 
 
 
