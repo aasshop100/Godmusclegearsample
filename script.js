@@ -158,9 +158,15 @@ function addToCart(button) {
         cart.push({ id, name, price, quantity: 1, image });
     }
 
+     // Save cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Update cart count immediately
+    updateCartCount();
+
     updateCart();
     showCartNotification(`✅ ${name} added to cart!`);
-}
+
 
 // Quantity change
 function updateQuantity(index, newQty) {
@@ -960,6 +966,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
