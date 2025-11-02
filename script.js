@@ -935,6 +935,22 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // 🚚 Check for Free Shipping Promo
+const freeShippingCodes = ["SHIPFREE20", "FREESHIP2025"];
+
+if (freeShippingCodes.includes(enteredCode)) {
+  localStorage.setItem("appliedPromoCode", enteredCode);
+  localStorage.setItem("freeShipping", "true");
+
+  showMessage(`✅ Free shipping promo "${enteredCode}" applied! Shipping discounted up to $20.`, "text-success");
+  promoInput.value = "";
+
+  if (typeof updateCartDisplay === "function") updateCartDisplay();
+  if (typeof updateCheckoutSummary === "function") updateCheckoutSummary();
+  return;
+}
+
+
     let cart = getCart();
 
     // ✅ Free Item Promo
@@ -1036,6 +1052,7 @@ function updateCheckoutSummary() {
   localStorage.setItem("checkoutShipping", shipping.toFixed(2));
   localStorage.setItem("checkoutGrandTotal", grandTotal.toFixed(2));
 }
+
 
 
 
