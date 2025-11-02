@@ -309,6 +309,13 @@ const country = (formData.get('country') || '').toString().trim();
 
   const grandTotal = subtotal + shipping;
 
+  // 📝 Note for email if free shipping promo is applied
+let promoNote = "";
+if (localStorage.getItem("freeShipping") === "true") {
+  promoNote = "Free Shipping Promo Applied (up to $20 discount)";
+}
+
+
 
   // Create Order ID
   const orderId = 'ORDER-' + Date.now();
@@ -1109,6 +1116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
