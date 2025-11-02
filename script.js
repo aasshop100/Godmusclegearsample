@@ -1,12 +1,14 @@
 // script.js - cleaned & merged (preserves all features, inline onclick retained)
 
-document.addEventListener('touchstart', function() {}, { passive: true });
 
 /* -------------------------
    Global State & Constants
    ------------------------- */
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const BASE_SHIPPING_PER_10 = 20.00;
+document.addEventListener('touchstart', function() {}, { passive: true });
+
+
 
 /* -------------------------
    CART FUNCTIONS
@@ -159,6 +161,9 @@ function addToCart(button) {
   } else {
     cart.push({ id, name, price, quantity: 1, image });
   }
+
+   window.addToCart = addToCart;
+
 
   // Save + UI updates
   localStorage.setItem('cart', JSON.stringify(cart));
@@ -788,3 +793,4 @@ document.addEventListener("DOMContentLoaded", function () {
 /* -------------------------
    End of script.js
    ------------------------- */
+
