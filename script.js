@@ -1042,7 +1042,8 @@ if (freeShippingCodes.includes(enteredCode)) {
       console.log("🧹 Promo reset — cart is empty.");
     }
   });
-
+  }
+  });
 
 
 
@@ -1129,6 +1130,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
