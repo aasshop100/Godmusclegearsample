@@ -32,11 +32,6 @@ function updateCartCount() {
   }
 }
 
-
-    // Save cart data
-    localStorage.setItem('cart', JSON.stringify(cart));
-}
-
 // === Show Floating Notification ===
 function showCartNotification(message) {
   // Remove any existing notification first
@@ -965,6 +960,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
