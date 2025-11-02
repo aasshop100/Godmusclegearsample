@@ -83,77 +83,88 @@ function showAddedToast(itemName) {
     }, 2000);
 }
 
-// Render cart page
+// Render cart page (upgraded: equal card layout + promo-aware shipping)
 function updateCart() {
-    updateCartCount();
+  updateCartCount();
 
-    const cartItems = document.getElementById('cart-items');
-    const subtotalEl = document.getElementById('cart-subtotal');
-    const shippingEl = document.getElementById('shipping-fee');
-    const grandTotalEl = document.getElementById('cart-grand-total');
-    const emptyMsg = document.getElementById('empty-cart-message');
+  const cartItems = document.getElementById('cart-items');
+  const subtotalEl = document.getElementById('cart-subtotal');
+  const shippingEl = document.getElementById('shipping-fee');
+  const grandTotalEl = document.getElementById('cart-grand-total');
+  const emptyMsg = document.getElementById('empty-cart-message');
 
-    if (!cartItems) return;
+  if (!cartItems) return;
 
-    let subtotal = 0;
-    let totalQuantity = 0;
-    cartItems.innerHTML = '';
+  let subtotal = 0;
+  let totalQuantity = 0;
+  cartItems.innerHTML = '';
 
-    if (cart.length === 0) {
+  // If cart is empty — show empty state and reset values
+  if (!cart || cart.length === 0) {
     if (emptyMsg) emptyMsg.style.display = 'block';
     if (subtotalEl) subtotalEl.textContent = '$0.00';
     if (shippingEl) shippingEl.textContent = '$0.00';
     if (grandTotalEl) grandTotalEl.textContent = '$0.00';
 
-    // Ensure checkout button updates when cart becomes empty
-    if (typeof updateCheckoutButton === 'function') {
-        updateCheckoutButton();
-    }
-
+    // Ensure checkout button updates when cart is empty
+    if (typeof updateCheckoutButton === 'function') updateCheckoutButton();
     return;
+  }
+
+  // Hide empty message when there are items
+  if (emptyMsg) emptyMsg.style.display = 'none';
+
+  // Render each cart item and compute totals
+  cart.forEach((item, index) => {
+    const itemPrice = Number(item.price) || 0;
+    const quantity = item.quantity || 1;
+    const lineTotal = itemPrice * quantity;
+    subtotal += lineTotal;
+    totalQuantity += quantity;
+
+    const imageSrc = item.image || 'images/default-supplement.png';
+
+    cartItems.innerHTML += `
+      <div class="card mb-3">
+        <div class="card-body d-flex align-items-center flex-wrap gap-3">
+          <img src="${imageSrc}" alt="${item.name}" class="img-thumbnail" style="width:80px; height:80px; object-fit:cover; border-radius:8px;">
+          
+          <div class="flex-grow-1">
+            <h6 class="mb-1">${item.name}</h6>
+            <p class="mb-1 text-muted">$${itemPrice.toFixed(2)} each</p>
+          </div>
+
+          <div class="d-flex align-items-center gap-2">
+            <input type="number" class="form-control" value="${quantity}" min="1" style="width:70px;" onchange="updateQuantity(${index}, this.value)">
+            <strong>$${lineTotal.toFixed(2)}</strong>
+            <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  // ===== SHIPPING LOGIC (promo-aware) =====
+  // Use your BASE_SHIPPING_PER_10 constant (make sure it's defined globally)
+  let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+  const promoType = localStorage.getItem("promoType");
+
+  // Free-shipping promo subtracts one tier (BASE_SHIPPING_PER_10) capped at 0
+  if (promoType === "free-shipping") {
+    shipping = Math.max(0, shipping - BASE_SHIPPING_PER_10);
+  }
+
+  const grandTotal = subtotal + shipping;
+
+  // Update UI (with $ sign)
+  if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+  if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
+  if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
+
+  // Persist and ensure checkout button state updates
+  localStorage.setItem('cart', JSON.stringify(cart));
+  if (typeof updateCheckoutButton === 'function') updateCheckoutButton();
 }
 
-    if (emptyMsg) emptyMsg.style.display = 'none';
-
-    cart.forEach((item, index) => {
-        const itemPrice = Number(item.price) || 0;
-        const quantity = item.quantity || 1;
-        const lineTotal = itemPrice * quantity;
-        subtotal += lineTotal;
-        totalQuantity += quantity;
-
-        const imageSrc = item.image || 'images/default-supplement.png';
-        const imageHtml = `<img src="${imageSrc}" alt="${item.name}" class="img-thumbnail me-2" style="width: 60px; height: 60px; object-fit: cover;">`;
-
-       cartItems.innerHTML += `
-    <div class="card mb-3">
-        <div class="card-body d-flex align-items-center flex-wrap gap-3">
-            <img src="${imageSrc}" alt="${item.name}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-            
-            <div class="flex-grow-1">
-                <h6 class="mb-1">${item.name}</h6>
-                <p class="mb-1 text-muted">$${itemPrice.toFixed(2)} each</p>
-            </div>
-
-            <div class="d-flex align-items-center gap-2">
-                <input type="number" class="form-control" value="${quantity}" min="1" style="width: 70px;" onchange="updateQuantity(${index}, this.value)">
-                <strong>$${lineTotal.toFixed(2)}</strong>
-                <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
-            </div>
-        </div>
-    </div>
-`;
-
-    });
-
-    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-    const grandTotal = subtotal + shipping;
-
-    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-    if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
-    if (grandTotalEl) grandTotalEl.textContent = `$${grandTotal.toFixed(2)}`;
-
-    localStorage.setItem('cart', JSON.stringify(cart));
 
      // ✅ Update checkout button state after updating cart
     updateCheckoutButton();
@@ -238,13 +249,12 @@ function renderCheckoutSummary() {
         `;
     });
 
-    let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-    const grandTotal = subtotal + shipping;
-
-    if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
-    if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
-    if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
+ let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+const promoType = localStorage.getItem("promoType");
+if (promoType === "free-shipping") {
+  shipping = Math.max(0, shipping - BASE_SHIPPING_PER_10);
 }
+
 
 // ✅ Final version — sends full order details to both customer & owner
 function handleCheckoutSubmit(event) {
@@ -291,12 +301,21 @@ const country = (formData.get('country') || '').toString().trim();
     return;
   }
 
-  // Order calculations
-  const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
-  const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-  const BASE_SHIPPING_PER_10 = 20; // adjust if needed
-  const shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
-  const grandTotal = subtotal + shipping;
+// Order calculations
+const subtotal = storedCart.reduce((sum, item) => sum + (Number(item.price) * (item.quantity || 1)), 0);
+const totalQuantity = storedCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+const BASE_SHIPPING_PER_10 = 20;
+let shipping = Math.ceil(totalQuantity / 10) * BASE_SHIPPING_PER_10;
+
+// ✅ Apply free-shipping promo (-$20 cap)
+const promoType = localStorage.getItem("promoType");
+if (promoType === "free-shipping") {
+  shipping = Math.max(0, shipping - BASE_SHIPPING_PER_10);
+}
+
+const grandTotal = subtotal + shipping;
+
 
   // Create Order ID
   const orderId = 'ORDER-' + Date.now();
@@ -961,6 +980,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof updateCartDisplay === "function") updateCartDisplay();
   });
 });
+
 
 
 
