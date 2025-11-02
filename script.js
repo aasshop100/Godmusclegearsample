@@ -1054,25 +1054,66 @@ function updateCheckoutSummary() {
 }
 
 
-// === FIX: refresh totals AFTER checkout items are rendered ===
-document.addEventListener("DOMContentLoaded", () => {
-  const isCheckout = document.getElementById("checkout-grand-total");
-  if (!isCheckout) return;
+// === CHECKOUT TOTAL CALCULATION + ITEM LIST (with Free Shipping Promo Support) ===
+function updateCheckoutSummary() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const checkoutItemsContainer = document.getElementById("checkout-items-list");
+  const totalItemsEl = document.getElementById("checkout-items");
+  const subtotalEl = document.getElementById("checkout-subtotal");
+  const shippingEl = document.getElementById("checkout-shipping");
+  const grandTotalEl = document.getElementById("checkout-grand-total");
 
-  // Wait a short moment to let the order-summary render first
-  setTimeout(() => updateCheckoutSummary(), 300);
+  // ✅ Rebuild the order summary item list (if container exists)
+  if (checkoutItemsContainer) {
+    checkoutItemsContainer.innerHTML = ""; // Clear previous list
 
-  // Recalculate when freeShipping or cart changes
-  window.addEventListener("storage", (e) => {
-    if (["freeShipping", "cart"].includes(e.key)) {
-      setTimeout(() => {
-        if (typeof updateCheckoutSummary === "function") {
-          updateCheckoutSummary();
-        }
-      }, 300);
+    if (cart.length === 0) {
+      checkoutItemsContainer.innerHTML = `<p class="text-muted text-center">Your cart is empty.</p>`;
+    } else {
+      cart.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("checkout-item", "d-flex", "justify-content-between", "align-items-center", "mb-2");
+        itemDiv.innerHTML = `
+          <div>
+            <strong>${item.name}</strong>
+            <br><small>Qty: ${item.quantity}</small>
+          </div>
+          <div>$${(item.price * item.quantity).toFixed(2)}</div>
+        `;
+        checkoutItemsContainer.appendChild(itemDiv);
+      });
     }
-  });
-});
+  }
+
+  // 🧮 Totals
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  // 🧾 Base shipping rule: $20 per 10 items (or part thereof)
+  const BASE_SHIPPING_PER_10 = 20.00;
+  let shipping = BASE_SHIPPING_PER_10 * Math.ceil(totalItems / 10);
+
+  // 🚚 Apply free shipping promo (max $20)
+  if (localStorage.getItem("freeShipping") === "true") {
+    const discount = Math.min(20, shipping);
+    shipping = Math.max(0, shipping - discount);
+  }
+
+  const grandTotal = subtotal + shipping;
+
+  // 🪄 Update summary fields
+  if (totalItemsEl) totalItemsEl.textContent = totalItems;
+  if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
+  if (shippingEl) shippingEl.textContent = shipping.toFixed(2);
+  if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
+
+  // 💾 Save for order emails or success page
+  localStorage.setItem("checkoutSubtotal", subtotal.toFixed(2));
+  localStorage.setItem("checkoutShipping", shipping.toFixed(2));
+  localStorage.setItem("checkoutGrandTotal", grandTotal.toFixed(2));
+}
+
+
 
 
 
