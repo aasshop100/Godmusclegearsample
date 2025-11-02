@@ -1054,6 +1054,24 @@ function updateCheckoutSummary() {
 }
 
 
+// === FIX: make totals refresh when freeShipping promo is active ===
+document.addEventListener("DOMContentLoaded", () => {
+  const isCheckout = document.getElementById("checkout-grand-total");
+  if (!isCheckout) return;
+
+  // Observe localStorage changes (so totals update when promo applied)
+  window.addEventListener("storage", (e) => {
+    if (e.key === "freeShipping" || e.key === "cart") {
+      if (typeof updateCheckoutSummary === "function") {
+        updateCheckoutSummary();
+      }
+    }
+  });
+
+  // Also run once on first load
+  updateCheckoutSummary();
+});
+
 
 
 
