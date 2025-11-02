@@ -146,26 +146,30 @@ function updateCart() {
 
 // Add to cart
 function addToCart(button) {
-    const name = button.dataset.name || 'Unknown Item';
-    const price = Number(button.dataset.price) || 0;
-    const id = button.dataset.id || name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    const image = button.dataset.image || 'images/default-supplement.png';
+  const name = button.dataset.name || 'Unknown Item';
+  const price = Number(button.dataset.price) || 0;
+  const id = button.dataset.id || name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+  const image = button.dataset.image || 'images/default-supplement.png';
 
-    let existingItem = cart.find(item => item.id === id);
-    if (existingItem) {
-        existingItem.quantity = (existingItem.quantity || 1) + 1;
-    } else {
-        cart.push({ id, name, price, quantity: 1, image });
-    }
+  let existingItem = cart.find(item => item.id === id);
+  if (existingItem) {
+    existingItem.quantity = (existingItem.quantity || 1) + 1;
+  } else {
+    cart.push({ id, name, price, quantity: 1, image });
+  }
 
-     // Save cart to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
+  // ✅ Save cart
+  localStorage.setItem('cart', JSON.stringify(cart));
 
-    // Update cart count immediately
-    updateCartCount();
+  // ✅ Update UI counts immediately
+  updateCartCount();
 
-    updateCart();
-    showCartNotification(`✅ ${name} added to cart!`);
+  // ✅ Update cart page if open
+  updateCart();
+
+  showCartNotification(`✅ ${name} added to cart!`);
+}
+
 
 
 // Quantity change
@@ -966,6 +970,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 
 
 
