@@ -1170,7 +1170,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 }); // closes previous DOMContentLoaded or main block
 
-// === JS PROTECTION + CAPTCHA VALIDATION ===
+// === JS PROTECTION + CAPTCHA VALIDATION (FINAL FIX) ===
 document.addEventListener('DOMContentLoaded', function() {
   const forms = document.querySelectorAll('form');
   forms.forEach(form => {
@@ -1180,9 +1180,9 @@ document.addEventListener('DOMContentLoaded', function() {
       if (captcha) {
         const response = grecaptcha.getResponse();
         if (response.length === 0) {
-          e.preventDefault(); // stop form from submitting
+          e.preventDefault(); // stop form submission
           alert("⚠️ Please verify that you are not a robot before placing your order.");
-          return;
+          return false; // 🔒 ensure form does not continue submitting
         }
       }
 
@@ -1192,9 +1192,13 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.disabled = true;
         setTimeout(() => { btn.disabled = false; }, 5000);
       }
+
+      return true; // allow form to proceed normally if everything is valid
     });
   });
 });
+
+
 
 
 
