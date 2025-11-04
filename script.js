@@ -1170,33 +1170,52 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 }); // closes previous DOMContentLoaded or main block
 
-// === JS PROTECTION + CAPTCHA VALIDATION (FINAL FIX) ===
+// === JS PROTECTION + CAPTCHA VALIDATION (FINAL MODAL FIX) ===
 document.addEventListener('DOMContentLoaded', function() {
   const forms = document.querySelectorAll('form');
+  const captchaModal = document.getElementById('captchaModal');
+  const closeCaptchaModal = document.getElementById('closeCaptchaModal');
+
+  if (closeCaptchaModal) {
+    closeCaptchaModal.addEventListener('click', () => {
+      captchaModal.style.display = 'none';
+    });
+  }
+
   forms.forEach(form => {
     form.addEventListener('submit', function(e) {
-      // ✅ Check if reCAPTCHA is present
       const captcha = form.querySelector('.g-recaptcha');
+      let blocked = false; // Track whether to block submission
+
+      // ✅ Check reCAPTCHA
       if (captcha) {
         const response = grecaptcha.getResponse();
         if (response.length === 0) {
-          e.preventDefault(); // stop form submission
-          alert("⚠️ Please verify that you are not a robot before placing your order.");
-          return false; // 🔒 ensure form does not continue submitting
+          e.preventDefault();        // stop browser submission
+          e.stopImmediatePropagation(); // stop all other submit handlers
+          blocked = true;
+          if (captchaModal) {
+            captchaModal.style.display = 'flex';
+          }
         }
       }
 
-      // ✅ Disable the button for 5 seconds to prevent spamming
+      // ✅ If blocked, exit the function completely
+      if (blocked) return false;
+
+      // ✅ Disable the button for 5 seconds (anti-spam)
       const btn = this.querySelector('button[type="submit"]');
       if (btn) {
         btn.disabled = true;
         setTimeout(() => { btn.disabled = false; }, 5000);
       }
 
-      return true; // allow form to proceed normally if everything is valid
+      return true; // Only continue if not blocked
     });
   });
 });
+
+
 
 
 
