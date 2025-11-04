@@ -1170,7 +1170,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 }); // closes previous DOMContentLoaded or main block
 
-// === JS PROTECTION + CAPTCHA VALIDATION (FINAL MODAL FIX) ===
+// === JS PROTECTION + CAPTCHA VALIDATION (HARD STOP VERSION) ===
 document.addEventListener('DOMContentLoaded', function() {
   const forms = document.querySelectorAll('form');
   const captchaModal = document.getElementById('captchaModal');
@@ -1184,36 +1184,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
   forms.forEach(form => {
     form.addEventListener('submit', function(e) {
+      // 🧱 CAPTCHA VALIDATION FIRST — before anything else
       const captcha = form.querySelector('.g-recaptcha');
-      let blocked = false; // Track whether to block submission
-
-      // ✅ Check reCAPTCHA
       if (captcha) {
         const response = grecaptcha.getResponse();
         if (response.length === 0) {
-          e.preventDefault();        // stop browser submission
-          e.stopImmediatePropagation(); // stop all other submit handlers
-          blocked = true;
+          // block everything immediately
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
           if (captchaModal) {
             captchaModal.style.display = 'flex';
           }
+          
+          return false; // 🔒 completely stop any submit action
         }
       }
 
-      // ✅ If blocked, exit the function completely
-      if (blocked) return false;
-
-      // ✅ Disable the button for 5 seconds (anti-spam)
+      // 🧠 only runs if CAPTCHA was valid
       const btn = this.querySelector('button[type="submit"]');
       if (btn) {
         btn.disabled = true;
         setTimeout(() => { btn.disabled = false; }, 5000);
       }
 
-      return true; // Only continue if not blocked
-    });
+      return true; // allow Formspree submit only when verified
+    }, true); // ✅ capture phase (runs before default submit)
   });
 });
+
+
 
 
 
