@@ -1157,7 +1157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Wait a short moment to let the order-summary render first
   setTimeout(() => updateCheckoutSummary(), 300);
-
+  
   // Recalculate when freeShipping or cart changes
   window.addEventListener("storage", (e) => {
     if (["freeShipping", "cart"].includes(e.key)) {
@@ -1168,21 +1168,23 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 300);
     }
   });
-});
+}); // closes previous DOMContentLoaded or main block
 
 // === JS PROTECTION ===
 document.addEventListener('DOMContentLoaded', function() {
- const forms = document.querySelectorAll('form');
-forms.forEach(form => {
-  form.addEventListener('submit', function() {
-    const btn = this.querySelector('button[type="submit"]');
-    if (btn) {
-      btn.disabled = true;
-      setTimeout(() => { btn.disabled = false; }, 5000);
-    }
+  const forms = document.querySelectorAll('form');
+  forms.forEach(form => {
+    form.addEventListener('submit', function() {
+      const btn = this.querySelector('button[type="submit"]');
+      if (btn) {
+        btn.disabled = true;
+        setTimeout(() => { btn.disabled = false; }, 5000);
+      }
+    });
   });
-});
-});
+}); // ✅ closes JS protection block properly
+
+
 
 
 
