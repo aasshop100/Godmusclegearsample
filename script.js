@@ -1170,12 +1170,20 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// ===JS PROTECTION ===
-document.querySelector('form').addEventListener('submit', function(e) {
-  const btn = this.querySelector('button[type="submit"]');
-  btn.disabled = true;
-  setTimeout(() => { btn.disabled = false; }, 5000);
+// === JS PROTECTION ===
+document.addEventListener('DOMContentLoaded', function() {
+ const forms = document.querySelectorAll('form');
+forms.forEach(form => {
+  form.addEventListener('submit', function() {
+    const btn = this.querySelector('button[type="submit"]');
+    if (btn) {
+      btn.disabled = true;
+      setTimeout(() => { btn.disabled = false; }, 5000);
+    }
+  });
 });
+
+
 
 
 
